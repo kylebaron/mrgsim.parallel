@@ -33,6 +33,7 @@ library(mrgsolve.parallel)
 options(future.fork.enable=TRUE, mc.cores = 8L)
 
 plan(multiprocess,workers=8L)
+
 ```
 
 
@@ -41,7 +42,7 @@ plan(multiprocess,workers=8L)
 ```{r}
 mod <- modlib("pk2cmt", end = 168*8, delta = 1)
 
-data <- expand.ev(amt = 100*seq(1,3000), ii = 24, addl = 27*2+2) 
+data <- expand.ev(amt = 100*seq(1,2000), ii = 24, addl = 27*2+2) 
 
 system.time(ans <- future_mrgsim_d(mod, data, nchunk = 8L))
 
