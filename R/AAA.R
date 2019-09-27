@@ -5,6 +5,7 @@
 #' @importFrom utils assignInMyNamespace
 NULL
 
+#nocov start
 mc_able <- TRUE
 
 .onLoad <- function(libname,pkgname) {
@@ -14,3 +15,5 @@ mc_able <- TRUE
 }
 
 globalVariables(c("mod", "event"))
+
+# nocov end

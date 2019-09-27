@@ -25,3 +25,11 @@ A list of data frames
 Use \link{chunk_by_id} to split up a data set by the \code{ID} column; use
 \link{chunk_by_row} split a data set by rows.
 }
+\examples{
+x <- expand.grid(ID = 1:10, B = rev(1:10))
+
+chunk_by_id(x, 3)
+
+chunk_by_row(x, nchunk = 4)
+
+}

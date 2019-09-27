@@ -28,3 +28,12 @@ A data frame or list of simulated data
 Use \link{future_mrgsim_d} to simulate with the \code{future} package.  Use
 \link{mc_mrgsim_d} to simulate with \link[parallel:mclapply]{parallel::mclapply}.
 }
+\examples{
+
+mod <- modlib("pk2")
+
+data <- expand.ev(amt = seq(10))
+
+out <- future_mrgsim_d(mod,data, nchunk = 2)
+
+}

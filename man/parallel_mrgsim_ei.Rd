@@ -30,3 +30,14 @@ A data frame or list of simulated data
 Use \link{future_mrgsim_ei} to simulate with the \code{future} package.  Use
 \link{mc_mrgsim_ei} to simulate with \link[parallel:mclapply]{parallel::mclapply}.
 }
+\examples{
+
+mod <- modlib("pk2")
+
+event <- ev(amt = 100)
+
+idata <- data.frame(CL = runif(10, 0.5, 1.5))
+
+out <- future_mrgsim_ei(mod, event, idata)
+
+}

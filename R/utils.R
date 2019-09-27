@@ -1,4 +1,4 @@
-
+#nocov start
 #' Functions to enable / disable forking with future
 #'
 #' @export
@@ -11,11 +11,13 @@ fork_ok <- function() {
 fork_not_ok <- function() Sys.setenv(R_FUTURE_FORK_ENABLE="false")
 
 # Wrapper function -----------------------------------------------
+
+
 wrap_loadso <- function(mod,fun,...) {
   loadso(mod)
   fun(mod,...)
 }
-
+#nocov end
 
 #' Chunk a data frame
 #'
@@ -28,6 +30,13 @@ wrap_loadso <- function(mod,fun,...) {
 #' chunking
 #'
 #' @return A list of data frames
+#'
+#' @examples
+#' x <- expand.grid(ID = 1:10, B = rev(1:10))
+#'
+#' chunk_by_id(x, 3)
+#'
+#' chunk_by_row(x, nchunk = 4)
 #'
 #' @name chunk_data_frame
 #' @export

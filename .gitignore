@@ -1,4 +1,10 @@
+build
+README.html
+mrgsolve.parallel.Rcheck
+test.R
+mrgsolve.parallel*.tar.gz
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+.DS_Store
