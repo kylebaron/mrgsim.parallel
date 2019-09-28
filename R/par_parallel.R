@@ -5,6 +5,7 @@
   loadso(mod)
   mrgsim_ei(mod, event, idat, ..., output="df")
 }
+
 #' Simulate an idata set in parallel
 #'
 #' Use [future_mrgsim_ei] to simulate with the `future` package.  Use
@@ -48,7 +49,6 @@ future_mrgsim_ei <- function(mod, event, idata, nchunk = 4, ..., as_list=FALSE) 
 #' @rdname parallel_mrgsim_ei
 #' @export
 mc_mrgsim_ei <- function(mod, event, idata, nchunk = 4, ..., as_list = FALSE) {
-
   idata <- chunk_by_row(idata,nchunk)
   if(mc_able) {
     ans <- mclapply(X=idata, mod = mod, event = event, FUN = .simi)

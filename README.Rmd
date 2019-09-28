@@ -13,11 +13,25 @@ knitr::opts_chunk$set(comment = '.', message=FALSE, warning = FALSE,
 [![Travis build status](https://travis-ci.org/mrgsolve/mrgsolve.parallel.svg?branch=master)](https://travis-ci.org/mrgsolve/mrgsolve.parallel)
 <!-- badges: end -->
 
-Any speed-up will be highly problem-dependent.
-
-
 ## Overview
-parallel simulation with mrgsolve in R
+mrgsolve.parallel facilitates parallel simulation with mrgsolve in R.  The 
+future and parallel packages provide the parallelization.  
+
+There are 2 main workflows:
+
+1. Split a `data_set` into chunks by ID, simulate the chunks in parallel, then 
+   assemble the results back to a single data frame.
+1. Split an `idata_set` (individual-level parameters) into chunks by row, 
+   simulate the chunks in parallel, then assemble the results back to a single
+   data frame.
+
+The nature of the parallel backend requires some overhead to get the 
+parallel simulation done.  So, it will take a reasonably-sized job to see 
+a speed increase and small jobs will likely take *longer* with parallelization.
+The overhead will have less of an impact as the job gets bigger and very large
+jobs (taking 20 or 60 minutes ... or longer) will make the overhead look 
+negligible. 
+
 
 ```{r,include = FALSE}
 options(mrgsolve.soloc = "build")
@@ -26,6 +40,8 @@ options(mrgsolve.soloc = "build")
 ## Backend 
 
 ```{r}
+library(dplyr)
+
 library(future)
 
 library(mrgsolve.parallel)
@@ -35,23 +51,77 @@ options(future.fork.enable=TRUE, mc.cores = 8L)
 plan(multiprocess,workers=8L)
 
 ```
-
-
-## Data set
+## First workflow: split and simulate a data set
 
 ```{r}
 mod <- modlib("pk2cmt", end = 168*8, delta = 1)
 
 data <- expand.ev(amt = 100*seq(1,2000), ii = 24, addl = 27*2+2) 
 
+data <- mutate(data, CL = runif(n(), 0.7, 1.3))
+
+head(data)
+
+dim(data)
+```
+
+We can simulate in parallel with the future package or the parallel package like this:
+```{r}
 system.time(ans <- future_mrgsim_d(mod, data, nchunk = 8L))
 
 system.time(ans <- mc_mrgsim_d(mod, data, nchunk = 8L))
+```
 
+To compare an identical simulation done without parallelization
+```{r}
 system.time(ans <- mrgsim_d(mod,data))
+```
+
+## Second workflow: split and simulate a batch of parameters
+
+Backend and the model
+```{r}
+plan(multiprocess, workers = 6)
+
+mod <- modlib("pk1cmt", end = 168*4, delta = 0.5)
+```
+
+For this workflow, we have a set of parameters (`idata`) along with an 
+event object that gets applied to all of the parameters
+```{r}
+idata <- tibble(CL = runif(8000, 0.5, 1.5), ID = seq_along(CL))
+
+head(idata)
+```
+
+```{r}
+dose <- ev(amt = 100, ii = 24, addl = 27)
+
+dose
+```
+
+Run it
+```{r}
+system.time(ans1 <- mrgsim_ei(mod, dose, idata, output="df"))
+
+system.time(ans2 <- mc_mrgsim_ei(mod, dose, idata, nchunk = 8))
+
+identical(ans1,ans2)
 
 ```
 
 
+## Utility functions 
 
+You can access the chunking functions for your own parallel workflows
 
+```{r}
+dose <- ev_seq(ev(amt = 100), ev(amt = 50, ii = 12, addl = 2))
+dose <- ev_rep(dose, 1:5)
+
+dose
+
+chunk_by_id(dose, nchunk = 2)
+```
+
+See also: `chunk_by_row`
