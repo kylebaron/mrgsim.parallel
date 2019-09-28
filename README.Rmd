@@ -81,7 +81,7 @@ system.time(ans <- mrgsim_d(mod,data))
 
 Backend and the model
 ```{r}
-plan(multiprocess, workers = 6)
+plan(multiprocess, workers = 8)
 
 mod <- modlib("pk1cmt", end = 168*4, delta = 0.5)
 ```
