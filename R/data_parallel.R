@@ -4,7 +4,7 @@
   if(.dry) {
     return(dat)
   } else {
-    return(.p(mrgsim_d(mod,dat,...,output="df")))
+    return(.p(mrgsim_d(mod,dat,...,output="df"),mod))
   }
 }
 

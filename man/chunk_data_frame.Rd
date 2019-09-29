@@ -6,9 +6,9 @@
 \alias{chunk_by_row}
 \title{Chunk a data frame}
 \usage{
-chunk_by_id(data, nchunk, id_col = "ID")
+chunk_by_id(data, nchunk, id_col = "ID", mark = NULL)
 
-chunk_by_row(data, nchunk)
+chunk_by_row(data, nchunk, mark = NULL)
 }
 \arguments{
 \item{data}{a data frame}
@@ -17,6 +17,9 @@ chunk_by_row(data, nchunk)
 
 \item{id_col}{character specifying the column containing the \code{ID} for
 chunking}
+
+\item{mark}{when populated as a character label, adds a column to the
+chunked data frames with that name and with value the integer group number}
 }
 \value{
 A list of data frames

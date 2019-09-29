@@ -1,3 +1,5 @@
+.nothing <- function(sims,mod) sims
+
 #nocov start
 #' Functions to enable / disable forking with future
 #'
@@ -17,6 +19,7 @@ wrap_loadso <- function(mod,fun,...) {
   loadso(mod)
   fun(mod,...)
 }
+
 #nocov end
 
 #' Chunk a data frame
@@ -28,6 +31,8 @@ wrap_loadso <- function(mod,fun,...) {
 #' @param nchunk number of chunks
 #' @param id_col character specifying the column containing the `ID` for
 #' chunking
+#' @param mark when populated as a character label, adds a column to the 
+#' chunked data frames with that name and with value the integer group number
 #'
 #' @return A list of data frames
 #'
@@ -40,24 +45,27 @@ wrap_loadso <- function(mod,fun,...) {
 #'
 #' @name chunk_data_frame
 #' @export
-chunk_by_id <- function(data,nchunk,id_col = "ID") {
+chunk_by_id <- function(data,nchunk,id_col="ID",mark=NULL) {
   id <- data[[id_col]]
   ids <- unique(id)
   ntot <- length(ids)
   nper <- ceiling(ntot/nchunk)
   a <- rep(seq(nchunk), each = nper, length.out = ntot)
-  ind <- match(id,ids)
-  split(data, a[match(id,ids)])
+  sp <- a[match(id,ids)]
+  if(is.character(mark)) {
+    data[[mark]] <- sp  
+  }
+  split.data.frame(data, sp)
 }
 
 #' @rdname chunk_data_frame
 #' @export
-chunk_by_row <- function(data, nchunk) {
+chunk_by_row <- function(data,nchunk,mark=NULL) {
   ntot <- nrow(data)
   nper <- ceiling(ntot/nchunk)
   a <- rep(seq(nchunk), each = nper, length.out = ntot)
-  split(data,a)
+  if(is.character(mark)) {
+    data[[mark]] <- a    
+  }
+  split.data.frame(data,a)
 }
-
-.nothing <- function(sims,mod) sims
-

@@ -87,7 +87,12 @@ chunk_by_row split a data set by rows." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/mrgsolve/mrgsolve.fu">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -102,7 +107,7 @@ chunk_by_row split a data set by rows." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Chunk a data frame</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/mrgsolve/mrgsolve.fu/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
     <div class="hidden name"><code>chunk_data_frame.Rd</code></div>
     </div>
 
@@ -111,9 +116,9 @@ chunk_by_row split a data set by rows." />
 chunk_by_row split a data set by rows.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>chunk_by_id</span>(<span class='no'>data</span>, <span class='no'>nchunk</span>, <span class='kw'>id_col</span> <span class='kw'>=</span> <span class='st'>"ID"</span>)
+    <pre class="usage"><span class='fu'>chunk_by_id</span>(<span class='no'>data</span>, <span class='no'>nchunk</span>, <span class='kw'>id_col</span> <span class='kw'>=</span> <span class='st'>"ID"</span>, <span class='kw'>mark</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>chunk_by_row</span>(<span class='no'>data</span>, <span class='no'>nchunk</span>)</pre>
+<span class='fu'>chunk_by_row</span>(<span class='no'>data</span>, <span class='no'>nchunk</span>, <span class='kw'>mark</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -130,6 +135,11 @@ chunk_by_row split a data set by rows.</p>
       <th>id_col</th>
       <td><p>character specifying the column containing the <code>ID</code> for
 chunking</p></td>
+    </tr>
+    <tr>
+      <th>mark</th>
+      <td><p>when populated as a character label, adds a column to the
+chunked data frames with that name and with value the integer group number</p></td>
     </tr>
     </table>
 

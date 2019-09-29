@@ -6,7 +6,7 @@
   if(.dry) {
     return(idat)
   } else {
-    return(.p(mrgsim_ei(mod,event,idat,...,output="df")))
+    return(.p(mrgsim_ei(mod,event,idat,...,output="df"),mod))
   }
 }
 
