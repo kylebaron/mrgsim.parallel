@@ -39,7 +39,7 @@
 #' @export
 future_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
                             .p = NULL, .dry = FALSE) {
-  data <- chunk_by_id(data,nchunk)
+  if(!inherits(data,"list")) data <- chunk_by_id(data,nchunk)
   pa <- c("mrgsolve")
   if(!is.function(.p)) .p <- .nothing
   ans <- future_lapply(
@@ -59,7 +59,7 @@ future_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
 #' @export
 mc_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
                         .p = NULL, .dry = FALSE) {
-  data <- chunk_by_id(data,nchunk)
+  if(!inherits(data,"list")) data <- chunk_by_id(data,nchunk)
   if(!is.function(.p)) .p <- .nothing
   if(mc_able) {
     ans <- mclapply(X = data, mod = mod, .p = .p, .dry = .dry, FUN = .simd)

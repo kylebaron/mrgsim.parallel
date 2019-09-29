@@ -40,7 +40,7 @@
 #' @export
 future_mrgsim_ei <- function(mod, event, idata, nchunk = 4, ..., as_list=FALSE,
                              .p  = NULL, .dry = FALSE) {
-  idata <- chunk_by_row(idata,nchunk)
+  if(!inherits(idata,"list")) idata <- chunk_by_row(idata,nchunk)
   if(!is.function(.p)) .p <- .nothing
   pa <- c("mrgsolve")
   ans <- future_lapply(
@@ -69,7 +69,7 @@ fu_mrgsim_ei0 <- function(...,.dry=TRUE) fu_mrgsim_ei(...,.dry = TRUE) #nocov
 #' @export
 mc_mrgsim_ei <- function(mod, event, idata, nchunk = 4, ..., as_list = FALSE,
                          .p = NULL, .dry = FALSE) {
-  idata <- chunk_by_row(idata,nchunk)
+  if(!inherits(idata,"list")) idata <- chunk_by_row(idata,nchunk)
   if(!is.function(.p)) .p <- .nothing
   if(mc_able) {
     ans <- mclapply(

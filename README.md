@@ -54,12 +54,12 @@ head(data)
 ```
 
     .   ID time amt ii addl cmt evid        CL
-    . 1  1    0 100 24   56   1    1 1.2681814
-    . 2  2    0 200 24   56   1    1 0.8746955
-    . 3  3    0 300 24   56   1    1 1.2822714
-    . 4  4    0 400 24   56   1    1 0.7991876
-    . 5  5    0 500 24   56   1    1 1.0333662
-    . 6  6    0 600 24   56   1    1 1.2362265
+    . 1  1    0 100 24   56   1    1 0.9294230
+    . 2  2    0 200 24   56   1    1 0.9694008
+    . 3  3    0 300 24   56   1    1 1.1112295
+    . 4  4    0 400 24   56   1    1 1.1820941
+    . 5  5    0 500 24   56   1    1 1.2273561
+    . 6  6    0 600 24   56   1    1 0.9049374
 
 ``` r
 dim(data)
@@ -75,14 +75,14 @@ system.time(ans1 <- future_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
     .    user  system elapsed 
-    .  14.200   1.546   3.626
+    .  13.907   1.487   3.600
 
 ``` r
 system.time(ans2 <- mc_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
     .    user  system elapsed 
-    .  13.487   0.956   2.866
+    .  13.019   0.909   2.760
 
 To compare an identical simulation done without parallelization
 
@@ -91,7 +91,7 @@ system.time(ans3 <- mrgsim_d(mod,data))
 ```
 
     .    user  system elapsed 
-    .   9.151   0.176   9.339
+    .   9.286   0.192   9.498
 
 ``` r
 identical(ans2,as.data.frame(ans3))
@@ -121,12 +121,12 @@ head(idata)
     . # A tibble: 6 x 2
     .      CL    ID
     .   <dbl> <int>
-    . 1 0.612     1
-    . 2 0.756     2
+    . 1 1.45      1
+    . 2 1.49      2
     . 3 0.632     3
-    . 4 0.956     4
-    . 5 1.02      5
-    . 6 1.01      6
+    . 4 0.685     4
+    . 5 1.40      5
+    . 6 0.995     6
 
 ``` r
 dose <- ev(amt = 100, ii = 24, addl = 27)
@@ -145,7 +145,7 @@ system.time(ans1 <- mc_mrgsim_ei(mod, dose, idata, nchunk = 6))
 ```
 
     .    user  system elapsed 
-    .   8.471   0.791   1.862
+    .   8.309   0.804   1.858
 
 And without parallelization
 
@@ -154,7 +154,7 @@ system.time(ans2 <- mrgsim_ei(mod, dose, idata, output = "df"))
 ```
 
     .    user  system elapsed 
-    .   5.838   0.144   5.990
+    .   5.928   0.155   6.094
 
 ``` r
 identical(ans1,ans2)
@@ -223,7 +223,7 @@ system.time(x <- fu_mrgsim_d(mod, data, nchunk = 8, .dry = TRUE))
 ```
 
     .    user  system elapsed 
-    .   0.102   0.124   0.129
+    .   0.106   0.138   0.137
 
 ## Pass a function to post process on the worker
 
@@ -260,3 +260,10 @@ The main use case here is to summarize or some how decrease the volume
 of data before returning the combined simulations. In case memory is
 able to handle the simulation volume, this post-processing could be done
 on the combined data as well.
+
+<hr>
+
+## More info
+
+See [inst/doc/about.md (on GitHub only)](inst/doc/about.md) for more
+details.

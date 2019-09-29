@@ -8,7 +8,6 @@ mod <- suppressMessages(mrgsolve::modlib("pk1", end = 3))
 data <- expand.ev(amt = seq(25))
 data2 <- data
 data2[["SUBJ"]] <- data2[["ID"]]
-data2[["ID"]] <- NULL
 
 e <- ev(amt = 100)
 
@@ -62,4 +61,11 @@ test_that("sim idata", {
 test_that("dry run", {
   expect_is(fu_mrgsim_d(mod,data,.dry = TRUE),"data.frame")
   expect_is(fu_mrgsim_ei(mod,e,idata,.dry = TRUE), "data.frame")
+})
+
+test_that("pass in chunked data", {
+  ch <- chunk_by_id(data,4)
+  out1 <- fu_mrgsim_d(mod,data, nchunk=4)
+  out2 <- fu_mrgsim_d(mod,ch)
+  expect_identical(out1,out2)
 })

@@ -173,3 +173,9 @@ before returning the combined simulations.  In case memory is able to handle
 the simulation volume, this post-processing could be done on the combined
 data as well.
 
+
+<hr>
+
+## More info
+
+See [inst/doc/about.md (on GitHub only)](inst/doc/about.md) for more details.
