@@ -1,5 +1,5 @@
 
-# mrgsolve.parallel
+# mrgsolve.fu
 
 <!-- badges: start -->
 
@@ -9,8 +9,9 @@ status](https://travis-ci.org/mrgsolve/mrgsolve.fu.svg?branch=master)](https://t
 
 ## Overview
 
-mrgsolve.fu facilitates parallel simulation with mrgsolve in R. The
-future and parallel packages provide the parallelization.
+mrgsolve.fu (em-are-gee solve dot foo) facilitates parallel simulation
+with mrgsolve in R. The future and parallel packages provide the
+parallelization.
 
 There are 2 main workflows:
 
@@ -53,13 +54,13 @@ data <- mutate(data, CL = runif(n(), 0.7, 1.3))
 head(data)
 ```
 
-    .   ID time amt ii addl cmt evid       CL
-    . 1  1    0 100 24   56   1    1 1.138040
-    . 2  2    0 200 24   56   1    1 0.854579
-    . 3  3    0 300 24   56   1    1 1.130316
-    . 4  4    0 400 24   56   1    1 1.078820
-    . 5  5    0 500 24   56   1    1 1.025052
-    . 6  6    0 600 24   56   1    1 1.139057
+    .   ID time amt ii addl cmt evid        CL
+    . 1  1    0 100 24   56   1    1 1.2746575
+    . 2  2    0 200 24   56   1    1 1.0586956
+    . 3  3    0 300 24   56   1    1 1.1727678
+    . 4  4    0 400 24   56   1    1 1.2725611
+    . 5  5    0 500 24   56   1    1 0.8171153
+    . 6  6    0 600 24   56   1    1 0.7074677
 
 ``` r
 dim(data)
@@ -71,27 +72,33 @@ We can simulate in parallel with the future package or the parallel
 package like this:
 
 ``` r
-system.time(ans <- future_mrgsim_d(mod, data, nchunk = 6L))
+system.time(ans1 <- future_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
     .    user  system elapsed 
-    .  13.581   1.328   3.459
+    .  13.776   1.400   3.533
 
 ``` r
-system.time(ans <- mc_mrgsim_d(mod, data, nchunk = 6L))
+system.time(ans2 <- mc_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
     .    user  system elapsed 
-    .  12.755   0.886   2.661
+    .  13.333   1.058   2.798
 
 To compare an identical simulation done without parallelization
 
 ``` r
-system.time(ans <- mrgsim_d(mod,data))
+system.time(ans3 <- mrgsim_d(mod,data))
 ```
 
     .    user  system elapsed 
-    .   8.796   0.194   9.006
+    .   9.444   0.236   9.725
+
+``` r
+identical(ans2,as.data.frame(ans3))
+```
+
+    . [1] TRUE
 
 ## Second workflow: split and simulate a batch of parameters
 
@@ -115,12 +122,12 @@ head(idata)
     . # A tibble: 6 x 2
     .      CL    ID
     .   <dbl> <int>
-    . 1 0.743     1
-    . 2 1.48      2
-    . 3 1.06      3
-    . 4 1.48      4
-    . 5 1.32      5
-    . 6 1.29      6
+    . 1 0.952     1
+    . 2 1.30      2
+    . 3 0.754     3
+    . 4 0.679     4
+    . 5 1.04      5
+    . 6 0.634     6
 
 ``` r
 dose <- ev(amt = 100, ii = 24, addl = 27)
@@ -139,7 +146,7 @@ system.time(ans1 <- mc_mrgsim_ei(mod, dose, idata, nchunk = 6))
 ```
 
     .    user  system elapsed 
-    .   8.494   0.911   1.913
+    .  10.533   1.142   4.041
 
 And without parallelization
 
@@ -148,7 +155,7 @@ system.time(ans2 <- mrgsim_ei(mod, dose, idata, output="df"))
 ```
 
     .    user  system elapsed 
-    .   5.971   0.172   6.169
+    .   6.406   0.240   7.442
 
 ``` r
 identical(ans1,ans2)
@@ -199,6 +206,8 @@ chunk_by_id(dose, nchunk = 2)
     . 9     0 100  0    0   1    1  5
     . 10    0  50 12    2   1    1  5
 
+See also: `chunk_by_row`
+
 ## Do a dry run to check the overhead of parallelization
 
 ``` r
@@ -215,7 +224,7 @@ system.time(x <- fu_mrgsim_d(mod,data,nchunk = 8, .dry = TRUE))
 ```
 
     .    user  system elapsed 
-    .   0.123   0.183   0.148
+    .   0.114   0.177   0.145
 
 ## Pass a function to post process on the worker
 
@@ -252,5 +261,3 @@ The main use case here is to summarize or some how decrease the volume
 of data before returning the combined simulations. In case memory is
 able to handle the simulation volume, this post-processing could be done
 on the combined data as well.
-
-See also: `chunk_by_row`

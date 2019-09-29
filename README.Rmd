@@ -8,14 +8,14 @@ knitr::opts_chunk$set(comment = '.', message=FALSE, warning = FALSE,
                       fig.path="man/figures/README-")
 ```
 
-# mrgsolve.parallel
+# mrgsolve.fu
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.org/mrgsolve/mrgsolve.fu.svg?branch=master)](https://travis-ci.org/mrgsolve/mrgsolve.fu)
 <!-- badges: end -->
 
 ## Overview
-mrgsolve.fu facilitates parallel simulation with mrgsolve in R.  The 
-future and parallel packages provide the parallelization.  
+mrgsolve.fu (em-are-gee solve dot foo) facilitates parallel simulation with 
+mrgsolve in R.  The future and parallel packages provide the parallelization.  
 
 There are 2 main workflows:
 
@@ -67,15 +67,20 @@ dim(data)
 
 We can simulate in parallel with the future package or the parallel package like this:
 ```{r}
-system.time(ans <- future_mrgsim_d(mod, data, nchunk = 6L))
+system.time(ans1 <- future_mrgsim_d(mod, data, nchunk = 6L))
 
-system.time(ans <- mc_mrgsim_d(mod, data, nchunk = 6L))
+system.time(ans2 <- mc_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
 To compare an identical simulation done without parallelization
 ```{r}
-system.time(ans <- mrgsim_d(mod,data))
+system.time(ans3 <- mrgsim_d(mod,data))
 ```
+
+```{r}
+identical(ans2,as.data.frame(ans3))
+```
+
 
 ## Second workflow: split and simulate a batch of parameters
 
@@ -126,6 +131,7 @@ dose
 chunk_by_id(dose, nchunk = 2)
 ```
 
+See also: `chunk_by_row`
 
 ## Do a dry run to check the overhead of parallelization
 
@@ -168,4 +174,3 @@ before returning the combined simulations.  In case memory is able to handle
 the simulation volume, this post-processing could be done on the combined
 data as well.
 
-See also: `chunk_by_row`
