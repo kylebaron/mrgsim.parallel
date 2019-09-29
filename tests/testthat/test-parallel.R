@@ -1,3 +1,5 @@
+library(testthat)
+
 context("basic functionality")
 
 
@@ -49,4 +51,7 @@ test_that("sim idata", {
   expect_is(mc_mrgsim_ei(mod, e, idata,as_list=TRUE), "list")
 })
 
-
+test_that("dry run", {
+  expect_is(fu_mrgsim_d(mod,data,.dry = TRUE),"data.frame")
+  expect_is(fu_mrgsim_ei(mod,e,idata,.dry = TRUE), "data.frame")
+})

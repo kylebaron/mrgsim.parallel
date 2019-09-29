@@ -1,4 +1,4 @@
-Package: mrgsolve.parallel
+Package: mrgsolve.fu
 Type: Package
 Title: Simulate with 'mrgsolve' in Parallel
 Version: 0.1.0

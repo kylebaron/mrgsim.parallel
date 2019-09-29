@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 LIBDIR=/Users/kyleb/Rlibs/lib
-PACKAGE=mrgsolve.parallel
+PACKAGE=mrgsolve.fu
 VERSION=$(shell grep Version DESCRIPTION |awk '{print $$2}')
 TARBALL=${PACKAGE}_${VERSION}.tar.gz
 PKGDIR=.

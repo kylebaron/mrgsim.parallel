@@ -2,7 +2,7 @@
 Sys.setenv("R_TESTS" = "")
 
 library(testthat)
-library(mrgsolve.parallel)
-test_check("mrgsolve.parallel", reporter="summary")
+library(mrgsolve.fu)
+test_check("mrgsolve.fu", reporter="summary")
 
 

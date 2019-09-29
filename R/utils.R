@@ -59,3 +59,5 @@ chunk_by_row <- function(data, nchunk) {
   split(data,a)
 }
 
+.nothing <- function(sims,mod) sims
+

@@ -3,25 +3,41 @@
 \name{parallel_mrgsim_ei}
 \alias{parallel_mrgsim_ei}
 \alias{future_mrgsim_ei}
+\alias{fu_mrgsim_ei}
+\alias{fu_mrgsim_ei0}
 \alias{mc_mrgsim_ei}
 \title{Simulate an idata set in parallel}
 \usage{
-future_mrgsim_ei(mod, event, idata, nchunk = 4, ..., as_list = FALSE)
+future_mrgsim_ei(mod, event, idata, nchunk = 4, ..., as_list = FALSE,
+  .p = NULL, .dry = FALSE)
 
-mc_mrgsim_ei(mod, event, idata, nchunk = 4, ..., as_list = FALSE)
+fu_mrgsim_ei(mod, event, idata, nchunk = 4, ..., as_list = FALSE,
+  .p = NULL, .dry = FALSE)
+
+fu_mrgsim_ei0(..., .dry = TRUE)
+
+mc_mrgsim_ei(mod, event, idata, nchunk = 4, ..., as_list = FALSE,
+  .p = NULL, .dry = FALSE)
 }
 \arguments{
-\item{mod}{mrgsolve model object}
+\item{mod}{mrgsolve model object see \link[mrgsolve:mrgmod-class]{mrgsolve::mrgmod}}
 
-\item{event}{a mrgsolve event object}
+\item{event}{an event object from mrgsolve; see \link[mrgsolve:ev]{mrgsolve::ev}}
 
-\item{idata}{\code{idata} set to simulate}
+\item{idata}{an idata set of parameters, one per simulation unit (individual);
+see \link[mrgsolve:idata_set]{mrgsolve::idata_set}}
 
 \item{nchunk}{number of chunks in which to split the data set}
 
-\item{...}{passed to \link{mrgsim_ei}}
+\item{...}{passed to \link{mrgsim_d}}
 
 \item{as_list}{if \code{TRUE} a list is return; otherwise (default) a data frame}
+
+\item{.p}{post processing function executed on the worker; arguments should
+be (1) the simulated output (2) the model object}
+
+\item{.dry}{if \code{TRUE} neither the simulation nor the post processing will
+be done}
 }
 \value{
 A data frame or list of simulated data
@@ -40,4 +56,7 @@ idata <- data.frame(CL = runif(10, 0.5, 1.5))
 
 out <- future_mrgsim_ei(mod, event, idata)
 
+}
+\seealso{
+\link{future_mrgsim_ei}
 }

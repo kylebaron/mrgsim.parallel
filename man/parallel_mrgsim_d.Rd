@@ -4,22 +4,37 @@
 \alias{parallel_mrgsim_d}
 \alias{future_mrgsim_d}
 \alias{mc_mrgsim_d}
+\alias{fu_mrgsim_d}
+\alias{fu_mrgsim_d0}
 \title{Simulate a data set in parallel}
 \usage{
-future_mrgsim_d(mod, data, nchunk = 4, ..., as_list = FALSE)
+future_mrgsim_d(mod, data, nchunk = 4, ..., as_list = FALSE,
+  .p = NULL, .dry = FALSE)
 
-mc_mrgsim_d(mod, data, nchunk = 4, ..., as_list = FALSE)
+mc_mrgsim_d(mod, data, nchunk = 4, ..., as_list = FALSE, .p = NULL,
+  .dry = FALSE)
+
+fu_mrgsim_d(mod, data, nchunk = 4, ..., as_list = FALSE, .p = NULL,
+  .dry = FALSE)
+
+fu_mrgsim_d0(..., .dry = TRUE)
 }
 \arguments{
-\item{mod}{mrgsolve model object}
+\item{mod}{mrgsolve model object see \link[mrgsolve:mrgmod-class]{mrgsolve::mrgmod}}
 
-\item{data}{data set to simulate}
+\item{data}{data set to simulate; see \link[mrgsolve:data_set]{mrgsolve::data_set}}
 
 \item{nchunk}{number of chunks in which to split the data set}
 
 \item{...}{passed to \link{mrgsim_d}}
 
 \item{as_list}{if \code{TRUE} a list is return; otherwise (default) a data frame}
+
+\item{.p}{post processing function executed on the worker; arguments should
+be (1) the simulated output (2) the model object}
+
+\item{.dry}{if \code{TRUE} neither the simulation nor the post processing will
+be done}
 }
 \value{
 A data frame or list of simulated data
@@ -36,4 +51,7 @@ data <- expand.ev(amt = seq(10))
 
 out <- future_mrgsim_d(mod,data, nchunk = 2)
 
+}
+\seealso{
+\link{future_mrgsim_ei}
 }
