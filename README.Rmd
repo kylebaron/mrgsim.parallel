@@ -28,9 +28,8 @@ There are 2 main workflows:
 The nature of the parallel backend requires some overhead to get the 
 parallel simulation done.  So, it will take a reasonably-sized job to see 
 a speed increase and small jobs will likely take *longer* with parallelization.
-The overhead will have less of an impact as the job gets bigger and very large
-jobs (taking 20 or 60 minutes ... or longer) will make the overhead look 
-negligible. 
+But jobs taking more than a handful of seconds could benefit from this type 
+of parallelization.
 
 
 ```{r,include = FALSE}
