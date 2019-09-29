@@ -61,3 +61,6 @@ site:
 
 spelling:
 	Rscript inst/script/_spelling.R
+
+check-win:
+	Rscript -e 'devtools::check_win_devel()'

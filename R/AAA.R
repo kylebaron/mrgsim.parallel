@@ -10,7 +10,7 @@ mc_able <- TRUE
 
 .onLoad <- function(libname,pkgname) {
     if(.Platform$OS.type=="windows") {
-      assignInMyNamespace("m_cable", FALSE)
+      assignInMyNamespace("mc_cable", FALSE)
     }
 }
 
