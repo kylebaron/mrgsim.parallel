@@ -54,12 +54,12 @@ head(data)
 ```
 
     .   ID time amt ii addl cmt evid        CL
-    . 1  1    0 100 24   56   1    1 1.2949396
-    . 2  2    0 200 24   56   1    1 0.7007249
-    . 3  3    0 300 24   56   1    1 0.8427698
-    . 4  4    0 400 24   56   1    1 1.0792923
-    . 5  5    0 500 24   56   1    1 1.1445423
-    . 6  6    0 600 24   56   1    1 1.1601750
+    . 1  1    0 100 24   56   1    1 1.1300891
+    . 2  2    0 200 24   56   1    1 1.0826007
+    . 3  3    0 300 24   56   1    1 1.1634158
+    . 4  4    0 400 24   56   1    1 0.7357771
+    . 5  5    0 500 24   56   1    1 0.9372035
+    . 6  6    0 600 24   56   1    1 1.1001533
 
 ``` r
 dim(data)
@@ -75,14 +75,14 @@ system.time(ans <- future_mrgsim_d(mod, data, nchunk = 8L))
 ```
 
     .    user  system elapsed 
-    .   9.567   1.120   2.409
+    .  15.422   0.989   2.682
 
 ``` r
 system.time(ans <- mc_mrgsim_d(mod, data, nchunk = 8L))
 ```
 
     .    user  system elapsed 
-    .   9.258   1.107   1.855
+    .  15.043   0.913   2.417
 
 To compare an identical simulation done without parallelization
 
@@ -91,7 +91,7 @@ system.time(ans <- mrgsim_d(mod,data))
 ```
 
     .    user  system elapsed 
-    .   5.454   0.234   5.710
+    .   8.796   0.158   8.959
 
 ## Second workflow: split and simulate a batch of parameters
 
@@ -115,12 +115,12 @@ head(idata)
     . # A tibble: 6 x 2
     .      CL    ID
     .   <dbl> <int>
-    . 1 1.07      1
-    . 2 1.27      2
-    . 3 1.35      3
-    . 4 0.528     4
-    . 5 1.17      5
-    . 6 0.578     6
+    . 1 0.556     1
+    . 2 0.573     2
+    . 3 0.512     3
+    . 4 0.739     4
+    . 5 0.935     5
+    . 6 0.651     6
 
 ``` r
 dose <- ev(amt = 100, ii = 24, addl = 27)
@@ -139,14 +139,14 @@ system.time(ans1 <- mrgsim_ei(mod, dose, idata, output="df"))
 ```
 
     .    user  system elapsed 
-    .   8.570   0.645   9.243
+    .  12.362   0.538  12.911
 
 ``` r
 system.time(ans2 <- mc_mrgsim_ei(mod, dose, idata, nchunk = 8))
 ```
 
     .    user  system elapsed 
-    .  14.758   2.976   3.974
+    .  22.145   3.153   4.536
 
 ``` r
 identical(ans1,ans2)

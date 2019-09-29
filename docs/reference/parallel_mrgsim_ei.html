@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Simulate an idata set in parallel — parallel_mrgsim_ei • mrgsolve.parallel</title>
+<title>Simulate an idata set in parallel — parallel_mrgsim_ei • mrgsolve.fu</title>
 
 
 <!-- jquery -->
@@ -69,7 +69,7 @@ mc_mrgsim_ei to simulate with parallel::mclapply." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">mrgsolve.parallel</a>
+        <a class="navbar-link" href="../index.html">mrgsolve.fu</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
@@ -111,24 +111,32 @@ mc_mrgsim_ei to simulate with parallel::mclapply." />
 mc_mrgsim_ei to simulate with <a href='https://rdrr.io/r/parallel/mclapply.html'>parallel::mclapply</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>future_mrgsim_ei</span>(<span class='no'>mod</span>, <span class='no'>event</span>, <span class='no'>idata</span>, <span class='kw'>nchunk</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='no'>...</span>, <span class='kw'>as_list</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>future_mrgsim_ei</span>(<span class='no'>mod</span>, <span class='no'>event</span>, <span class='no'>idata</span>, <span class='kw'>nchunk</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='no'>...</span>, <span class='kw'>as_list</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>.p</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.dry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>mc_mrgsim_ei</span>(<span class='no'>mod</span>, <span class='no'>event</span>, <span class='no'>idata</span>, <span class='kw'>nchunk</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='no'>...</span>, <span class='kw'>as_list</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>fu_mrgsim_ei</span>(<span class='no'>mod</span>, <span class='no'>event</span>, <span class='no'>idata</span>, <span class='kw'>nchunk</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='no'>...</span>, <span class='kw'>as_list</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>.p</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.dry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>fu_mrgsim_ei0</span>(<span class='no'>...</span>, <span class='kw'>.dry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>mc_mrgsim_ei</span>(<span class='no'>mod</span>, <span class='no'>event</span>, <span class='no'>idata</span>, <span class='kw'>nchunk</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='no'>...</span>, <span class='kw'>as_list</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>.p</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.dry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mod</th>
-      <td><p>mrgsolve model object</p></td>
+      <td><p>mrgsolve model object see <a href='https://rdrr.io/pkg/mrgsolve/man/mrgmod-class.html'>mrgsolve::mrgmod</a></p></td>
     </tr>
     <tr>
       <th>event</th>
-      <td><p>a mrgsolve event object</p></td>
+      <td><p>an event object from mrgsolve; see <a href='https://rdrr.io/pkg/mrgsolve/man/ev.html'>mrgsolve::ev</a></p></td>
     </tr>
     <tr>
       <th>idata</th>
-      <td><p><code>idata</code> set to simulate</p></td>
+      <td><p>an idata set of parameters, one per simulation unit (individual);
+see <a href='https://rdrr.io/pkg/mrgsolve/man/idata_set.html'>mrgsolve::idata_set</a></p></td>
     </tr>
     <tr>
       <th>nchunk</th>
@@ -136,17 +144,30 @@ mc_mrgsim_ei to simulate with <a href='https://rdrr.io/r/parallel/mclapply.html'
     </tr>
     <tr>
       <th>...</th>
-      <td><p>passed to mrgsim_ei</p></td>
+      <td><p>passed to mrgsim_d</p></td>
     </tr>
     <tr>
       <th>as_list</th>
       <td><p>if <code>TRUE</code> a list is return; otherwise (default) a data frame</p></td>
+    </tr>
+    <tr>
+      <th>.p</th>
+      <td><p>post processing function executed on the worker; arguments should
+be (1) the simulated output (2) the model object</p></td>
+    </tr>
+    <tr>
+      <th>.dry</th>
+      <td><p>if <code>TRUE</code> neither the simulation nor the post processing will
+be done</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data frame or list of simulated data</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>future_mrgsim_ei</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -162,6 +183,7 @@ mc_mrgsim_ei to simulate with <a href='https://rdrr.io/r/parallel/mclapply.html'
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
