@@ -38,7 +38,7 @@ library(mrgsolve.parallel)
 
 options(future.fork.enable=TRUE, mc.cores = 8L)
 
-plan(multiprocess,workers=8L)
+plan(multiprocess,workers=6L)
 ```
 
 ## First workflow: split and simulate a data set
@@ -54,12 +54,12 @@ head(data)
 ```
 
     .   ID time amt ii addl cmt evid        CL
-    . 1  1    0 100 24   56   1    1 1.1300891
-    . 2  2    0 200 24   56   1    1 1.0826007
-    . 3  3    0 300 24   56   1    1 1.1634158
-    . 4  4    0 400 24   56   1    1 0.7357771
-    . 5  5    0 500 24   56   1    1 0.9372035
-    . 6  6    0 600 24   56   1    1 1.1001533
+    . 1  1    0 100 24   56   1    1 0.7251764
+    . 2  2    0 200 24   56   1    1 0.7013425
+    . 3  3    0 300 24   56   1    1 1.2910753
+    . 4  4    0 400 24   56   1    1 1.0024215
+    . 5  5    0 500 24   56   1    1 1.2303530
+    . 6  6    0 600 24   56   1    1 0.9893465
 
 ``` r
 dim(data)
@@ -71,18 +71,18 @@ We can simulate in parallel with the future package or the parallel
 package like this:
 
 ``` r
-system.time(ans <- future_mrgsim_d(mod, data, nchunk = 8L))
+system.time(ans <- future_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
     .    user  system elapsed 
-    .  15.422   0.989   2.682
+    .  13.569   1.345   3.448
 
 ``` r
-system.time(ans <- mc_mrgsim_d(mod, data, nchunk = 8L))
+system.time(ans <- mc_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
     .    user  system elapsed 
-    .  15.043   0.913   2.417
+    .  12.914   0.863   2.715
 
 To compare an identical simulation done without parallelization
 
@@ -91,23 +91,23 @@ system.time(ans <- mrgsim_d(mod,data))
 ```
 
     .    user  system elapsed 
-    .   8.796   0.158   8.959
+    .   8.788   0.163   8.955
 
 ## Second workflow: split and simulate a batch of parameters
 
 Backend and the model
 
 ``` r
-plan(multiprocess, workers = 8)
+plan(multiprocess, workers = 6)
 
-mod <- modlib("pk1cmt", end = 168*4, delta = 0.5)
+mod <- modlib("pk1cmt", end = 168*4, delta = 1)
 ```
 
 For this workflow, we have a set of parameters (`idata`) along with an
 event object that gets applied to all of the parameters
 
 ``` r
-idata <- tibble(CL = runif(8000, 0.5, 1.5), ID = seq_along(CL))
+idata <- tibble(CL = runif(4000, 0.5, 1.5), ID = seq_along(CL))
 
 head(idata)
 ```
@@ -115,12 +115,12 @@ head(idata)
     . # A tibble: 6 x 2
     .      CL    ID
     .   <dbl> <int>
-    . 1 0.556     1
-    . 2 0.573     2
-    . 3 0.512     3
-    . 4 0.739     4
-    . 5 0.935     5
-    . 6 0.651     6
+    . 1 0.960     1
+    . 2 0.906     2
+    . 3 0.759     3
+    . 4 1.37      4
+    . 5 1.35      5
+    . 6 0.868     6
 
 ``` r
 dose <- ev(amt = 100, ii = 24, addl = 27)
@@ -139,14 +139,14 @@ system.time(ans1 <- mrgsim_ei(mod, dose, idata, output="df"))
 ```
 
     .    user  system elapsed 
-    .  12.362   0.538  12.911
+    .   5.842   0.121   5.978
 
 ``` r
-system.time(ans2 <- mc_mrgsim_ei(mod, dose, idata, nchunk = 8))
+system.time(ans2 <- mc_mrgsim_ei(mod, dose, idata, nchunk = 6))
 ```
 
     .    user  system elapsed 
-    .  22.145   3.153   4.536
+    .   8.214   0.692   1.736
 
 ``` r
 identical(ans1,ans2)

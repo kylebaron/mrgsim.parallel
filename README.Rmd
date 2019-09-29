@@ -10,11 +10,11 @@ knitr::opts_chunk$set(comment = '.', message=FALSE, warning = FALSE,
 
 # mrgsolve.parallel
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/mrgsolve/mrgsolve.parallel.svg?branch=master)](https://travis-ci.org/mrgsolve/mrgsolve.parallel)
+[![Travis build status](https://travis-ci.org/mrgsolve/mrgsolve.fu.svg?branch=master)](https://travis-ci.org/mrgsolve/mrgsolve.fu)
 <!-- badges: end -->
 
 ## Overview
-mrgsolve.parallel facilitates parallel simulation with mrgsolve in R.  The 
+mrgsolve.fu facilitates parallel simulation with mrgsolve in R.  The 
 future and parallel packages provide the parallelization.  
 
 There are 2 main workflows:
@@ -48,7 +48,7 @@ library(mrgsolve.parallel)
 
 options(future.fork.enable=TRUE, mc.cores = 8L)
 
-plan(multiprocess,workers=8L)
+plan(multiprocess,workers=6L)
 
 ```
 ## First workflow: split and simulate a data set
@@ -67,9 +67,9 @@ dim(data)
 
 We can simulate in parallel with the future package or the parallel package like this:
 ```{r}
-system.time(ans <- future_mrgsim_d(mod, data, nchunk = 8L))
+system.time(ans <- future_mrgsim_d(mod, data, nchunk = 6L))
 
-system.time(ans <- mc_mrgsim_d(mod, data, nchunk = 8L))
+system.time(ans <- mc_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
 To compare an identical simulation done without parallelization
@@ -81,15 +81,15 @@ system.time(ans <- mrgsim_d(mod,data))
 
 Backend and the model
 ```{r}
-plan(multiprocess, workers = 8)
+plan(multiprocess, workers = 6)
 
-mod <- modlib("pk1cmt", end = 168*4, delta = 0.5)
+mod <- modlib("pk1cmt", end = 168*4, delta = 1)
 ```
 
 For this workflow, we have a set of parameters (`idata`) along with an 
 event object that gets applied to all of the parameters
 ```{r}
-idata <- tibble(CL = runif(8000, 0.5, 1.5), ID = seq_along(CL))
+idata <- tibble(CL = runif(4000, 0.5, 1.5), ID = seq_along(CL))
 
 head(idata)
 ```
@@ -104,7 +104,7 @@ Run it
 ```{r}
 system.time(ans1 <- mrgsim_ei(mod, dose, idata, output="df"))
 
-system.time(ans2 <- mc_mrgsim_ei(mod, dose, idata, nchunk = 8))
+system.time(ans2 <- mc_mrgsim_ei(mod, dose, idata, nchunk = 6))
 
 identical(ans1,ans2)
 
