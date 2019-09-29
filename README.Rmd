@@ -47,7 +47,7 @@ library(mrgsolve.parallel)
 
 options(future.fork.enable=TRUE, mc.cores = 6L)
 
-plan(multiprocess,workers=6L)
+plan(multiprocess, workers = 6L)
 
 ```
 ## First workflow: split and simulate a data set
@@ -112,7 +112,7 @@ system.time(ans1 <- mc_mrgsim_ei(mod, dose, idata, nchunk = 6))
 And without parallelization
 
 ```{r}
-system.time(ans2 <- mrgsim_ei(mod, dose, idata, output="df"))
+system.time(ans2 <- mrgsim_ei(mod, dose, idata, output = "df"))
 
 identical(ans1,ans2)
 ```
@@ -136,10 +136,10 @@ See also: `chunk_by_row`
 
 ```{r}
 plan(transparent)
-system.time(x <- fu_mrgsim_d(mod,data,.dry = TRUE))
+system.time(x <- fu_mrgsim_d(mod, data, nchunk = 8, .dry = TRUE))
 
 plan(multiprocess,workers = 8L)
-system.time(x <- fu_mrgsim_d(mod,data,nchunk = 8, .dry = TRUE))
+system.time(x <- fu_mrgsim_d(mod, data, nchunk = 8, .dry = TRUE))
 
 ```
 
