@@ -117,13 +117,13 @@ mc_mrgsim_d to simulate with <a href='https://rdrr.io/r/parallel/mclapply.html'>
     </div>
 
     <pre class="usage"><span class='fu'>future_mrgsim_d</span>(<span class='no'>mod</span>, <span class='no'>data</span>, <span class='kw'>nchunk</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='no'>...</span>, <span class='kw'>as_list</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>.p</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.dry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>.p</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.dry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.seed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='fu'>mc_mrgsim_d</span>(<span class='no'>mod</span>, <span class='no'>data</span>, <span class='kw'>nchunk</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='no'>...</span>, <span class='kw'>as_list</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.p</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>.dry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>.dry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='fu'>fu_mrgsim_d</span>(<span class='no'>mod</span>, <span class='no'>data</span>, <span class='kw'>nchunk</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='no'>...</span>, <span class='kw'>as_list</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.p</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>.dry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>.dry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.seed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='fu'>fu_mrgsim_d0</span>(<span class='no'>...</span>, <span class='kw'>.dry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
@@ -159,6 +159,10 @@ be (1) the simulated output (2) the model object</p></td>
       <th>.dry</th>
       <td><p>if <code>TRUE</code> neither the simulation nor the post processing will
 be done</p></td>
+    </tr>
+    <tr>
+      <th>.seed</th>
+      <td><p>passed to future_lapply as <code>future.seed</code></p></td>
     </tr>
     </table>
 
