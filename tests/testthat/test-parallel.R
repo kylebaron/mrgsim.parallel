@@ -43,10 +43,14 @@ test_that("bad input", {
   expect_error(chunk_by_id(data, 0))
   expect_error(chunk_by_id(data, "A"))
   expect_error(chunk_by_id(data, "kyletbaron"))
+  expect_error(chunk_by_id(data, 26))
+  expect_is(chunk_by_id(data,25),"list")
   expect_error(chunk_by_row(list(), 5))
   expect_error(chunk_by_row(matrix(0), 5))
   expect_error(chunk_by_row(data, 0))
   expect_error(chunk_by_row(data, "A"))
+  expect_error(chunk_by_row(data, 99))
+  expect_is(chunk_by_row(data,25), "list")
 })
 
 test_that("sim data", {
@@ -84,7 +88,7 @@ test_that("pass in chunked data", {
 
 test_that("reproducible results", {
   mod <- mrgsolve::modlib("popex", end = 6)
-  data <- mrgsolve::expand.ev(amt = 100, ID = 1:3)
+  data <- mrgsolve::expand.ev(amt = 100, ID = 1:4)
   set.seed(11223)
   out1 <- fu_mrgsim_d(mod,data)
   set.seed(11223)
