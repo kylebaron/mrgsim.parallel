@@ -46,6 +46,18 @@ wrap_loadso <- function(mod,fun,...) {
 #' @name chunk_data_frame
 #' @export
 chunk_by_id <- function(data,nchunk,id_col="ID",mark=NULL) {
+  if(!is.data.frame(data)) {
+    stop("data argument must be a data.frame")  
+  }
+  if(!exists(id_col,data)) {
+    stop(sprintf("chunking column %s does not exist in data", id_col))  
+  }
+  if(!is.numeric(nchunk)) {
+    stop("nchunk must be numeric")  
+  }
+  if(!(nchunk > 0)) {
+    stop("nchunk must be greater than zero")  
+  }
   id <- data[[id_col]]
   ids <- unique(id)
   ntot <- length(ids)
@@ -61,6 +73,15 @@ chunk_by_id <- function(data,nchunk,id_col="ID",mark=NULL) {
 #' @rdname chunk_data_frame
 #' @export
 chunk_by_row <- function(data,nchunk,mark=NULL) {
+  if(!is.data.frame(data)) {
+    stop("data argument must be a data.frame")  
+  }
+  if(!is.numeric(nchunk)) {
+    stop("nchunk must be numeric")  
+  }
+  if(!(nchunk > 0)) {
+    stop("nchunk must be greater than zero")  
+  }
   ntot <- nrow(data)
   nper <- ceiling(ntot/nchunk)
   a <- rep(seq(nchunk), each = nper, length.out = ntot)

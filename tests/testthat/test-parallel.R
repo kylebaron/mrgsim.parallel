@@ -37,6 +37,18 @@ test_that("chunk_data", {
   
 })
 
+test_that("bad input", {
+  expect_error(chunk_by_id(list(), 5))
+  expect_error(chunk_by_id(matrix(0), 5))
+  expect_error(chunk_by_id(data, 0))
+  expect_error(chunk_by_id(data, "A"))
+  expect_error(chunk_by_id(data, "kyletbaron"))
+  expect_error(chunk_by_row(list(), 5))
+  expect_error(chunk_by_row(matrix(0), 5))
+  expect_error(chunk_by_row(data, 0))
+  expect_error(chunk_by_row(data, "A"))
+})
+
 test_that("sim data", {
   out <- mrgsim_d(mod, data, output="df")
   out2 <- future_mrgsim_d(mod,data)
