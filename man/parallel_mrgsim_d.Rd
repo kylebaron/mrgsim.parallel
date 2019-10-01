@@ -9,13 +9,13 @@
 \title{Simulate a data set in parallel}
 \usage{
 future_mrgsim_d(mod, data, nchunk = 4, ..., as_list = FALSE,
-  .p = NULL, .dry = FALSE)
+  .p = NULL, .dry = FALSE, .seed = TRUE)
 
 mc_mrgsim_d(mod, data, nchunk = 4, ..., as_list = FALSE, .p = NULL,
-  .dry = FALSE)
+  .dry = FALSE, .seed = NULL)
 
 fu_mrgsim_d(mod, data, nchunk = 4, ..., as_list = FALSE, .p = NULL,
-  .dry = FALSE)
+  .dry = FALSE, .seed = TRUE)
 
 fu_mrgsim_d0(..., .dry = TRUE)
 }
@@ -35,6 +35,8 @@ be (1) the simulated output (2) the model object}
 
 \item{.dry}{if \code{TRUE} neither the simulation nor the post processing will
 be done}
+
+\item{.seed}{passed to \link{future_lapply} as \code{future.seed}}
 }
 \value{
 A data frame or list of simulated data

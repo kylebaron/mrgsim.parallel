@@ -34,7 +34,7 @@ test_that("chunk_data", {
   x <- chunk_by_row(idata2, nchunk = 2, mark = "test")
   expect_true(exists("test", x[[2]]))
   expect_true(all(x[[2]]["test"]==2))
-
+  
 })
 
 test_that("sim data", {
@@ -68,4 +68,17 @@ test_that("pass in chunked data", {
   out1 <- fu_mrgsim_d(mod,data, nchunk=4)
   out2 <- fu_mrgsim_d(mod,ch)
   expect_identical(out1,out2)
+})
+
+test_that("reproducible results", {
+  mod <- mrgsolve::modlib("popex", end = 6)
+  data <- mrgsolve::expand.ev(amt = 100, ID = 1:3)
+  set.seed(11223)
+  out1 <- fu_mrgsim_d(mod,data)
+  set.seed(11223)
+  out2 <- fu_mrgsim_d(mod,data)
+  set.seed(11221)
+  out3 <- fu_mrgsim_d(mod,data)
+  expect_identical(out1,out2)
+  expect_false(identical(out1,out3))
 })

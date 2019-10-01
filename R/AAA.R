@@ -6,13 +6,7 @@
 NULL
 
 #nocov start
-mc_able <- TRUE
-
-.onLoad <- function(libname,pkgname) {
-    if(.Platform$OS.type=="windows") {
-      assignInMyNamespace("mc_cable", FALSE)
-    }
-}
+mc_able <- .Platform$OS.type!="windows"
 
 globalVariables(c("mod", "event"))
 

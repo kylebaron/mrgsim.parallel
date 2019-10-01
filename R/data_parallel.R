@@ -22,6 +22,7 @@
 #' be (1) the simulated output (2) the model object
 #' @param .dry if `TRUE` neither the simulation nor the post processing will
 #' be done
+#' @param .seed passed to [future_lapply] as `future.seed`
 #'
 #' @return A data frame or list of simulated data
 #'
@@ -38,7 +39,7 @@
 #' @name parallel_mrgsim_d
 #' @export
 future_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
-                            .p = NULL, .dry = FALSE) {
+                            .p = NULL, .dry = FALSE, .seed = TRUE) {
   if(!inherits(data,"list")) data <- chunk_by_id(data,nchunk)
   pa <- c("mrgsolve")
   if(!is.function(.p)) .p <- .nothing
@@ -46,6 +47,7 @@ future_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
     X = data,
     future.packages = pa,
     future.globals = character(0),
+    future.seed = .seed,
     mod = mod,
     .p = .p,
     .dry = .dry,
@@ -58,7 +60,7 @@ future_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
 #' @rdname parallel_mrgsim_d
 #' @export
 mc_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
-                        .p = NULL, .dry = FALSE) {
+                        .p = NULL, .dry = FALSE, .seed = NULL) {
   if(!inherits(data,"list")) data <- chunk_by_id(data,nchunk)
   if(!is.function(.p)) .p <- .nothing
   if(mc_able) {

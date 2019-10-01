@@ -39,7 +39,7 @@
 #' @name parallel_mrgsim_ei
 #' @export
 future_mrgsim_ei <- function(mod, event, idata, nchunk = 4, ..., as_list=FALSE,
-                             .p  = NULL, .dry = FALSE) {
+                             .p  = NULL, .dry = FALSE, .seed=TRUE) {
   if(!inherits(idata,"list")) idata <- chunk_by_row(idata,nchunk)
   if(!is.function(.p)) .p <- .nothing
   pa <- c("mrgsolve")
@@ -47,6 +47,7 @@ future_mrgsim_ei <- function(mod, event, idata, nchunk = 4, ..., as_list=FALSE,
     X=idata,
     future.packages = pa,
     future.globals = character(0),
+    future.seed = .seed,
     mod = mod,
     event = event,
     .p = .p,
@@ -68,7 +69,7 @@ fu_mrgsim_ei0 <- function(...,.dry=TRUE) fu_mrgsim_ei(...,.dry = TRUE) #nocov
 #' @rdname parallel_mrgsim_ei
 #' @export
 mc_mrgsim_ei <- function(mod, event, idata, nchunk = 4, ..., as_list = FALSE,
-                         .p = NULL, .dry = FALSE) {
+                         .p = NULL, .dry = FALSE, .seed=NULL) {
   if(!inherits(idata,"list")) idata <- chunk_by_row(idata,nchunk)
   if(!is.function(.p)) .p <- .nothing
   if(mc_able) {
