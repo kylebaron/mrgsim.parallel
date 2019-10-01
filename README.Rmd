@@ -14,7 +14,7 @@ knitr::opts_chunk$set(comment = '.', message=FALSE, warning = FALSE,
 <!-- badges: end -->
 
 ## Overview
-mrgsolve.fu (em-are-gee solve dot foo) facilitates parallel simulation with 
+mrgsolve.fu (em-are-gee solve dot few) facilitates parallel simulation with 
 mrgsolve in R.  The future and parallel packages provide the parallelization.  
 
 There are 2 main workflows:
