@@ -15,12 +15,18 @@ Issue: #4
 - Split a data set by a single column and simulate in parallel
 - The mrgsolve simulation function is `mrgsim_d`
 
+- Tests
+  - sim data
+
 ### 2 - Simulate an idata set with event in parallel
 
 Issue: #5
 
 - Split a data set by a single column and simulate in parallel
 - The mrgsolve simulation function is `mrgsim_d`
+
+- Tests
+  - sim idata
 
 ### 3 - Common to both data and idata simulation
 
@@ -43,6 +49,13 @@ Issue: #4, #5
 - Globals are prevented from getting passed to the worker when simulating 
   with the future backend
   
+- Tests
+  - dry run
+  - pass in chunked data
+  - reproducible results
+  - sim data
+  - sim idata
+  
 ### 3 - Chunk a data frame
 
 Issue: #6
@@ -51,8 +64,10 @@ Issue: #6
 - The data frame can get chunked by the value in a single column
 - The chunk number can optionally get attached to each chunk
 
+- Tests
+  - chunk data
+  - bad input
+
 # Coverage
 See [inst/covr/coverage.md](../covr/coverage.md)
-
-
 
