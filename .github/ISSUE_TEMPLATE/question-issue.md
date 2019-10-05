@@ -1,7 +1,7 @@
 ---
-name: Documentation issue
-about: Documentation issue
-title: "[DOC]"
+name: mrgsolve.fu question issue
+about: ask a question
+title: ""
 labels: 'question'
 assignees: 'kylebaron'
 

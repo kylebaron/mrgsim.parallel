@@ -1,6 +1,6 @@
 ---
 name: mrgsolve.fu bug report
-about: Bug report
+about: bug report
 title: "[BUG] "
 labels: bug
 assignees: kylebaron
