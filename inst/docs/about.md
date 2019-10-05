@@ -10,21 +10,21 @@
 
 ### 1 - Simulate a data set in parallel
 
-Issue number: 4
+Issue: #4
 
 - Split a data set by a single column and simulate in parallel
 - The mrgsolve simulation function is `mrgsim_d`
 
 ### 2 - Simulate an idata set with event in parallel
 
-Issue number: 5
+Issue: #5
 
 - Split a data set by a single column and simulate in parallel
 - The mrgsolve simulation function is `mrgsim_d`
 
 ### 3 - Common to both data and idata simulation
 
-Issue Numbers: 4, 5
+Issue: #4, #5
 
 - Parallel back end includes `future.apply::future_lapply` and 
    `parallel::mclapply`
@@ -45,7 +45,7 @@ Issue Numbers: 4, 5
   
 ### 3 - Chunk a data frame
 
-Issue number: 6
+Issue: #6
 
 - The data frame can get chunked by row
 - The data frame can get chunked by the value in a single column
