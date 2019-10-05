@@ -1,6 +1,6 @@
 ---
-name: Documentation issue
-about: Documentation issue
+name: mrgsolve.fu documentation
+about: documentation issue
 title: "[DOC]"
 labels: ''
 assignees: ''
