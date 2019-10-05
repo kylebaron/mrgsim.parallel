@@ -54,12 +54,12 @@ head(data)
 ```
 
     .   ID time amt ii addl cmt evid        CL
-    . 1  1    0 100 24   56   1    1 1.0763341
-    . 2  2    0 200 24   56   1    1 1.0833758
-    . 3  3    0 300 24   56   1    1 0.7964450
-    . 4  4    0 400 24   56   1    1 0.8082381
-    . 5  5    0 500 24   56   1    1 1.1408044
-    . 6  6    0 600 24   56   1    1 1.1717298
+    . 1  1    0 100 24   56   1    1 1.1728726
+    . 2  2    0 200 24   56   1    1 0.7040120
+    . 3  3    0 300 24   56   1    1 1.1167925
+    . 4  4    0 400 24   56   1    1 0.8456033
+    . 5  5    0 500 24   56   1    1 0.8356673
+    . 6  6    0 600 24   56   1    1 1.0532129
 
 ``` r
 dim(data)
@@ -75,14 +75,14 @@ system.time(ans1 <- future_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
     .    user  system elapsed 
-    .   9.298   0.950   2.355
+    .   9.774   0.927   2.498
 
 ``` r
 system.time(ans2 <- mc_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
     .    user  system elapsed 
-    .   9.000   0.954   2.002
+    .   9.735   1.145   2.364
 
 To compare an identical simulation done without parallelization
 
@@ -91,7 +91,7 @@ system.time(ans3 <- mrgsim_d(mod,data))
 ```
 
     .    user  system elapsed 
-    .   6.382   0.193   6.587
+    .   6.462   0.258   6.785
 
 ``` r
 identical(ans2,as.data.frame(ans3))
@@ -121,12 +121,12 @@ head(idata)
     . # A tibble: 6 x 2
     .      CL    ID
     .   <dbl> <int>
-    . 1 1.07      1
-    . 2 0.800     2
-    . 3 1.32      3
-    . 4 1.15      4
-    . 5 1.18      5
-    . 6 0.688     6
+    . 1 1.04      1
+    . 2 0.910     2
+    . 3 0.637     3
+    . 4 0.876     4
+    . 5 1.06      5
+    . 6 1.48      6
 
 ``` r
 dose <- ev(amt = 100, ii = 24, addl = 27)
@@ -145,7 +145,7 @@ system.time(ans1 <- mc_mrgsim_ei(mod, dose, idata, nchunk = 6))
 ```
 
     .    user  system elapsed 
-    .   6.553   0.878   1.584
+    .   7.033   0.994   1.858
 
 And without parallelization
 
@@ -154,7 +154,7 @@ system.time(ans2 <- mrgsim_ei(mod, dose, idata, output = "df"))
 ```
 
     .    user  system elapsed 
-    .   4.424   0.158   4.595
+    .   4.520   0.204   4.764
 
 ``` r
 identical(ans1,ans2)
@@ -215,7 +215,7 @@ system.time(x <- fu_mrgsim_d(mod, data, nchunk = 8, .dry = TRUE))
 ```
 
     .    user  system elapsed 
-    .   0.013   0.001   0.015
+    .   0.015   0.002   0.018
 
 ``` r
 plan(multiprocess,workers = 8L)
@@ -223,7 +223,7 @@ system.time(x <- fu_mrgsim_d(mod, data, nchunk = 8, .dry = TRUE))
 ```
 
     .    user  system elapsed 
-    .   0.116   0.184   0.147
+    .   0.114   0.186   0.165
 
 ## Pass a function to post process on the worker
 
