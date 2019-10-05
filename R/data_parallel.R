@@ -51,7 +51,8 @@ future_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
     mod = mod,
     .p = .p,
     .dry = .dry,
-    FUN=.simd
+    FUN=.simd, 
+    ...
   )
   if(as_list) return(ans)
   return(bind_rows(ans))
@@ -64,9 +65,9 @@ mc_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
   if(!inherits(data,"list")) data <- chunk_by_id(data,nchunk)
   if(!is.function(.p)) .p <- .nothing
   if(mc_able) {
-    ans <- mclapply(X = data, mod = mod, .p = .p, .dry = .dry, FUN = .simd)
+    ans <- mclapply(X = data, mod = mod, .p = .p, .dry = .dry, FUN = .simd, ...)
   } else { 
-    ans <- lapply(X = data, mod = mod, .p = .p, .dry = .dry, FUN = .simd) #nocov
+    ans <- lapply(X = data, mod = mod, .p = .p, .dry = .dry, FUN = .simd,...) #nocov
   }
   if(as_list) return(ans)
   return(bind_rows(ans))

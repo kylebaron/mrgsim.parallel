@@ -52,7 +52,8 @@ future_mrgsim_ei <- function(mod, event, idata, nchunk = 4, ..., as_list=FALSE,
     event = event,
     .p = .p,
     .dry = .dry,
-    FUN=.simi
+    FUN=.simi, 
+    ...
   )
   if(as_list) return(ans)
   bind_rows(ans)
@@ -75,12 +76,13 @@ mc_mrgsim_ei <- function(mod, event, idata, nchunk = 4, ..., as_list = FALSE,
   if(mc_able) {
     ans <- mclapply(
       X=idata, mod = mod, event = event, .p = .p, .dry = .dry,
-      FUN = .simi
+      FUN = .simi, ... 
     )
   } else {
     ans <- lapply( #nocov start
       X=idata, mod = mod, event = event, .p = .p, .dry = .dry,
-      FUN = .simi
+      FUN = .simi, 
+      ...
     ) #nocov end
   }
   if(as_list) return(ans)
