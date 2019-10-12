@@ -98,3 +98,12 @@ test_that("reproducible results", {
   expect_identical(out1,out2)
   expect_false(identical(out1,out3))
 })
+
+test_that("post processing function", {
+  post <- function(sims,mod) {sims[,"post_add"] <- 1; sims}
+  out1 <- fu_mrgsim_d(mod,data,nchunk=4)
+  out2 <- fu_mrgsim_d(mod,data,nchunk=4,.p=post)
+  expect_true(exists("post_add", out2))
+  expect_true(!exists("post_add", out1))
+  expect_true(all(out2[["post_add"]]==1))
+})
