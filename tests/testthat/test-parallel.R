@@ -21,6 +21,10 @@ test_that("chunk_data", {
   x2 <- chunk_by_id(data2, nchunk = 5, id_col = "SUBJ")
   expect_identical(length(x), 5L)
   
+  x2 <- chunk_by_id(data2, nchunk = 5, mark = "test")
+  expect_true(exists("test", x2[[3]]))
+  expect_true(all(x[[4]][["test"]]==4))
+
   x <- chunk_by_row(data2, nchunk = 3, mark = "test")
   expect_true(exists("test", x[[3]]))
   expect_true(all(x[[3]]["test"]==3))
@@ -51,6 +55,7 @@ test_that("bad input", {
   expect_error(chunk_by_row(data, "A"))
   expect_error(chunk_by_row(data, 99))
   expect_is(chunk_by_row(data,25), "list")
+  expect_error(chunk_by_id(data,4,id_col="FOO"))
 })
 
 test_that("sim data", {

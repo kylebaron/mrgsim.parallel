@@ -30,7 +30,7 @@ all:
 
 .PHONY: doc
 doc:
-	Rscript -e 'devtool::document()'
+	Rscript -e 'devtools::document()'
 
 .PHONY: build
 build:
