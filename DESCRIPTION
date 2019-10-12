@@ -1,7 +1,7 @@
 Package: mrgsolve.fu
 Type: Package
 Title: Simulate with 'mrgsolve' in Parallel
-Version: 0.0.1.9000
+Version: 0.0.1.9001
 Author: Kyle Baron
 Maintainer: Kyle Baron <kyleb@metrumrg.com>
 Description: Simulate from a mrgsolve model using parallel backend.
