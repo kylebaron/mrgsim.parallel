@@ -6,8 +6,5 @@
 NULL
 
 #nocov start
-mc_able <- .Platform$OS.type!="windows"
-
 globalVariables(c("mod", "event"))
-
 # nocov end

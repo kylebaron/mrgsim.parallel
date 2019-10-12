@@ -1,5 +1,10 @@
 .nothing <- function(sims,mod) sims
 
+mc_able <- function() {
+  if(.Platform$OS.type=="windows") return(FALSE)
+  return(isTRUE(getOption("mrgsolve.fu.mc.enable",TRUE)))
+}
+
 #nocov start
 #' Functions to enable / disable forking with future
 #'

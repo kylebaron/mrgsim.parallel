@@ -14,6 +14,8 @@ e <- ev(amt = 100)
 idata <- expand.idata(CL = runif(36, 0.5, 1.5))
 idata2 <- expand.idata(CL = runif(40, 0.5, 1.5))
 
+future::plan(future::sequential)
+
 test_that("chunk_data", {
   x <- chunk_by_id(data, nchunk = 5)
   expect_identical(length(x), 5L)
@@ -66,7 +68,10 @@ test_that("sim data", {
   out3 <- mc_mrgsim_d(mod,data)
   expect_identical(out,out3)
   expect_is(future_mrgsim_d(mod,data,as_list=TRUE), "list")
+  mc <- getOption("mc.cores")
+  options(mc.cores=1)
   expect_is(mc_mrgsim_d(mod,data,as_list=TRUE), "list")
+  options(mc.cores=mc)
 })
 
 test_that("sim idata", {
@@ -77,6 +82,17 @@ test_that("sim idata", {
   expect_identical(out,out3)
   expect_is(future_mrgsim_ei(mod, e, idata,as_list=TRUE), "list")
   expect_is(mc_mrgsim_ei(mod, e, idata,as_list=TRUE), "list")
+})
+
+test_that("sim with nchunk=1", {
+  data1 <- chunk_by_id(data,nchunk=1)
+  outa <- fu_mrgsim_d(mod,data1)
+  outb <- mrgsim_d(mod,data,output="df")
+  expect_identical(outa,outb)
+  idata1 <- chunk_by_row(idata,nchunk=1)
+  outa <- mrgsim_ei(mod,e,idata,output="df")
+  outb <- fu_mrgsim_ei(mod,e,idata1)
+  expect_identical(outa,outb)
 })
 
 test_that("dry run", {
