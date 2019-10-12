@@ -36,6 +36,13 @@ of parallelization.
 options(mrgsolve.soloc = "build")
 ```
 
+## Installation
+
+```{r,eval=FALSE}
+remotes::install_github("metrumresearchgroup/mrgsolve.fu")
+```
+
+
 ## Backend 
 
 ```{r}

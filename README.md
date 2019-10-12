@@ -27,6 +27,12 @@ a speed increase and small jobs will likely take *longer* with
 parallelization. But jobs taking more than a handful of seconds could
 benefit from this type of parallelization.
 
+## Installation
+
+``` r
+remotes::install_github("metrumresearchgroup/mrgsolve.fu")
+```
+
 ## Backend
 
 ``` r
@@ -53,13 +59,13 @@ data <- mutate(data, CL = runif(n(), 0.7, 1.3))
 head(data)
 ```
 
-    .   ID time amt ii addl cmt evid        CL
-    . 1  1    0 100 24   56   1    1 1.1728726
-    . 2  2    0 200 24   56   1    1 0.7040120
-    . 3  3    0 300 24   56   1    1 1.1167925
-    . 4  4    0 400 24   56   1    1 0.8456033
-    . 5  5    0 500 24   56   1    1 0.8356673
-    . 6  6    0 600 24   56   1    1 1.0532129
+    .   ID time amt ii addl cmt evid       CL
+    . 1  1    0 100 24   56   1    1 1.015312
+    . 2  2    0 200 24   56   1    1 1.218442
+    . 3  3    0 300 24   56   1    1 1.086150
+    . 4  4    0 400 24   56   1    1 1.040448
+    . 5  5    0 500 24   56   1    1 1.016255
+    . 6  6    0 600 24   56   1    1 0.872935
 
 ``` r
 dim(data)
@@ -75,14 +81,14 @@ system.time(ans1 <- future_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
     .    user  system elapsed 
-    .   9.774   0.927   2.498
+    .   9.454   0.971   2.407
 
 ``` r
 system.time(ans2 <- mc_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
     .    user  system elapsed 
-    .   9.735   1.145   2.364
+    .   9.091   0.954   2.123
 
 To compare an identical simulation done without parallelization
 
@@ -91,7 +97,7 @@ system.time(ans3 <- mrgsim_d(mod,data))
 ```
 
     .    user  system elapsed 
-    .   6.462   0.258   6.785
+    .   6.207   0.169   6.380
 
 ``` r
 identical(ans2,as.data.frame(ans3))
@@ -121,12 +127,12 @@ head(idata)
     . # A tibble: 6 x 2
     .      CL    ID
     .   <dbl> <int>
-    . 1 1.04      1
-    . 2 0.910     2
-    . 3 0.637     3
-    . 4 0.876     4
-    . 5 1.06      5
-    . 6 1.48      6
+    . 1 1.25      1
+    . 2 0.575     2
+    . 3 0.759     3
+    . 4 1.05      4
+    . 5 0.588     5
+    . 6 1.27      6
 
 ``` r
 dose <- ev(amt = 100, ii = 24, addl = 27)
@@ -145,7 +151,7 @@ system.time(ans1 <- mc_mrgsim_ei(mod, dose, idata, nchunk = 6))
 ```
 
     .    user  system elapsed 
-    .   7.033   0.994   1.858
+    .   6.452   0.815   1.596
 
 And without parallelization
 
@@ -154,7 +160,7 @@ system.time(ans2 <- mrgsim_ei(mod, dose, idata, output = "df"))
 ```
 
     .    user  system elapsed 
-    .   4.520   0.204   4.764
+    .   4.369   0.133   4.506
 
 ``` r
 identical(ans1,ans2)
@@ -215,7 +221,7 @@ system.time(x <- fu_mrgsim_d(mod, data, nchunk = 8, .dry = TRUE))
 ```
 
     .    user  system elapsed 
-    .   0.015   0.002   0.018
+    .   0.012   0.001   0.013
 
 ``` r
 plan(multiprocess,workers = 8L)
@@ -223,7 +229,7 @@ system.time(x <- fu_mrgsim_d(mod, data, nchunk = 8, .dry = TRUE))
 ```
 
     .    user  system elapsed 
-    .   0.114   0.186   0.165
+    .   0.111   0.166   0.140
 
 ## Pass a function to post process on the worker
 
