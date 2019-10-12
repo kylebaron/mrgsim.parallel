@@ -3,7 +3,7 @@
 ^\.Rproj\.user$
 test\.R
 Makefile
-^mrgsolve\.parallel_.*\.tar\.gz
+^.*\.tar\.gz$
 vera\.Rcheck
 \.Rhistory
 README.md
