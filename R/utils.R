@@ -56,13 +56,13 @@ chunk_by_id <- function(data,nchunk,id_col="ID",mark=NULL) {
     stop("nchunk must be numeric")  
   }
   if(!(nchunk > 0)) {
-    stop("nchunk must be greater than zero")  
+    stop("nchunk must be greater than zero",call.=FALSE)  
   }
   id <- data[[id_col]]
   ids <- unique(id)
   ntot <- length(ids)
   if(!(nchunk <= ntot)) {
-    stop("nchunk must be <= number of IDs") 
+    stop("nchunk must be <= number of IDs",call.=FALSE) 
   }
   nper <- ceiling(ntot/nchunk)
   a <- rep(seq(nchunk), each = nper, length.out = ntot)
@@ -77,13 +77,13 @@ chunk_by_id <- function(data,nchunk,id_col="ID",mark=NULL) {
 #' @export
 chunk_by_row <- function(data,nchunk,mark=NULL) {
   if(!is.data.frame(data)) {
-    stop("data argument must be a data.frame")  
+    stop("data argument must be a data.frame",call.=FALSE)  
   }
   if(!is.numeric(nchunk)) {
     stop("nchunk must be numeric")  
   }
   if(!(nchunk > 0)) {
-    stop("nchunk must be greater than zero")  
+    stop("nchunk must be greater than zero",call.=FALSE)  
   }
   if(!(nchunk <= nrow(data))) {
     stop("nchunk must be <= nrow(data)") 

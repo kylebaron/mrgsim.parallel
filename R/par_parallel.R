@@ -42,7 +42,7 @@ future_mrgsim_ei <- function(mod, event, idata, nchunk = 4, ..., as_list=FALSE,
                              .p  = NULL, .dry = FALSE, .seed=TRUE) {
   if(!inherits(idata,"list")) idata <- chunk_by_row(idata,nchunk)
   if(!is.function(.p)) .p <- .nothing
-  pa <- c("mrgsolve")
+  pa <- "mrgsolve"
   ans <- future_lapply(
     X=idata,
     future.packages = pa,

@@ -41,7 +41,7 @@
 future_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
                             .p = NULL, .dry = FALSE, .seed = TRUE) {
   if(!inherits(data,"list")) data <- chunk_by_id(data,nchunk)
-  pa <- c("mrgsolve")
+  pa <- "mrgsolve"
   if(!is.function(.p)) .p <- .nothing
   ans <- future_lapply(
     X = data,
