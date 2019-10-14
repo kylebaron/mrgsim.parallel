@@ -5,20 +5,6 @@ mc_able <- function() {
   return(isTRUE(getOption("mrgsolve.fu.mc.enable",TRUE)))
 }
 
-#nocov start
-#' Functions to enable / disable forking with future
-#'
-#' @export
-fork_ok <- function() {
-  message("Setting 'R_FUTURE_FORK_ENABLE'; call 'fork_not_ok()' to undo.")
-  Sys.setenv(R_FUTURE_FORK_ENABLE="true")
-}
-#' @rdname fork_ok
-#' @export
-fork_not_ok <- function() Sys.setenv(R_FUTURE_FORK_ENABLE="false")
-
-# Wrapper function -----------------------------------------------
-
 
 wrap_loadso <- function(mod,fun,...) {
   loadso(mod)
