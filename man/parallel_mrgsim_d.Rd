@@ -8,14 +8,38 @@
 \alias{fu_mrgsim_d0}
 \title{Simulate a data set in parallel}
 \usage{
-future_mrgsim_d(mod, data, nchunk = 4, ..., as_list = FALSE,
-  .p = NULL, .dry = FALSE, .seed = TRUE)
+future_mrgsim_d(
+  mod,
+  data,
+  nchunk = 4,
+  ...,
+  as_list = FALSE,
+  .p = NULL,
+  .dry = FALSE,
+  .seed = TRUE
+)
 
-mc_mrgsim_d(mod, data, nchunk = 4, ..., as_list = FALSE, .p = NULL,
-  .dry = FALSE, .seed = NULL)
+mc_mrgsim_d(
+  mod,
+  data,
+  nchunk = 4,
+  ...,
+  as_list = FALSE,
+  .p = NULL,
+  .dry = FALSE,
+  .seed = NULL
+)
 
-fu_mrgsim_d(mod, data, nchunk = 4, ..., as_list = FALSE, .p = NULL,
-  .dry = FALSE, .seed = TRUE)
+fu_mrgsim_d(
+  mod,
+  data,
+  nchunk = 4,
+  ...,
+  as_list = FALSE,
+  .p = NULL,
+  .dry = FALSE,
+  .seed = TRUE
+)
 
 fu_mrgsim_d0(..., .dry = TRUE)
 }
