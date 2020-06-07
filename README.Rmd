@@ -50,7 +50,7 @@ library(dplyr)
 
 library(future)
 
-library(mrgsolve.parallel)
+library(mrgsolve.fu)
 
 options(future.fork.enable=TRUE, mc.cores = 6L)
 

@@ -8,16 +8,43 @@
 \alias{mc_mrgsim_ei}
 \title{Simulate an idata set in parallel}
 \usage{
-future_mrgsim_ei(mod, event, idata, nchunk = 4, ..., as_list = FALSE,
-  .p = NULL, .dry = FALSE, .seed = TRUE)
+future_mrgsim_ei(
+  mod,
+  event,
+  idata,
+  nchunk = 4,
+  ...,
+  as_list = FALSE,
+  .p = NULL,
+  .dry = FALSE,
+  .seed = TRUE
+)
 
-fu_mrgsim_ei(mod, event, idata, nchunk = 4, ..., as_list = FALSE,
-  .p = NULL, .dry = FALSE, .seed = TRUE)
+fu_mrgsim_ei(
+  mod,
+  event,
+  idata,
+  nchunk = 4,
+  ...,
+  as_list = FALSE,
+  .p = NULL,
+  .dry = FALSE,
+  .seed = TRUE
+)
 
 fu_mrgsim_ei0(..., .dry = TRUE)
 
-mc_mrgsim_ei(mod, event, idata, nchunk = 4, ..., as_list = FALSE,
-  .p = NULL, .dry = FALSE, .seed = NULL)
+mc_mrgsim_ei(
+  mod,
+  event,
+  idata,
+  nchunk = 4,
+  ...,
+  as_list = FALSE,
+  .p = NULL,
+  .dry = FALSE,
+  .seed = NULL
+)
 }
 \arguments{
 \item{mod}{mrgsolve model object see \link[mrgsolve:mrgmod-class]{mrgsolve::mrgmod}}
