@@ -14,7 +14,7 @@ future_mrgsim_ei(
   idata,
   nchunk = 4,
   ...,
-  as_list = FALSE,
+  .as_list = FALSE,
   .p = NULL,
   .dry = FALSE,
   .seed = TRUE,
@@ -27,7 +27,7 @@ fu_mrgsim_ei(
   idata,
   nchunk = 4,
   ...,
-  as_list = FALSE,
+  .as_list = FALSE,
   .p = NULL,
   .dry = FALSE,
   .seed = TRUE,
@@ -42,7 +42,7 @@ mc_mrgsim_ei(
   idata,
   nchunk = 4,
   ...,
-  as_list = FALSE,
+  .as_list = FALSE,
   .p = NULL,
   .dry = FALSE,
   .seed = NULL,
@@ -61,7 +61,7 @@ see \link[mrgsolve:idata_set]{mrgsolve::idata_set}}
 
 \item{...}{passed to \link{mrgsim_d}}
 
-\item{as_list}{if \code{TRUE} a list is return; otherwise (default) a data frame}
+\item{.as_list}{if \code{TRUE} a list is return; otherwise (default) a data frame}
 
 \item{.p}{post processing function executed on the worker; arguments should
 be (1) the simulated output (2) the model object}

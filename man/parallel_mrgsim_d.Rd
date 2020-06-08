@@ -13,7 +13,7 @@ future_mrgsim_d(
   data,
   nchunk = 4,
   ...,
-  as_list = FALSE,
+  .as_list = FALSE,
   .p = NULL,
   .dry = FALSE,
   .seed = TRUE,
@@ -25,7 +25,7 @@ mc_mrgsim_d(
   data,
   nchunk = 4,
   ...,
-  as_list = FALSE,
+  .as_list = FALSE,
   .p = NULL,
   .dry = FALSE,
   .seed = NULL,
@@ -37,7 +37,7 @@ fu_mrgsim_d(
   data,
   nchunk = 4,
   ...,
-  as_list = FALSE,
+  .as_list = FALSE,
   .p = NULL,
   .dry = FALSE,
   .seed = TRUE,
@@ -55,7 +55,7 @@ fu_mrgsim_d0(..., .dry = TRUE)
 
 \item{...}{passed to \link{mrgsim_d}}
 
-\item{as_list}{if \code{TRUE} a list is return; otherwise (default) a data frame}
+\item{.as_list}{if \code{TRUE} a list is return; otherwise (default) a data frame}
 
 \item{.p}{post processing function executed on the worker; arguments should
 be (1) the simulated output (2) the model object}

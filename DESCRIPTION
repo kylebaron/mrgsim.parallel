@@ -4,7 +4,7 @@ Title: Simulate with 'mrgsolve' in Parallel
 Version: 0.0.1.9000
 Author: Kyle Baron
 Maintainer: Kyle Baron <kylebtwin@imap.cc>
-Description: Simulate from a mrgsolve model using parallel backend.
+Description: Simulate from 'mrgsolve' models using parallel backend.
 License: GPL (>=2)
 Imports: parallel, dplyr, future.apply
 Depends: mrgsolve,R (>= 3.5.0)

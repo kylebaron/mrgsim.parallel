@@ -42,7 +42,7 @@
 #'
 #' @name parallel_mrgsim_ei
 #' @export
-future_mrgsim_ei <- function(mod, events, idata, nchunk = 4, ..., as_list=FALSE,
+future_mrgsim_ei <- function(mod, events, idata, nchunk = 4, ..., .as_list=FALSE,
                              .p  = NULL, .dry = FALSE, .seed = TRUE, 
                              .parallel = TRUE) {
   
@@ -69,7 +69,7 @@ future_mrgsim_ei <- function(mod, events, idata, nchunk = 4, ..., as_list=FALSE,
       ...
     ) #nocov end
   }
-  if(as_list) return(ans)
+  if(.as_list) return(ans)
   bind_rows(ans)
 }
 
@@ -83,7 +83,7 @@ fu_mrgsim_ei0 <- function(...,.dry=TRUE) fu_mrgsim_ei(...,.dry = TRUE) #nocov
 
 #' @rdname parallel_mrgsim_ei
 #' @export
-mc_mrgsim_ei <- function(mod, events, idata, nchunk = 4, ..., as_list = FALSE,
+mc_mrgsim_ei <- function(mod, events, idata, nchunk = 4, ..., .as_list = FALSE,
                          .p = NULL, .dry = FALSE, .seed=NULL, 
                          .parallel = TRUE) {
   
@@ -101,6 +101,6 @@ mc_mrgsim_ei <- function(mod, events, idata, nchunk = 4, ..., as_list = FALSE,
       ...
     ) #nocov end
   }
-  if(as_list) return(ans)
+  if(.as_list) return(ans)
   return(bind_rows(ans))
 }

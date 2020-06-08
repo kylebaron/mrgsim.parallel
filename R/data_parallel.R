@@ -17,7 +17,7 @@
 #' @param data data set to simulate; see [mrgsolve::data_set]
 #' @param nchunk number of chunks in which to split the data set
 #' @param ... passed to [mrgsim_d]
-#' @param as_list if `TRUE` a list is return; otherwise (default) a data frame
+#' @param .as_list if `TRUE` a list is return; otherwise (default) a data frame
 #' @param .p post processing function executed on the worker; arguments should
 #' be (1) the simulated output (2) the model object
 #' @param .dry if `TRUE` neither the simulation nor the post processing will
@@ -40,7 +40,7 @@
 #'
 #' @name parallel_mrgsim_d
 #' @export
-future_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
+future_mrgsim_d <- function(mod, data, nchunk = 4, ..., .as_list = FALSE,
                             .p = NULL, .dry = FALSE, .seed = TRUE, 
                             .parallel = TRUE) {
   if(!inherits(data,"list")) data <- chunk_by_id(data,nchunk)
@@ -61,13 +61,13 @@ future_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
   } else {
     ans <- lapply(X = data, mod = mod, .p = .p, .dry = .dry, FUN = .simd,...) #nocov
   }
-  if(as_list) return(ans)
+  if(.as_list) return(ans)
   return(bind_rows(ans))
 }
 
 #' @rdname parallel_mrgsim_d
 #' @export
-mc_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
+mc_mrgsim_d <- function(mod, data, nchunk = 4, ..., .as_list = FALSE,
                         .p = NULL, .dry = FALSE, .seed = NULL, 
                         .parallel = TRUE) {
   if(!inherits(data,"list")) data <- chunk_by_id(data,nchunk)
@@ -77,7 +77,7 @@ mc_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
   } else { 
     ans <- lapply(X = data, mod = mod, .p = .p, .dry = .dry, FUN = .simd,...) #nocov
   }
-  if(as_list) return(ans)
+  if(.as_list) return(ans)
   return(bind_rows(ans))
 }
 

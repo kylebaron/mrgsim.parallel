@@ -60,8 +60,8 @@ test_that("sim data", {
   
   out3 <- mc_mrgsim_d(mod,data)
   expect_identical(out,out3)
-  expect_is(future_mrgsim_d(mod,data,as_list=TRUE), "list")
-  expect_is(mc_mrgsim_d(mod,data,as_list=TRUE), "list")
+  expect_is(future_mrgsim_d(mod,data,.as_list=TRUE), "list")
+  expect_is(mc_mrgsim_d(mod,data,.as_list=TRUE), "list")
 })
 
 test_that("sim idata", {
@@ -70,8 +70,8 @@ test_that("sim idata", {
   expect_identical(out,out2)
   out3 <- mc_mrgsim_ei(mod, e, idata)
   expect_identical(out,out3)
-  expect_is(future_mrgsim_ei(mod, e, idata,as_list=TRUE), "list")
-  expect_is(mc_mrgsim_ei(mod, e, idata,as_list=TRUE), "list")
+  expect_is(future_mrgsim_ei(mod, e, idata,.as_list=TRUE), "list")
+  expect_is(mc_mrgsim_ei(mod, e, idata,.as_list=TRUE), "list")
 })
 
 test_that("dry run", {

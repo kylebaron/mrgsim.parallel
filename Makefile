@@ -1,13 +1,9 @@
 SHELL := /bin/bash
-LIBDIR=/Users/kyleb/Rlibs/lib
 PACKAGE=mrgsolve.fu
 VERSION=$(shell grep Version DESCRIPTION |awk '{print $$2}')
 TARBALL=${PACKAGE}_${VERSION}.tar.gz
 PKGDIR=.
 CHKDIR=.
-
-## Set libPaths:
-export R_LIBS=${LIBDIR}
 
 travis:
 	make build

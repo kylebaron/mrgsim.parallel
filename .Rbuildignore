@@ -3,11 +3,12 @@
 test\.R
 Makefile
 ^mrgsolve\.parallel_.*\.tar\.gz
-vera\.Rcheck
+mrgsolve\.fu\.Rcheck
 \.Rhistory
 README.md
 README.Rmd
 README.html
 man/figures
 build
+docs
 
