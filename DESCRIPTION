@@ -7,12 +7,12 @@ Maintainer: Kyle Baron <kylebtwin@imap.cc>
 Description: Simulate from a mrgsolve model using parallel backend.
 License: GPL (>=2)
 Imports: parallel, dplyr, future.apply
-Depends: mrgsolve
+Depends: mrgsolve,R (>= 3.5.0)
 Suggests: testthat
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/mrgsolve/mrgsolve.fu
-BugReports: https://github.com/mrgsolve/mrgsolve.fu/issues
+URL: https://github.com/kylebaron/mrgsolve.fu
+BugReports: https://github.com/kylebaron/mrgsolve.fu/issues
 RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)
 Language: en-US

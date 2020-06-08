@@ -1,6 +1,6 @@
 
 .simd <- function(dat,mod,...,.p,.dry) {
-  loadso(mod)
+  if(!inherits(mod, "packmod")) loadso(mod)
   if(.dry) {
     return(dat)
   } else {
@@ -23,6 +23,8 @@
 #' @param .dry if `TRUE` neither the simulation nor the post processing will
 #' be done
 #' @param .seed passed to [future_lapply] as `future.seed`
+#' @param .parallel if `FALSE`, the simulation will not be parallelized; this is
+#' intended for debugging and testing use only
 #'
 #' @return A data frame or list of simulated data
 #'
@@ -30,30 +32,35 @@
 #'
 #' @examples
 #'
-#' mod <- modlib("pk2")
+#' mod <- mrgsolve::house()
 #'
-#' data <- expand.ev(amt = seq(10))
+#' data <- mrgsolve::expand.ev(amt = seq(10))
 #'
 #' out <- future_mrgsim_d(mod,data, nchunk = 2)
 #'
 #' @name parallel_mrgsim_d
 #' @export
 future_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
-                            .p = NULL, .dry = FALSE, .seed = TRUE) {
+                            .p = NULL, .dry = FALSE, .seed = TRUE, 
+                            .parallel = TRUE) {
   if(!inherits(data,"list")) data <- chunk_by_id(data,nchunk)
   pa <- c("mrgsolve")
   if(!is.function(.p)) .p <- .nothing
-  ans <- future_lapply(
-    X = data,
-    future.packages = pa,
-    future.globals = character(0),
-    future.seed = .seed,
-    mod = mod,
-    .p = .p,
-    .dry = .dry,
-    FUN=.simd, 
-    ...
-  )
+  if(isTRUE(.parallel)) {
+    ans <- future_lapply(
+      X = data,
+      future.packages = pa,
+      future.globals = character(0),
+      future.seed = .seed,
+      mod = mod,
+      .p = .p,
+      .dry = .dry,
+      FUN = .simd, 
+      ...
+    )
+  } else {
+    ans <- lapply(X = data, mod = mod, .p = .p, .dry = .dry, FUN = .simd,...) #nocov
+  }
   if(as_list) return(ans)
   return(bind_rows(ans))
 }
@@ -61,10 +68,11 @@ future_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
 #' @rdname parallel_mrgsim_d
 #' @export
 mc_mrgsim_d <- function(mod, data, nchunk = 4, ..., as_list = FALSE,
-                        .p = NULL, .dry = FALSE, .seed = NULL) {
+                        .p = NULL, .dry = FALSE, .seed = NULL, 
+                        .parallel = TRUE) {
   if(!inherits(data,"list")) data <- chunk_by_id(data,nchunk)
   if(!is.function(.p)) .p <- .nothing
-  if(mc_able) {
+  if(mc_able & isTRUE(.parallel)) {
     ans <- mclapply(X = data, mod = mod, .p = .p, .dry = .dry, FUN = .simd, ...)
   } else { 
     ans <- lapply(X = data, mod = mod, .p = .p, .dry = .dry, FUN = .simd,...) #nocov

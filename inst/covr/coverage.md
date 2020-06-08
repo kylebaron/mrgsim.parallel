@@ -1,7 +1,7 @@
-# coverage: 97.73%
+# coverage: 93.62%
 
 |file              | coverage|
 |:-----------------|--------:|
-|R/utils.R         |    94.12|
+|R/utils.R         |    84.21|
 |R/data_parallel.R |   100.00|
 |R/par_parallel.R  |   100.00|

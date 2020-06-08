@@ -56,7 +56,7 @@ check:
 readme:
 	Rscript -e 'rmarkdown::render("README.Rmd")'
 
-site:
+pkgdown:
 	Rscript -e 'pkgdown::build_site()'
 
 spelling:

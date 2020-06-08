@@ -10,46 +10,49 @@
 \usage{
 future_mrgsim_ei(
   mod,
-  event,
+  events,
   idata,
   nchunk = 4,
   ...,
   as_list = FALSE,
   .p = NULL,
   .dry = FALSE,
-  .seed = TRUE
+  .seed = TRUE,
+  .parallel = TRUE
 )
 
 fu_mrgsim_ei(
   mod,
-  event,
+  events,
   idata,
   nchunk = 4,
   ...,
   as_list = FALSE,
   .p = NULL,
   .dry = FALSE,
-  .seed = TRUE
+  .seed = TRUE,
+  .parallel = TRUE
 )
 
 fu_mrgsim_ei0(..., .dry = TRUE)
 
 mc_mrgsim_ei(
   mod,
-  event,
+  events,
   idata,
   nchunk = 4,
   ...,
   as_list = FALSE,
   .p = NULL,
   .dry = FALSE,
-  .seed = NULL
+  .seed = NULL,
+  .parallel = TRUE
 )
 }
 \arguments{
 \item{mod}{mrgsolve model object see \link[mrgsolve:mrgmod-class]{mrgsolve::mrgmod}}
 
-\item{event}{an event object from mrgsolve; see \link[mrgsolve:ev]{mrgsolve::ev}}
+\item{events}{an event object from mrgsolve; see \link[mrgsolve:ev]{mrgsolve::ev}}
 
 \item{idata}{an idata set of parameters, one per simulation unit (individual);
 see \link[mrgsolve:idata_set]{mrgsolve::idata_set}}
@@ -67,6 +70,9 @@ be (1) the simulated output (2) the model object}
 be done}
 
 \item{.seed}{passed to \link{future_lapply} as \code{future.seed}}
+
+\item{.parallel}{if \code{FALSE}, the simulation will not be parallelized; this is
+intended for debugging and testing use only}
 }
 \value{
 A data frame or list of simulated data
@@ -77,13 +83,13 @@ Use \link{future_mrgsim_ei} to simulate with the \code{future} package.  Use
 }
 \examples{
 
-mod <- modlib("pk2")
+mod <- mrgsolve::house()
 
-event <- ev(amt = 100)
+events <- mrgsolve::ev(amt = 100)
 
 idata <- data.frame(CL = runif(10, 0.5, 1.5))
 
-out <- future_mrgsim_ei(mod, event, idata)
+out <- future_mrgsim_ei(mod, events, idata)
 
 }
 \seealso{

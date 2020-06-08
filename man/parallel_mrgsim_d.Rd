@@ -16,7 +16,8 @@ future_mrgsim_d(
   as_list = FALSE,
   .p = NULL,
   .dry = FALSE,
-  .seed = TRUE
+  .seed = TRUE,
+  .parallel = TRUE
 )
 
 mc_mrgsim_d(
@@ -27,7 +28,8 @@ mc_mrgsim_d(
   as_list = FALSE,
   .p = NULL,
   .dry = FALSE,
-  .seed = NULL
+  .seed = NULL,
+  .parallel = TRUE
 )
 
 fu_mrgsim_d(
@@ -38,7 +40,8 @@ fu_mrgsim_d(
   as_list = FALSE,
   .p = NULL,
   .dry = FALSE,
-  .seed = TRUE
+  .seed = TRUE,
+  .parallel = TRUE
 )
 
 fu_mrgsim_d0(..., .dry = TRUE)
@@ -61,6 +64,9 @@ be (1) the simulated output (2) the model object}
 be done}
 
 \item{.seed}{passed to \link{future_lapply} as \code{future.seed}}
+
+\item{.parallel}{if \code{FALSE}, the simulation will not be parallelized; this is
+intended for debugging and testing use only}
 }
 \value{
 A data frame or list of simulated data
@@ -71,9 +77,9 @@ Use \link{future_mrgsim_d} to simulate with the \code{future} package.  Use
 }
 \examples{
 
-mod <- modlib("pk2")
+mod <- mrgsolve::house()
 
-data <- expand.ev(amt = seq(10))
+data <- mrgsolve::expand.ev(amt = seq(10))
 
 out <- future_mrgsim_d(mod,data, nchunk = 2)
 
