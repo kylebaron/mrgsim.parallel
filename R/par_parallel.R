@@ -48,7 +48,10 @@ future_mrgsim_ei <- function(mod, events, idata, nchunk = 4, ..., .as_list=FALSE
   
   if(!inherits(idata,"list")) idata <- chunk_by_row(idata,nchunk)
   if(!is.function(.p)) .p <- .nothing
-  pa <- c("mrgsolve")
+  pa <- "mrgsolve"
+  if(length(idata)==1) {
+    return(.simi(idata[[1]],mod,events,...,.p=.p,.dry=.dry))
+  }
   if(isTRUE(.parallel)) {
     ans <- future_lapply(
       X = idata,
@@ -89,9 +92,12 @@ mc_mrgsim_ei <- function(mod, events, idata, nchunk = 4, ..., .as_list = FALSE,
   
   if(!inherits(idata,"list")) idata <- chunk_by_row(idata,nchunk)
   if(!is.function(.p)) .p <- .nothing
-  if(mc_able & isTRUE(.parallel)) {
+  if(length(idata)==1) {
+    return(.simi(idata[[1]],mod,events,...,.p=.p,.dry=.dry))
+  }
+  if(mc_able() & isTRUE(.parallel)) {
     ans <- mclapply(
-      X=idata, mod = mod, events = events, .p = .p, .dry = .dry,
+      X = idata, mod = mod, events = events, .p = .p, .dry = .dry,
       FUN = .simi, ... 
     )
   } else {

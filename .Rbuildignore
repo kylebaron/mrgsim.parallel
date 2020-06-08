@@ -11,4 +11,4 @@ README.html
 man/figures
 build
 docs
-
+^.*\.tar\.gz$

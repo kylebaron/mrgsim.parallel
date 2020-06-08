@@ -44,8 +44,11 @@ future_mrgsim_d <- function(mod, data, nchunk = 4, ..., .as_list = FALSE,
                             .p = NULL, .dry = FALSE, .seed = TRUE, 
                             .parallel = TRUE) {
   if(!inherits(data,"list")) data <- chunk_by_id(data,nchunk)
-  pa <- c("mrgsolve")
+  pa <- "mrgsolve"
   if(!is.function(.p)) .p <- .nothing
+  if((length(data)==1)) {
+    return(.simd(data[[1]],mod,...,.p=.p,.dry=.dry))
+  }
   if(isTRUE(.parallel)) {
     ans <- future_lapply(
       X = data,
@@ -72,7 +75,10 @@ mc_mrgsim_d <- function(mod, data, nchunk = 4, ..., .as_list = FALSE,
                         .parallel = TRUE) {
   if(!inherits(data,"list")) data <- chunk_by_id(data,nchunk)
   if(!is.function(.p)) .p <- .nothing
-  if(mc_able & isTRUE(.parallel)) {
+  if((length(data)==1)) {
+    return(.simd(data[[1]],mod,...,.p=.p,.dry=.dry))
+  }
+  if(mc_able() & isTRUE(.parallel)) {
     ans <- mclapply(X = data, mod = mod, .p = .p, .dry = .dry, FUN = .simd, ...)
   } else { 
     ans <- lapply(X = data, mod = mod, .p = .p, .dry = .dry, FUN = .simd,...) #nocov

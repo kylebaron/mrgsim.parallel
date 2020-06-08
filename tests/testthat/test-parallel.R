@@ -14,12 +14,18 @@ e <- ev(amt = 100)
 idata <- expand.idata(CL = runif(36, 0.5, 1.5))
 idata2 <- expand.idata(CL = runif(40, 0.5, 1.5))
 
+future::plan(future::sequential)
+
 test_that("chunk_data", {
   x <- chunk_by_id(data, nchunk = 5)
   expect_identical(length(x), 5L)
   
   x2 <- chunk_by_id(data2, nchunk = 5, id_col = "SUBJ")
   expect_identical(length(x), 5L)
+  
+  x2 <- chunk_by_id(data2, nchunk = 5, mark = "test")
+  expect_true(exists("test", x2[[3]]))
+  expect_true(all(x[[4]][["test"]]==4))
   
   x <- chunk_by_row(data2, nchunk = 3, mark = "test")
   expect_true(exists("test", x[[3]]))
@@ -51,6 +57,7 @@ test_that("bad input", {
   expect_error(chunk_by_row(data, "A"))
   expect_error(chunk_by_row(data, 99))
   expect_is(chunk_by_row(data,25), "list")
+  expect_error(chunk_by_id(data,4,id_col="FOO"))
 })
 
 test_that("sim data", {
@@ -74,9 +81,29 @@ test_that("sim idata", {
   expect_is(mc_mrgsim_ei(mod, e, idata,.as_list=TRUE), "list")
 })
 
+test_that("sim with nchunk=1", {
+  data1 <- chunk_by_id(data,nchunk=1)
+  outa <- fu_mrgsim_d(mod,data1)
+  outb <- mrgsim_d(mod,data,output="df")
+  expect_identical(outa,outb)
+  idata1 <- chunk_by_row(idata,nchunk=1)
+  outa <- mrgsim_ei(mod,e,idata,output="df")
+  outb <- fu_mrgsim_ei(mod,e,idata1)
+  expect_identical(outa,outb)
+})
+
 test_that("dry run", {
   expect_is(fu_mrgsim_d(mod,data,.dry = TRUE),"data.frame")
   expect_is(fu_mrgsim_ei(mod,e,idata,.dry = TRUE), "data.frame")
+})
+
+test_that("post processing function", {
+  post <- function(sims,mod) {sims[,"post_add"] <- 1; sims}
+  out1 <- fu_mrgsim_d(mod,data,nchunk=4)
+  out2 <- fu_mrgsim_d(mod,data,nchunk=4,.p=post)
+  expect_true(exists("post_add", out2))
+  expect_true(!exists("post_add", out1))
+  expect_true(all(out2[["post_add"]]==1))
 })
 
 test_that("pass in chunked data", {
