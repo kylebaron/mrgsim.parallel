@@ -100,6 +100,6 @@ chunk_by_row <- function(data,nchunk,mark=NULL) {
 dat <- function(set = c("data", "idata", "data_big", "idata_big")) {
   set <- match.arg(set)
   file <- paste0(set,".RDS")
-  file <- system.file("datasets",file,package = "mrgsolve.fu")
+  file <- system.file("rmd",file,package = "mrgsolve.fu")
   readRDS(file)
 }
