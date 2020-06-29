@@ -1,4 +1,4 @@
-Package: mrgsolve.fu
+Package: mrgsim.parallel
 Type: Package
 Title: Simulate with 'mrgsolve' in Parallel
 Version: 0.0.1.9000
@@ -7,12 +7,12 @@ Maintainer: Kyle Baron <kylebtwin@imap.cc>
 Description: Simulate from 'mrgsolve' models using parallel backend.
 License: GPL (>=2)
 Imports: parallel, dplyr, future.apply
-Depends: mrgsolve,R (>= 3.5.0)
+Depends: mrgsolve, R (>= 3.5.0)
 Suggests: testthat
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/kylebaron/mrgsolve.fu
-BugReports: https://github.com/kylebaron/mrgsolve.fu/issues
+URL: https://github.com/kylebaron/mrgsim.parallel
+BugReports: https://github.com/kylebaron/mrgsim.parallel/issues
 RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)
 Language: en-US

@@ -1,19 +1,8 @@
 .nothing <- function(sims,mod) sims
 
 #nocov start
-#' Functions to enable / disable forking with future
-#'
-#' @export
-fork_ok <- function() {
-  message("Setting 'R_FUTURE_FORK_ENABLE'; call 'fork_not_ok()' to undo.")
-  Sys.setenv(R_FUTURE_FORK_ENABLE="true")
-}
-#' @rdname fork_ok
-#' @export
-fork_not_ok <- function() Sys.setenv(R_FUTURE_FORK_ENABLE="false")
 
 # Wrapper function -----------------------------------------------
-
 
 wrap_loadso <- function(mod,fun,...) {
   loadso(mod)
@@ -100,11 +89,11 @@ chunk_by_row <- function(data,nchunk,mark=NULL) {
 dat <- function(set = c("data", "idata", "data_big", "idata_big")) {
   set <- match.arg(set)
   file <- paste0(set,".RDS")
-  file <- system.file("rmd",file,package = "mrgsolve.fu")
+  file <- system.file("rmd",file,package = "mrgsim.parallel")
   readRDS(file)
 }
 
 mc_able <- function() {
   if(.Platform$OS.type=="windows") return(FALSE)
-  return(isTRUE(getOption("mrgsolve.fu.mc.enable",TRUE)))
+  return(isTRUE(getOption("mrgsim.parallel.mc.enable",TRUE)))
 }

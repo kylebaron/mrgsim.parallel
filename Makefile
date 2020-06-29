@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-PACKAGE=mrgsolve.fu
+PACKAGE=mrgsim.parallel
 VERSION=$(shell grep Version DESCRIPTION |awk '{print $$2}')
 TARBALL=${PACKAGE}_${VERSION}.tar.gz
 PKGDIR=.

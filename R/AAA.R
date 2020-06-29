@@ -5,6 +5,16 @@
 #' @importFrom utils assignInMyNamespace
 NULL
 
+#' Simulate with 'mrgsolve' in Parallel
+#' 
+#' @section Package options:
+#' 
+#' - `mrgsim.parallel.mc.able`: if `TRUE`, multicore will be used if appropriate.
+#' 
+#' @name mrgsim.parallel
+#' @rdname mrgsim.parallel
+NULL
+
 #nocov start
 #mc_able <- .Platform$OS.type!="windows"
 

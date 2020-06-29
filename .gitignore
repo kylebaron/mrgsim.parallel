@@ -1,8 +1,8 @@
 build
 README.html
-mrgsolve.fu.Rcheck
+mrgsim.parallel.Rcheck
 test.R
-mrgsolve.fu*.tar.gz
+mrgsim.parallel*.tar.gz
 .Rproj.user
 .Rhistory
 .RData

@@ -2,8 +2,6 @@
 
 export(chunk_by_id)
 export(chunk_by_row)
-export(fork_not_ok)
-export(fork_ok)
 export(fu_mrgsim_d)
 export(fu_mrgsim_d0)
 export(fu_mrgsim_ei)

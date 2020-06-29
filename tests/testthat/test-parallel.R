@@ -14,8 +14,6 @@ e <- ev(amt = 100)
 idata <- expand.idata(CL = runif(36, 0.5, 1.5))
 idata2 <- expand.idata(CL = runif(40, 0.5, 1.5))
 
-future::plan(future::sequential)
-
 test_that("chunk_data", {
   x <- chunk_by_id(data, nchunk = 5)
   expect_identical(length(x), 5L)

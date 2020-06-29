@@ -2,8 +2,8 @@
 ^\.Rproj\.user$
 test\.R
 Makefile
-^mrgsolve\.parallel_.*\.tar\.gz
-mrgsolve\.fu\.Rcheck
+^mrgsim\.parallel_.*\.tar\.gz
+mrgsim\.parallel\.Rcheck
 \.Rhistory
 README.md
 README.Rmd
