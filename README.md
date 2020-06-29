@@ -1,17 +1,14 @@
 
-# mrgsolve.fu
+# mrgsim.parallel
 
 <!-- badges: start -->
 
-[![Travis build
-status](https://travis-ci.org/mrgsolve/mrgsolve.fu.svg?branch=master)](https://travis-ci.org/mrgsolve/mrgsolve.fu)
 <!-- badges: end -->
 
 ## Overview
 
-mrgsolve.fu (em-are-gee solve dot few) facilitates parallel simulation
-with mrgsolve in R. The future and parallel packages provide the
-parallelization.
+mrgsolve.parallel facilitates parallel simulation with mrgsolve in R.
+The future and parallel packages provide the parallelization.
 
 There are 2 main workflows:
 
@@ -34,7 +31,7 @@ library(dplyr)
 
 library(future)
 
-library(mrgsolve.parallel)
+library(mrgsim.parallel)
 
 options(future.fork.enable=TRUE, mc.cores = 6L)
 
@@ -54,12 +51,12 @@ head(data)
 ```
 
     .   ID time amt ii addl cmt evid        CL
-    . 1  1    0 100 24   56   1    1 1.1728726
-    . 2  2    0 200 24   56   1    1 0.7040120
-    . 3  3    0 300 24   56   1    1 1.1167925
-    . 4  4    0 400 24   56   1    1 0.8456033
-    . 5  5    0 500 24   56   1    1 0.8356673
-    . 6  6    0 600 24   56   1    1 1.0532129
+    . 1  1    0 100 24   56   1    1 0.8340196
+    . 2  2    0 200 24   56   1    1 1.2108530
+    . 3  3    0 300 24   56   1    1 1.1597400
+    . 4  4    0 400 24   56   1    1 1.1480386
+    . 5  5    0 500 24   56   1    1 1.0561753
+    . 6  6    0 600 24   56   1    1 1.2572473
 
 ``` r
 dim(data)
@@ -75,14 +72,14 @@ system.time(ans1 <- future_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
     .    user  system elapsed 
-    .   9.774   0.927   2.498
+    .   9.709   1.503   2.476
 
 ``` r
 system.time(ans2 <- mc_mrgsim_d(mod, data, nchunk = 6L))
 ```
 
     .    user  system elapsed 
-    .   9.735   1.145   2.364
+    .   8.774   0.885   1.912
 
 To compare an identical simulation done without parallelization
 
@@ -91,7 +88,7 @@ system.time(ans3 <- mrgsim_d(mod,data))
 ```
 
     .    user  system elapsed 
-    .   6.462   0.258   6.785
+    .   6.010   0.165   6.179
 
 ``` r
 identical(ans2,as.data.frame(ans3))
@@ -121,12 +118,12 @@ head(idata)
     . # A tibble: 6 x 2
     .      CL    ID
     .   <dbl> <int>
-    . 1 1.04      1
-    . 2 0.910     2
-    . 3 0.637     3
-    . 4 0.876     4
-    . 5 1.06      5
-    . 6 1.48      6
+    . 1 1.34      1
+    . 2 0.706     2
+    . 3 0.964     3
+    . 4 0.652     4
+    . 5 0.542     5
+    . 6 1.40      6
 
 ``` r
 dose <- ev(amt = 100, ii = 24, addl = 27)
@@ -145,7 +142,7 @@ system.time(ans1 <- mc_mrgsim_ei(mod, dose, idata, nchunk = 6))
 ```
 
     .    user  system elapsed 
-    .   7.033   0.994   1.858
+    .   6.242   0.688   1.393
 
 And without parallelization
 
@@ -154,7 +151,7 @@ system.time(ans2 <- mrgsim_ei(mod, dose, idata, output = "df"))
 ```
 
     .    user  system elapsed 
-    .   4.520   0.204   4.764
+    .   4.141   0.142   4.285
 
 ``` r
 identical(ans1,ans2)
@@ -173,37 +170,37 @@ dose <- ev_rep(dose, 1:5)
 dose
 ```
 
-    .    time amt ii addl cmt evid ID
-    . 1     0 100  0    0   1    1  1
-    . 2     0  50 12    2   1    1  1
-    . 3     0 100  0    0   1    1  2
-    . 4     0  50 12    2   1    1  2
-    . 5     0 100  0    0   1    1  3
-    . 6     0  50 12    2   1    1  3
-    . 7     0 100  0    0   1    1  4
-    . 8     0  50 12    2   1    1  4
-    . 9     0 100  0    0   1    1  5
-    . 10    0  50 12    2   1    1  5
+    .    ID time amt ii addl cmt evid
+    . 1   1    0 100  0    0   1    1
+    . 2   1    0  50 12    2   1    1
+    . 3   2    0 100  0    0   1    1
+    . 4   2    0  50 12    2   1    1
+    . 5   3    0 100  0    0   1    1
+    . 6   3    0  50 12    2   1    1
+    . 7   4    0 100  0    0   1    1
+    . 8   4    0  50 12    2   1    1
+    . 9   5    0 100  0    0   1    1
+    . 10  5    0  50 12    2   1    1
 
 ``` r
 chunk_by_id(dose, nchunk = 2)
 ```
 
     . $`1`
-    .   time amt ii addl cmt evid ID
-    . 1    0 100  0    0   1    1  1
-    . 2    0  50 12    2   1    1  1
-    . 3    0 100  0    0   1    1  2
-    . 4    0  50 12    2   1    1  2
-    . 5    0 100  0    0   1    1  3
-    . 6    0  50 12    2   1    1  3
+    .   ID time amt ii addl cmt evid
+    . 1  1    0 100  0    0   1    1
+    . 2  1    0  50 12    2   1    1
+    . 3  2    0 100  0    0   1    1
+    . 4  2    0  50 12    2   1    1
+    . 5  3    0 100  0    0   1    1
+    . 6  3    0  50 12    2   1    1
     . 
     . $`2`
-    .    time amt ii addl cmt evid ID
-    . 7     0 100  0    0   1    1  4
-    . 8     0  50 12    2   1    1  4
-    . 9     0 100  0    0   1    1  5
-    . 10    0  50 12    2   1    1  5
+    .    ID time amt ii addl cmt evid
+    . 7   4    0 100  0    0   1    1
+    . 8   4    0  50 12    2   1    1
+    . 9   5    0 100  0    0   1    1
+    . 10  5    0  50 12    2   1    1
 
 See also: `chunk_by_row`
 
@@ -215,7 +212,7 @@ system.time(x <- fu_mrgsim_d(mod, data, nchunk = 8, .dry = TRUE))
 ```
 
     .    user  system elapsed 
-    .   0.015   0.002   0.018
+    .   0.016   0.001   0.018
 
 ``` r
 plan(multiprocess,workers = 8L)
@@ -223,7 +220,7 @@ system.time(x <- fu_mrgsim_d(mod, data, nchunk = 8, .dry = TRUE))
 ```
 
     .    user  system elapsed 
-    .   0.114   0.186   0.165
+    .   0.131   0.185   0.167
 
 ## Pass a function to post process on the worker
 

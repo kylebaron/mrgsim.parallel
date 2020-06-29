@@ -8,13 +8,12 @@ knitr::opts_chunk$set(comment = '.', message=FALSE, warning = FALSE,
                       fig.path="man/figures/README-")
 ```
 
-# mrgsolve.fu
+# mrgsim.parallel
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/mrgsolve/mrgsolve.fu.svg?branch=master)](https://travis-ci.org/mrgsolve/mrgsolve.fu)
 <!-- badges: end -->
 
 ## Overview
-mrgsolve.fu (em-are-gee solve dot few) facilitates parallel simulation with 
+mrgsolve.parallel facilitates parallel simulation with 
 mrgsolve in R.  The future and parallel packages provide the parallelization.  
 
 There are 2 main workflows:
@@ -43,7 +42,7 @@ library(dplyr)
 
 library(future)
 
-library(mrgsolve.parallel)
+library(mrgsim.parallel)
 
 options(future.fork.enable=TRUE, mc.cores = 6L)
 
