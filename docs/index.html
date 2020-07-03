@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulate with mrgsolve in Parallel • mrgsolve.fu</title>
+<title>Simulate with mrgsolve in Parallel • mrgsim.parallel</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -30,7 +30,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">mrgsolve.fu</a>
+        <a class="navbar-link" href="index.html">mrgsim.parallel</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
@@ -49,7 +49,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/kylebaron/mrgsolve.fu/">
+  <a href="https://github.com/kylebaron/mrgsim.parallel/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -66,15 +66,15 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="mrgsolvefu" class="section level1">
+<div id="mrgsimparallel" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#mrgsolvefu" class="anchor"></a>mrgsolve.fu</h1></div>
+<a href="#mrgsimparallel" class="anchor"></a>mrgsim.parallel</h1></div>
 <!-- badges: start -->
-
+<!-- badges: end -->
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
-<p>mrgsolve.fu (em-are-gee solve dot few) facilitates parallel simulation with mrgsolve in R. The future and parallel packages provide the parallelization.</p>
+<p>mrgsolve.parallel facilitates parallel simulation with mrgsolve in R. The future and parallel packages provide the parallelization.</p>
 <p>There are 2 main workflows:</p>
 <ol>
 <li>Split a <code>data_set</code> into chunks by ID, simulate the chunks in parallel, then assemble the results back to a single data frame.</li>
@@ -89,7 +89,7 @@
 
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">future</span>)
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">mrgsolve.parallel</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">mrgsim.parallel</span>)
 
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">future.fork.enable</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">mc.cores</span> <span class="kw">=</span> <span class="fl">6L</span>)
 
@@ -106,25 +106,25 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">data</span>)</pre></div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">.   ID time amt ii addl cmt evid        CL</a>
-<a class="sourceLine" id="cb3-2" title="2">. <span class="dv">1</span>  <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">1.1728726</span></a>
-<a class="sourceLine" id="cb3-3" title="3">. <span class="dv">2</span>  <span class="dv">2</span>    <span class="dv">0</span> <span class="dv">200</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">0.7040120</span></a>
-<a class="sourceLine" id="cb3-4" title="4">. <span class="dv">3</span>  <span class="dv">3</span>    <span class="dv">0</span> <span class="dv">300</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">1.1167925</span></a>
-<a class="sourceLine" id="cb3-5" title="5">. <span class="dv">4</span>  <span class="dv">4</span>    <span class="dv">0</span> <span class="dv">400</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">0.8456033</span></a>
-<a class="sourceLine" id="cb3-6" title="6">. <span class="dv">5</span>  <span class="dv">5</span>    <span class="dv">0</span> <span class="dv">500</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">0.8356673</span></a>
-<a class="sourceLine" id="cb3-7" title="7">. <span class="dv">6</span>  <span class="dv">6</span>    <span class="dv">0</span> <span class="dv">600</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">1.0532129</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-2" title="2">. <span class="dv">1</span>  <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">0.8340196</span></a>
+<a class="sourceLine" id="cb3-3" title="3">. <span class="dv">2</span>  <span class="dv">2</span>    <span class="dv">0</span> <span class="dv">200</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">1.2108530</span></a>
+<a class="sourceLine" id="cb3-4" title="4">. <span class="dv">3</span>  <span class="dv">3</span>    <span class="dv">0</span> <span class="dv">300</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">1.1597400</span></a>
+<a class="sourceLine" id="cb3-5" title="5">. <span class="dv">4</span>  <span class="dv">4</span>    <span class="dv">0</span> <span class="dv">400</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">1.1480386</span></a>
+<a class="sourceLine" id="cb3-6" title="6">. <span class="dv">5</span>  <span class="dv">5</span>    <span class="dv">0</span> <span class="dv">500</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">1.0561753</span></a>
+<a class="sourceLine" id="cb3-7" title="7">. <span class="dv">6</span>  <span class="dv">6</span>    <span class="dv">0</span> <span class="dv">600</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">1.2572473</span></a></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">data</span>)</pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">. [<span class="dv">1</span>] <span class="dv">2000</span>    <span class="dv">8</span></a></code></pre></div>
 <p>We can simulate in parallel with the future package or the parallel package like this:</p>
 <div class="sourceCode" id="cb6"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">ans1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">future_mrgsim_d</a></span>(<span class="no">mod</span>, <span class="no">data</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">6L</span>))</pre></div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb7-2" title="2">.   <span class="fl">9.774</span>   <span class="fl">0.927</span>   <span class="fl">2.498</span></a></code></pre></div>
+<a class="sourceLine" id="cb7-2" title="2">.   <span class="fl">9.709</span>   <span class="fl">1.503</span>   <span class="fl">2.476</span></a></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">ans2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">mc_mrgsim_d</a></span>(<span class="no">mod</span>, <span class="no">data</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">6L</span>))</pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb9-2" title="2">.   <span class="fl">9.735</span>   <span class="fl">1.145</span>   <span class="fl">2.364</span></a></code></pre></div>
+<a class="sourceLine" id="cb9-2" title="2">.   <span class="fl">8.774</span>   <span class="fl">0.885</span>   <span class="fl">1.912</span></a></code></pre></div>
 <p>To compare an identical simulation done without parallelization</p>
 <div class="sourceCode" id="cb10"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">ans3</span> <span class="kw">&lt;-</span> <span class="fu">mrgsim_d</span>(<span class="no">mod</span>,<span class="no">data</span>))</pre></div>
 <div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb11-2" title="2">.   <span class="fl">6.462</span>   <span class="fl">0.258</span>   <span class="fl">6.785</span></a></code></pre></div>
+<a class="sourceLine" id="cb11-2" title="2">.   <span class="fl">6.010</span>   <span class="fl">0.165</span>   <span class="fl">6.179</span></a></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="no">ans2</span>,<span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="no">ans3</span>))</pre></div>
 <div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">. [<span class="dv">1</span>] <span class="ot">TRUE</span></a></code></pre></div>
 </div>
@@ -142,12 +142,12 @@
 <div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">. <span class="co"># A tibble: 6 x 2</span></a>
 <a class="sourceLine" id="cb16-2" title="2">.      CL    ID</a>
 <a class="sourceLine" id="cb16-3" title="3">.   <span class="op">&lt;</span>dbl<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>int<span class="op">&gt;</span></a>
-<a class="sourceLine" id="cb16-4" title="4">. <span class="dv">1</span> <span class="fl">1.04</span>      <span class="dv">1</span></a>
-<a class="sourceLine" id="cb16-5" title="5">. <span class="dv">2</span> <span class="fl">0.910</span>     <span class="dv">2</span></a>
-<a class="sourceLine" id="cb16-6" title="6">. <span class="dv">3</span> <span class="fl">0.637</span>     <span class="dv">3</span></a>
-<a class="sourceLine" id="cb16-7" title="7">. <span class="dv">4</span> <span class="fl">0.876</span>     <span class="dv">4</span></a>
-<a class="sourceLine" id="cb16-8" title="8">. <span class="dv">5</span> <span class="fl">1.06</span>      <span class="dv">5</span></a>
-<a class="sourceLine" id="cb16-9" title="9">. <span class="dv">6</span> <span class="fl">1.48</span>      <span class="dv">6</span></a></code></pre></div>
+<a class="sourceLine" id="cb16-4" title="4">. <span class="dv">1</span> <span class="fl">1.34</span>      <span class="dv">1</span></a>
+<a class="sourceLine" id="cb16-5" title="5">. <span class="dv">2</span> <span class="fl">0.706</span>     <span class="dv">2</span></a>
+<a class="sourceLine" id="cb16-6" title="6">. <span class="dv">3</span> <span class="fl">0.964</span>     <span class="dv">3</span></a>
+<a class="sourceLine" id="cb16-7" title="7">. <span class="dv">4</span> <span class="fl">0.652</span>     <span class="dv">4</span></a>
+<a class="sourceLine" id="cb16-8" title="8">. <span class="dv">5</span> <span class="fl">0.542</span>     <span class="dv">5</span></a>
+<a class="sourceLine" id="cb16-9" title="9">. <span class="dv">6</span> <span class="fl">1.40</span>      <span class="dv">6</span></a></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="r"><span class="no">dose</span> <span class="kw">&lt;-</span> <span class="fu">ev</span>(<span class="kw">amt</span> <span class="kw">=</span> <span class="fl">100</span>, <span class="kw">ii</span> <span class="kw">=</span> <span class="fl">24</span>, <span class="kw">addl</span> <span class="kw">=</span> <span class="fl">27</span>)
 
 <span class="no">dose</span></pre></div>
@@ -157,11 +157,11 @@
 <p>Run it in parallel</p>
 <div class="sourceCode" id="cb19"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">ans1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_ei.html">mc_mrgsim_ei</a></span>(<span class="no">mod</span>, <span class="no">dose</span>, <span class="no">idata</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">6</span>))</pre></div>
 <div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb20-2" title="2">.   <span class="fl">7.033</span>   <span class="fl">0.994</span>   <span class="fl">1.858</span></a></code></pre></div>
+<a class="sourceLine" id="cb20-2" title="2">.   <span class="fl">6.242</span>   <span class="fl">0.688</span>   <span class="fl">1.393</span></a></code></pre></div>
 <p>And without parallelization</p>
 <div class="sourceCode" id="cb21"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">ans2</span> <span class="kw">&lt;-</span> <span class="fu">mrgsim_ei</span>(<span class="no">mod</span>, <span class="no">dose</span>, <span class="no">idata</span>, <span class="kw">output</span> <span class="kw">=</span> <span class="st">"df"</span>))</pre></div>
 <div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb22-2" title="2">.   <span class="fl">4.520</span>   <span class="fl">0.204</span>   <span class="fl">4.764</span></a></code></pre></div>
+<a class="sourceLine" id="cb22-2" title="2">.   <span class="fl">4.141</span>   <span class="fl">0.142</span>   <span class="fl">4.285</span></a></code></pre></div>
 <div class="sourceCode" id="cb23"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="no">ans1</span>,<span class="no">ans2</span>)</pre></div>
 <div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">. [<span class="dv">1</span>] <span class="ot">TRUE</span></a></code></pre></div>
 </div>
@@ -173,33 +173,33 @@
 <span class="no">dose</span> <span class="kw">&lt;-</span> <span class="fu">ev_rep</span>(<span class="no">dose</span>, <span class="fl">1</span>:<span class="fl">5</span>)
 
 <span class="no">dose</span></pre></div>
-<div class="sourceCode" id="cb26"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">.    time amt ii addl cmt evid ID</a>
-<a class="sourceLine" id="cb26-2" title="2">. <span class="dv">1</span>     <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">1</span></a>
-<a class="sourceLine" id="cb26-3" title="3">. <span class="dv">2</span>     <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">1</span></a>
-<a class="sourceLine" id="cb26-4" title="4">. <span class="dv">3</span>     <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">2</span></a>
-<a class="sourceLine" id="cb26-5" title="5">. <span class="dv">4</span>     <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">2</span></a>
-<a class="sourceLine" id="cb26-6" title="6">. <span class="dv">5</span>     <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">3</span></a>
-<a class="sourceLine" id="cb26-7" title="7">. <span class="dv">6</span>     <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">3</span></a>
-<a class="sourceLine" id="cb26-8" title="8">. <span class="dv">7</span>     <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">4</span></a>
-<a class="sourceLine" id="cb26-9" title="9">. <span class="dv">8</span>     <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">4</span></a>
-<a class="sourceLine" id="cb26-10" title="10">. <span class="dv">9</span>     <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">5</span></a>
-<a class="sourceLine" id="cb26-11" title="11">. <span class="dv">10</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">5</span></a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">.    ID time amt ii addl cmt evid</a>
+<a class="sourceLine" id="cb26-2" title="2">. <span class="dv">1</span>   <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb26-3" title="3">. <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb26-4" title="4">. <span class="dv">3</span>   <span class="dv">2</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb26-5" title="5">. <span class="dv">4</span>   <span class="dv">2</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb26-6" title="6">. <span class="dv">5</span>   <span class="dv">3</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb26-7" title="7">. <span class="dv">6</span>   <span class="dv">3</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb26-8" title="8">. <span class="dv">7</span>   <span class="dv">4</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb26-9" title="9">. <span class="dv">8</span>   <span class="dv">4</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb26-10" title="10">. <span class="dv">9</span>   <span class="dv">5</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb26-11" title="11">. <span class="dv">10</span>  <span class="dv">5</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a></code></pre></div>
 <div class="sourceCode" id="cb27"><pre class="r"><span class="fu"><a href="reference/chunk_data_frame.html">chunk_by_id</a></span>(<span class="no">dose</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></div>
 <div class="sourceCode" id="cb28"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">. <span class="op">$</span><span class="st">`</span><span class="dt">1</span><span class="st">`</span></a>
-<a class="sourceLine" id="cb28-2" title="2">.   time amt ii addl cmt evid ID</a>
-<a class="sourceLine" id="cb28-3" title="3">. <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">1</span></a>
-<a class="sourceLine" id="cb28-4" title="4">. <span class="dv">2</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">1</span></a>
-<a class="sourceLine" id="cb28-5" title="5">. <span class="dv">3</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">2</span></a>
-<a class="sourceLine" id="cb28-6" title="6">. <span class="dv">4</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">2</span></a>
-<a class="sourceLine" id="cb28-7" title="7">. <span class="dv">5</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">3</span></a>
-<a class="sourceLine" id="cb28-8" title="8">. <span class="dv">6</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">3</span></a>
+<a class="sourceLine" id="cb28-2" title="2">.   ID time amt ii addl cmt evid</a>
+<a class="sourceLine" id="cb28-3" title="3">. <span class="dv">1</span>  <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb28-4" title="4">. <span class="dv">2</span>  <span class="dv">1</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb28-5" title="5">. <span class="dv">3</span>  <span class="dv">2</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb28-6" title="6">. <span class="dv">4</span>  <span class="dv">2</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb28-7" title="7">. <span class="dv">5</span>  <span class="dv">3</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb28-8" title="8">. <span class="dv">6</span>  <span class="dv">3</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
 <a class="sourceLine" id="cb28-9" title="9">. </a>
 <a class="sourceLine" id="cb28-10" title="10">. <span class="op">$</span><span class="st">`</span><span class="dt">2</span><span class="st">`</span></a>
-<a class="sourceLine" id="cb28-11" title="11">.    time amt ii addl cmt evid ID</a>
-<a class="sourceLine" id="cb28-12" title="12">. <span class="dv">7</span>     <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">4</span></a>
-<a class="sourceLine" id="cb28-13" title="13">. <span class="dv">8</span>     <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">4</span></a>
-<a class="sourceLine" id="cb28-14" title="14">. <span class="dv">9</span>     <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">5</span></a>
-<a class="sourceLine" id="cb28-15" title="15">. <span class="dv">10</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span>  <span class="dv">5</span></a></code></pre></div>
+<a class="sourceLine" id="cb28-11" title="11">.    ID time amt ii addl cmt evid</a>
+<a class="sourceLine" id="cb28-12" title="12">. <span class="dv">7</span>   <span class="dv">4</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb28-13" title="13">. <span class="dv">8</span>   <span class="dv">4</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb28-14" title="14">. <span class="dv">9</span>   <span class="dv">5</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
+<a class="sourceLine" id="cb28-15" title="15">. <span class="dv">10</span>  <span class="dv">5</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a></code></pre></div>
 <p>See also: <code>chunk_by_row</code></p>
 </div>
 <div id="do-a-dry-run-to-check-the-overhead-of-parallelization" class="section level2">
@@ -208,11 +208,11 @@
 <div class="sourceCode" id="cb29"><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span>(<span class="no">transparent</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">fu_mrgsim_d</a></span>(<span class="no">mod</span>, <span class="no">data</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">8</span>, <span class="kw">.dry</span> <span class="kw">=</span> <span class="fl">TRUE</span>))</pre></div>
 <div class="sourceCode" id="cb30"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb30-2" title="2">.   <span class="fl">0.015</span>   <span class="fl">0.002</span>   <span class="fl">0.018</span></a></code></pre></div>
+<a class="sourceLine" id="cb30-2" title="2">.   <span class="fl">0.016</span>   <span class="fl">0.001</span>   <span class="fl">0.018</span></a></code></pre></div>
 <div class="sourceCode" id="cb31"><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span>(<span class="no">multiprocess</span>,<span class="kw">workers</span> <span class="kw">=</span> <span class="fl">8L</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">fu_mrgsim_d</a></span>(<span class="no">mod</span>, <span class="no">data</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">8</span>, <span class="kw">.dry</span> <span class="kw">=</span> <span class="fl">TRUE</span>))</pre></div>
 <div class="sourceCode" id="cb32"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb32-2" title="2">.   <span class="fl">0.114</span>   <span class="fl">0.186</span>   <span class="fl">0.165</span></a></code></pre></div>
+<a class="sourceLine" id="cb32-2" title="2">.   <span class="fl">0.131</span>   <span class="fl">0.185</span>   <span class="fl">0.167</span></a></code></pre></div>
 </div>
 <div id="pass-a-function-to-post-process-on-the-worker" class="section level2">
 <h2 class="hasAnchor">
@@ -247,9 +247,9 @@
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/kylebaron/mrgsolve.fu/">https://​github.com/​kylebaron/​mrgsolve.fu/​</a>
+<li>Browse source code at <br><a href="https://github.com/kylebaron/mrgsim.parallel/">https://​github.com/​kylebaron/​mrgsim.parallel/​</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/kylebaron/mrgsolve.fu/issues">https://​github.com/​kylebaron/​mrgsolve.fu/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/kylebaron/mrgsim.parallel/issues">https://​github.com/​kylebaron/​mrgsim.parallel/​issues</a>
 </li>
 </ul>
 </div>
@@ -266,13 +266,7 @@
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://travis-ci.org/mrgsolve/mrgsolve.fu"><img src="https://travis-ci.org/mrgsolve/mrgsolve.fu.svg?branch=master" alt="Travis build status"></a></li>
-</ul>
-</div>
-</div>
+  </div>
 </div>
 
 
