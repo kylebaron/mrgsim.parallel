@@ -9,8 +9,8 @@ Simulate with 'mrgsolve' in Parallel
 \section{Resources}{
 
 \itemize{
-\item GitHub: \link{https://github.com/kylebaron/mrgsim.parallel}
-\item Docs: \link{https://kylebaron.github.io/mrgsim.parallel}
+\item GitHub: \url{https://github.com/kylebaron/mrgsim.parallel}
+\item Docs: \url{https://kylebaron.github.io/mrgsim.parallel}
 }
 }
 

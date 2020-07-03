@@ -1,12 +1,9 @@
 library(spelling)
 
 path <- c(
-  "inst/doc/about.md",
+  "inst/docs/about.md",
   "README.Rmd"
 )
-
-
-
 
 spell_check_package()
 ignore <- readLines("inst/WORDLIST")

@@ -8,8 +8,8 @@ NULL
 #' Simulate with 'mrgsolve' in Parallel
 #' 
 #' @section Resources:
-#' - GitHub: [https://github.com/kylebaron/mrgsim.parallel]
-#' - Docs: [https://kylebaron.github.io/mrgsim.parallel]
+#' - GitHub: [https://github.com/kylebaron/mrgsim.parallel](https://github.com/kylebaron/mrgsim.parallel)
+#' - Docs: [https://kylebaron.github.io/mrgsim.parallel](https://kylebaron.github.io/mrgsim.parallel)
 #' 
 #' @section Package options:
 #' 
