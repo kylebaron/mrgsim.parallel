@@ -6,6 +6,14 @@
 \description{
 Simulate with 'mrgsolve' in Parallel
 }
+\section{Resources}{
+
+\itemize{
+\item GitHub: \link{https://github.com/kylebaron/mrgsim.parallel}
+\item Docs: \link{https://kylebaron.github.io/mrgsim.parallel}
+}
+}
+
 \section{Package options}{
 
 \itemize{

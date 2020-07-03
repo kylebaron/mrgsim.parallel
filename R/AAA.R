@@ -7,6 +7,10 @@ NULL
 
 #' Simulate with 'mrgsolve' in Parallel
 #' 
+#' @section Resources:
+#' - GitHub: [https://github.com/kylebaron/mrgsim.parallel]
+#' - Docs: [https://kylebaron.github.io/mrgsim.parallel]
+#' 
 #' @section Package options:
 #' 
 #' - `mrgsim.parallel.mc.able`: if `TRUE`, multicore will be used if appropriate.
