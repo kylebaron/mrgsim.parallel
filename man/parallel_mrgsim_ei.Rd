@@ -79,7 +79,7 @@ A data frame or list of simulated data
 }
 \description{
 Use \link{future_mrgsim_ei} to simulate with the \code{future} package.  Use
-\link{mc_mrgsim_ei} to simulate with \link[parallel:mclapply]{parallel::mclapply}.
+\link{mc_mrgsim_ei} to simulate with \code{parallel::mclapply}.
 }
 \examples{
 

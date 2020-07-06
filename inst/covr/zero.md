@@ -1,8 +1,9 @@
 "","filename","functions","line","value"
+"81","R/data_parallel.R","mc_mrgsim_d",79,0
 "10","R/par_parallel.R",".simi",10,0
-"26","R/utils.R","chunk_by_id",53,0
-"62","R/utils.R","chunk_by_id",71,0
-"93","R/utils.R","dat",101,0
-"94","R/utils.R","dat",102,0
-"95","R/utils.R","dat",103,0
-"96","R/utils.R","dat",104,0
+"99","R/par_parallel.R","mc_mrgsim_ei",96,0
+"92","R/utils.R","dat",90,0
+"93","R/utils.R","dat",91,0
+"94","R/utils.R","dat",92,0
+"95","R/utils.R","dat",93,0
+"100","R/utils.R","mc_able",97,0

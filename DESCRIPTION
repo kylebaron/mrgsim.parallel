@@ -1,10 +1,14 @@
 Package: mrgsim.parallel
 Type: Package
 Title: Simulate with 'mrgsolve' in Parallel
-Version: 0.0.1.9000
+Version: 0.1.1
 Author: Kyle Baron
 Maintainer: Kyle Baron <kylebtwin@imap.cc>
-Description: Simulate from 'mrgsolve' models using parallel backend.
+Description: Simulation from an 'mrgsolve' 
+    <https://cran.r-project.org/package=mrgsolve> model using a parallel backend.  
+    Input data sets are split (chunked) and simulated in parallel using 
+    mclapply() or future_lapply() 
+    <https://cran.r-project.org/package=future.apply>.
 License: GPL (>=2)
 Imports: parallel, dplyr, future.apply
 Depends: mrgsolve, R (>= 3.5.0)
@@ -16,3 +20,5 @@ BugReports: https://github.com/kylebaron/mrgsim.parallel/issues
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 Language: en-US
+NeedsCompilation: no
+Packaged: 2020-07-06 12:11:58 UTC; root

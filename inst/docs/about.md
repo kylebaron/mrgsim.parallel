@@ -41,11 +41,11 @@ Issue: #4, #5
 - Results are bound up into a single data frame by default or return as a list
   of chunked simulation results by argument 
 - Data frames can be pre-chunked by the user and passed as a list
-- A dry run maybe perfomed by argument
+- A dry run maybe performed by argument
 - A post-processing function may be passed along to the simulation function; 
   simulated data gets processed through the post function prior to returning
   from the worker
-- Additional arguments get passed allong to the simulation function as `...`
+- Additional arguments get passed along to the simulation function as `...`
 - When parallel (`mclapply`) backend is selected on a windows system, the 
   simulation is carried out sequentially (with `lapply`)
 - Globals are prevented from getting passed to the worker when simulating 

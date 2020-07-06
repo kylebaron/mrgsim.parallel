@@ -19,7 +19,7 @@
 #' Simulate an idata set in parallel
 #'
 #' Use [future_mrgsim_ei] to simulate with the `future` package.  Use
-#' [mc_mrgsim_ei] to simulate with [parallel::mclapply].
+#' [mc_mrgsim_ei] to simulate with `parallel::mclapply`.
 #'
 #' @inheritParams parallel_mrgsim_d
 #' @param events an event object from mrgsolve; see [mrgsolve::ev]

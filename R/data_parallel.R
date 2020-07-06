@@ -11,7 +11,7 @@
 #' Simulate a data set in parallel
 #'
 #' Use [future_mrgsim_d] to simulate with the `future` package.  Use
-#' [mc_mrgsim_d] to simulate with [parallel::mclapply].
+#' [mc_mrgsim_d] to simulate with `parallel::mclapply`.
 #'
 #' @param mod mrgsolve model object see [mrgsolve::mrgmod-class]
 #' @param data data set to simulate; see [mrgsolve::data_set]
