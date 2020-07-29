@@ -16,7 +16,7 @@ dll_exists <- function(mod) {
 #' 
 #' @examples
 #' 
-#' mrgsim_mp(mrgsolve:::house())
+#' mrgsim_worker(mrgsolve:::house())
 #' 
 #' @export
 mrgsim_ms <- function(mod, ...) {

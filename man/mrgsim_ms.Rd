@@ -20,6 +20,6 @@ multisession worker node where the model dll might not be loaded.
 }
 \examples{
 
-mrgsim_mp(mrgsolve:::house())
+mrgsim_worker(mrgsolve:::house())
 
 }
