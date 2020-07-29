@@ -25,11 +25,11 @@ mrgsim_ms <- function(mod, ...) {
   }
   if(!check_loaded(mod)) {
     if(!dll_exists(mod)) {
-      stop("the model dll could not be found", call.=FALSE)  
+      stop("the model dll could not be found", call. = FALSE)  
     }
     loadso(mod)
     if(!check_loaded(mod)) {
-      stop("the model dll could not be loaded", call.=FALSE)  
+      stop("the model dll could not be loaded", call. = FALSE)  
     }
   }
   mrgsim(mod,...)
