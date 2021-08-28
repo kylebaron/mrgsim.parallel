@@ -57,6 +57,8 @@ list_fst <- function(dir) {
 #' 
 #' 
 #' @param dir the directory to search
+#' @param n number of rows to show
+#' @param i which output output chunk to show 
 #' @export
 head_fst <- function(dir, n = 5, i = 1) {
   x <- list_fst(dir)
@@ -94,14 +96,19 @@ head_fst <- function(dir, n = 5, i = 1) {
 #' 
 #' @examples
 #' mod <- mrgsolve::house(delta = 24, end = 168)
-#' data <- mrgsolve::expand.ev(amt =c(100, 300, 450), ID = 1:100, ii = 24, addl = 6)
+#' data <- mrgsolve::expand.ev(
+#'   amt =c(100, 300, 450), 
+#'   ID = 1:100, 
+#'   ii = 24, 
+#'   addl = 6
+#' )
 #' data <- dplyr::mutate(data, dose = amt)
 #' process <- bg_mrgsim_d(
 #'   mod, 
 #'   data, 
 #'   carry_out = "dose", 
 #'   outvars = "CP",
-#'   .wait = TRUE, 
+#'   .wait = TRUE
 #'   ) 
 #'  process$get_result()
 #'   

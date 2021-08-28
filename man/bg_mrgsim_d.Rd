@@ -57,14 +57,19 @@ something equivalent on the result if you are expecting data frame.
 }
 \examples{
 mod <- mrgsolve::house(delta = 24, end = 168)
-data <- mrgsolve::expand.ev(amt =c(100, 300, 450), ID = 1:100, ii = 24, addl = 6)
+data <- mrgsolve::expand.ev(
+  amt =c(100, 300, 450), 
+  ID = 1:100, 
+  ii = 24, 
+  addl = 6
+)
 data <- dplyr::mutate(data, dose = amt)
 process <- bg_mrgsim_d(
   mod, 
   data, 
   carry_out = "dose", 
   outvars = "CP",
-  .wait = TRUE, 
+  .wait = TRUE
   ) 
  process$get_result()
   

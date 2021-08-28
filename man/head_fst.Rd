@@ -8,6 +8,10 @@ head_fst(dir, n = 5, i = 1)
 }
 \arguments{
 \item{dir}{the directory to search}
+
+\item{n}{number of rows to show}
+
+\item{i}{which output output chunk to show}
 }
 \description{
 Get the head of an fst file set

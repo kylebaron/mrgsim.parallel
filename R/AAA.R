@@ -1,7 +1,10 @@
 #' @importFrom future.apply future_lapply
-#' @importFrom dplyr bind_rows as_tibble
+#' @importFrom dplyr bind_rows as_tibble tibble
 #' @importFrom parallel mclapply
 #' @importFrom mrgsolve loadso mrgsim_d mrgsim_ei house mrgsim_i mrgsim
+#' @importFrom callr r_bg
+#' @importFrom fst read_fst write_fst
+#' @importFrom future plan
 #' @importMethodsFrom mrgsolve as.list
 #' @importFrom utils assignInMyNamespace
 NULL

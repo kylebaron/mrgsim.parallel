@@ -10,7 +10,7 @@ Description: Simulation from an 'mrgsolve'
     mclapply() or future_lapply() 
     <https://cran.r-project.org/package=future.apply>.
 License: GPL (>=2)
-Imports: parallel, dplyr, future.apply
+Imports: parallel, dplyr, future,  future.apply, callr, fst
 Depends: mrgsolve, R (>= 3.5.0)
 Suggests: testthat
 Encoding: UTF-8
