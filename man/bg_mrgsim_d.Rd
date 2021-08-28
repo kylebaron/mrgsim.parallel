@@ -4,15 +4,68 @@
 \alias{bg_mrgsim_d}
 \title{Run mrgsim in the background}
 \usage{
-bg_mrgsim_d(mod, data, ..., split = 1, output = ".")
+bg_mrgsim_d(
+  mod,
+  data,
+  ...,
+  path = NULL,
+  tag = NULL,
+  nchunk = 1,
+  plan = future::plan(),
+  .wait = FALSE
+)
 }
 \arguments{
 \item{mod}{a model object}
 
-\item{...}{arguments passed to \code{\link[mrgsolve:::mrgsim]{mrgsolve::::mrgsim()}}}
+\item{data}{data set to simulate; see \link[mrgsolve:data_set]{mrgsolve::data_set}}
 
-\item{path}{a directory for saving simulated data}
+\item{...}{arguments passed to \code{\link[mrgsolve:mrgsim]{mrgsolve::mrgsim()}}}
+
+\item{path}{a directory for saving simulated data; use this to collect
+results from several different runs in a single folder}
+
+\item{tag}{a name to use for the current run; results are saved under
+\code{tag} in \code{path} folder}
+
+\item{nchunk}{number of chunks in which to split the data set}
+
+\item{plan}{passed to \code{\link[future:plan]{future::plan()}}}
+
+\item{.wait}{if \code{FALSE}, the function returns immediately; if \code{TRUE}, then
+wait until the background job is finished}
+}
+\value{
+An \code{r_process} object; see \code{\link[callr:r_bg]{callr::r_bg()}}. Call \code{process$get_resuilt()} to
+get the actual result (see \code{details}).
 }
 \description{
-Run mrgsim in the background
+This function uses \code{\link[callr:r_bg]{callr::r_bg()}} to run your simulation in the background,
+optionally in parallel and optionally saving the results directly to
+disk in the fst format.
+}
+\details{
+\code{\link[=bg_mrgsim_d]{bg_mrgsim_d()}} returns a \link[processx:process]{processx::process} object (follow that link to
+see a list of methods). You will have to call \code{process$get_result()} to
+retrieve the result. When an output \code{folder} is not specified, simulated
+results are returned; when an output \code{folder} is specified, the path to
+the \code{fst} file on disk is returned.  The \code{fst} files  should be read with
+\code{\link[fst:write_fst]{fst::read_fst()}}. When the results are not saved to \code{folder}, you will
+get a single data frame when \code{nchunk} is 1 or a list of data frames when
+\code{nchunk} is greater than 1. It is safest to call \code{\link[dplyr:bind]{dplyr::bind_rows()}} or
+something equivalent on the result if you are expecting data frame.
+}
+\examples{
+mod <- mrgsolve::house(delta = 24, end = 168)
+data <- mrgsolve::expand.ev(amt =c(100, 300, 450), ID = 1:100, ii = 24, addl = 6)
+data <- dplyr::mutate(data, dose = amt)
+process <- bg_mrgsim_d(
+  mod, 
+  data, 
+  carry_out = "dose", 
+  outvars = "CP",
+  .wait = TRUE, 
+  ) 
+ process$get_result()
+  
 }

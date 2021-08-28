@@ -1,5 +1,5 @@
 #' @importFrom future.apply future_lapply
-#' @importFrom dplyr bind_rows
+#' @importFrom dplyr bind_rows as_tibble
 #' @importFrom parallel mclapply
 #' @importFrom mrgsolve loadso mrgsim_d mrgsim_ei house mrgsim_i mrgsim
 #' @importMethodsFrom mrgsolve as.list
