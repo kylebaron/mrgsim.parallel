@@ -75,21 +75,23 @@ head_fst <- function(dir, n = 5, i = 1) {
 #' 
 #' @param mod a model object
 #' @param ... arguments passed to [mrgsolve::mrgsim()]
-#' @param path a directory for saving simulated data; use this to collect 
+#' @param .plan passed to [future::plan()]; this controls how the problem is 
+#' parallelized when `nchunk` is greater than 1
+#' @param .path a directory for saving simulated data; use this to collect 
 #' results from several different runs in a single folder
-#' @param tag a name to use for the current run; results are saved under 
-#' `tag` in `path` folder
-#' @param plan passed to [future::plan()]
+#' @param .tag a name to use for the current run; results are saved under 
+#' `.tag` in `.path` folder
 #' @param .wait if `FALSE`, the function returns immediately; if `TRUE`, then 
 #' wait until the background job is finished
+#' @param .seed passed to [future.apply::future_mapply()] as `future.seed`
 #' 
 #' @details 
 #' [bg_mrgsim_d()] returns a [processx::process] object (follow that link to 
 #' see a list of methods). You will have to call `process$get_result()` to 
-#' retrieve the result. When an output `folder` is not specified, simulated 
-#' results are returned; when an output `folder` is specified, the path to 
+#' retrieve the result. When an output `.path` is not specified, simulated 
+#' results are returned; when an output `.path` is specified, the path to 
 #' the `fst` file on disk is returned.  The `fst` files  should be read with 
-#' [fst::read_fst()]. When the results are not saved to `folder`, you will 
+#' [fst::read_fst()]. When the results are not saved to `.path`, you will 
 #' get a single data frame when `nchunk` is 1 or a list of data frames when 
 #' `nchunk` is greater than 1. It is safest to call [dplyr::bind_rows()] or 
 #' something equivalent on the result if you are expecting data frame.
@@ -117,8 +119,11 @@ head_fst <- function(dir, n = 5, i = 1) {
 #' get the actual result (see `details`).
 #' 
 #' @export
-bg_mrgsim_d <- function(mod, data,  ..., path = NULL, tag = NULL, 
-                        nchunk = 1, plan = future::plan(), .wait = FALSE) {
+bg_mrgsim_d <- function(mod, data, nchunk = 1,   
+                        ..., 
+                        .plan = future::plan(),
+                        .path = NULL, .tag = NULL, 
+                        .wait = FALSE, .seed = FALSE) {
   
   if(is.data.frame(data)) {
     if(nchunk <= 1) {
@@ -128,13 +133,13 @@ bg_mrgsim_d <- function(mod, data,  ..., path = NULL, tag = NULL,
     }
   }
   
-  if(is.null(tag)) {
-    tag <- mod@model
+  if(is.null(.tag)) {
+    .tag <- mod@model
   }
-  stopifnot(is.character(tag))
-  stopifnot(length(tag)==1)
+  stopifnot(is.character(.tag))
+  stopifnot(length(.tag)==1)
   
-  output_paths <- setup_locker(path, tag, n = length(data))
+  output_paths <- setup_locker(.path, .tag, n = length(data))
   
   if(length(data)==1) {
     func <- bg_mrgsim_d_impl
@@ -142,13 +147,15 @@ bg_mrgsim_d <- function(mod, data,  ..., path = NULL, tag = NULL,
     args$mod <- mod
     args$data <- data[[1]]
     args$output <- output_paths[[1]]
+    args$.seed <- .seed
   } else {
     func <- bg_mrgsim_apply
     args <- list()
     args$more <- list(mod = mod, ...)
     args$output <- output_paths
     args$data <- data
-    args$plan <- plan
+    args$.plan <- .plan
+    args$.seed <- .seed
   }
   a <- r_bg(func, args = args, package = TRUE)
   if(isTRUE(.wait)) {
@@ -157,20 +164,21 @@ bg_mrgsim_d <- function(mod, data,  ..., path = NULL, tag = NULL,
   a
 }
 
-bg_mrgsim_apply <- function(data, plan, more, output, ...) {
+bg_mrgsim_apply <- function(data, .plan, more, output, .seed = FALSE, ...) {
   options(future.fork.enable = TRUE)
-  future::plan(plan)  
+  future::plan(.plan)  
   future.apply::future_mapply(
     FUN = bg_mrgsim_d_impl, 
     data = data,
     output = output,
     MoreArgs = more,
     SIMPLIFY = FALSE, 
-    future.seed = TRUE
+    future.seed = .seed
   )  
 }
 
-bg_mrgsim_d_impl <- function(data, mod, output = NULL, ...) {
+bg_mrgsim_d_impl <- function(data, mod, output = NULL, .seed = NULL,  ...) {
+  if(!is.null(.seed)) set.seed(.seed)
   out <- mrgsim(mod, data, ..., output = "df")
   if(is.null(output)) return(out)
   fst::write_fst(path = output, x = out)

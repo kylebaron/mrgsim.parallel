@@ -7,12 +7,13 @@
 bg_mrgsim_d(
   mod,
   data,
-  ...,
-  path = NULL,
-  tag = NULL,
   nchunk = 1,
-  plan = future::plan(),
-  .wait = FALSE
+  ...,
+  .plan = future::plan(),
+  .path = NULL,
+  .tag = NULL,
+  .wait = FALSE,
+  .seed = FALSE
 )
 }
 \arguments{
@@ -20,20 +21,23 @@ bg_mrgsim_d(
 
 \item{data}{data set to simulate; see \link[mrgsolve:data_set]{mrgsolve::data_set}}
 
-\item{...}{arguments passed to \code{\link[mrgsolve:mrgsim]{mrgsolve::mrgsim()}}}
-
-\item{path}{a directory for saving simulated data; use this to collect
-results from several different runs in a single folder}
-
-\item{tag}{a name to use for the current run; results are saved under
-\code{tag} in \code{path} folder}
-
 \item{nchunk}{number of chunks in which to split the data set}
 
-\item{plan}{passed to \code{\link[future:plan]{future::plan()}}}
+\item{...}{arguments passed to \code{\link[mrgsolve:mrgsim]{mrgsolve::mrgsim()}}}
+
+\item{.plan}{passed to \code{\link[future:plan]{future::plan()}}; this controls how the problem is
+parallelized when \code{nchunk} is greater than 1}
+
+\item{.path}{a directory for saving simulated data; use this to collect
+results from several different runs in a single folder}
+
+\item{.tag}{a name to use for the current run; results are saved under
+\code{.tag} in \code{.path} folder}
 
 \item{.wait}{if \code{FALSE}, the function returns immediately; if \code{TRUE}, then
 wait until the background job is finished}
+
+\item{.seed}{passed to \code{\link[future.apply:future_mapply]{future.apply::future_mapply()}} as \code{future.seed}}
 }
 \value{
 An \code{r_process} object; see \code{\link[callr:r_bg]{callr::r_bg()}}. Call \code{process$get_resuilt()} to
@@ -47,10 +51,10 @@ disk in the fst format.
 \details{
 \code{\link[=bg_mrgsim_d]{bg_mrgsim_d()}} returns a \link[processx:process]{processx::process} object (follow that link to
 see a list of methods). You will have to call \code{process$get_result()} to
-retrieve the result. When an output \code{folder} is not specified, simulated
-results are returned; when an output \code{folder} is specified, the path to
+retrieve the result. When an output \code{.path} is not specified, simulated
+results are returned; when an output \code{.path} is specified, the path to
 the \code{fst} file on disk is returned.  The \code{fst} files  should be read with
-\code{\link[fst:write_fst]{fst::read_fst()}}. When the results are not saved to \code{folder}, you will
+\code{\link[fst:write_fst]{fst::read_fst()}}. When the results are not saved to \code{.path}, you will
 get a single data frame when \code{nchunk} is 1 or a list of data frames when
 \code{nchunk} is greater than 1. It is safest to call \code{\link[dplyr:bind]{dplyr::bind_rows()}} or
 something equivalent on the result if you are expecting data frame.
