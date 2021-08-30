@@ -83,7 +83,8 @@ head_fst <- function(dir, n = 5, i = 1) {
 #' `.tag` in `.path` folder
 #' @param .wait if `FALSE`, the function returns immediately; if `TRUE`, then 
 #' wait until the background job is finished
-#' @param .seed passed to [future.apply::future_mapply()] as `future.seed`
+#' @param .seed numeric; passed to [future.apply::future_mapply()] as 
+#' `future.seed`, but only numeric values are accepted
 #' 
 #' @details 
 #' [bg_mrgsim_d()] returns a [processx::process] object (follow that link to 
@@ -157,6 +158,7 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     args$.plan <- .plan
     args$.seed <- .seed
   }
+
   a <- r_bg(func, args = args, package = TRUE)
   if(isTRUE(.wait)) {
     a$wait()  
@@ -178,7 +180,7 @@ bg_mrgsim_apply <- function(data, .plan, more, output, .seed = FALSE, ...) {
 }
 
 bg_mrgsim_d_impl <- function(data, mod, output = NULL, .seed = NULL,  ...) {
-  if(!is.null(.seed)) set.seed(.seed)
+  if(is.numeric(.seed)) set.seed(.seed)
   out <- mrgsim(mod, data, ..., output = "df")
   if(is.null(output)) return(out)
   fst::write_fst(path = output, x = out)

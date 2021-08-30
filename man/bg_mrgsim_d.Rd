@@ -37,7 +37,8 @@ results from several different runs in a single folder}
 \item{.wait}{if \code{FALSE}, the function returns immediately; if \code{TRUE}, then
 wait until the background job is finished}
 
-\item{.seed}{passed to \code{\link[future.apply:future_mapply]{future.apply::future_mapply()}} as \code{future.seed}}
+\item{.seed}{numeric; passed to \code{\link[future.apply:future_mapply]{future.apply::future_mapply()}} as
+\code{future.seed}, but only numeric values are accepted}
 }
 \value{
 An \code{r_process} object; see \code{\link[callr:r_bg]{callr::r_bg()}}. Call \code{process$get_resuilt()} to
