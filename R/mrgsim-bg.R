@@ -40,30 +40,48 @@ setup_locker <- function(locker, tag, n) {
   output_paths
 }
 
-#' List all fst files in a directory
+#' List all bg output files in a directory
 #' 
 #' 
-#' @param dir the directory to search
+#' @param path the directory to search
 #' @export
-list_fst <- function(dir) {
+list_fst <- function(path) {
   list.files(
-    dir, 
+    path, 
     full.names = TRUE, 
-    pattern = "*\\.fst$"
+    pattern = "*.\\-bg\\.fst$"
   )
+}
+
+#' Get the contents of an fst file set
+#' 
+#' @inheritParams head_fst
+#' @param .as_list should the results be returned as a list (`TRUE`) or a 
+#' tibble (`FALSE`)
+#' 
+#' @export
+get_fst <- function(path, .as_list = FALSE) {
+  files <- list_fst(path)
+  ans <- lapply(files, read_fst)
+  if(isTRUE(.as_list)) {
+    return(ans)  
+  }
+  as_tibble(bind_rows(ans))
 }
 
 #' Get the head of an fst file set
 #' 
 #' 
-#' @param dir the directory to search
+#' @param path the directory to search
 #' @param n number of rows to show
 #' @param i which output output chunk to show 
 #' @export
-head_fst <- function(dir, n = 5, i = 1) {
-  x <- list_fst(dir)
+head_fst <- function(path, n = 5, i = 1) {
+  x <- list_fst(path)
   read_fst(x[i], from = 1, to = n)
 }
+
+
 
 #' Run mrgsim in the background
 #' 
@@ -158,11 +176,12 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     args$.plan <- .plan
     args$.seed <- .seed
   }
-
+  
   a <- r_bg(func, args = args, package = TRUE)
   if(isTRUE(.wait)) {
     a$wait()  
   }
+  
   a
 }
 
@@ -180,7 +199,7 @@ bg_mrgsim_apply <- function(data, .plan, more, output, .seed = FALSE, ...) {
 }
 
 bg_mrgsim_d_impl <- function(data, mod, output = NULL, .seed = NULL,  ...) {
-  if(is.numeric(.seed)) set.seed(.seed)
+  if(is.numeric(.seed)) set.seed(.seed, kind = "L'Ecuyer-CMRG")
   out <- mrgsim(mod, data, ..., output = "df")
   if(is.null(output)) return(out)
   fst::write_fst(path = output, x = out)

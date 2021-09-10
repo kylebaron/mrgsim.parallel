@@ -4,10 +4,10 @@
 \alias{head_fst}
 \title{Get the head of an fst file set}
 \usage{
-head_fst(dir, n = 5, i = 1)
+head_fst(path, n = 5, i = 1)
 }
 \arguments{
-\item{dir}{the directory to search}
+\item{path}{the directory to search}
 
 \item{n}{number of rows to show}
 

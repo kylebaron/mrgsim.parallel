@@ -2,13 +2,13 @@
 % Please edit documentation in R/mrgsim-bg.R
 \name{list_fst}
 \alias{list_fst}
-\title{List all fst files in a directory}
+\title{List all bg output files in a directory}
 \usage{
-list_fst(dir)
+list_fst(path)
 }
 \arguments{
-\item{dir}{the directory to search}
+\item{path}{the directory to search}
 }
 \description{
-List all fst files in a directory
+List all bg output files in a directory
 }
