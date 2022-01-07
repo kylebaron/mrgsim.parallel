@@ -1,4 +1,8 @@
 
+bg_sim_env <- function() {
+  c(RSTUDIO="0", rcmd_safe_env())  
+}
+
 n_of_N <- function(i) {
   pad <- ceiling(log10(max(i))) + 1
   mx <- max(i)
@@ -210,7 +214,7 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     args$.seed <- .seed
     args$.format <- .format
   }
-  a <- r_bg(func, args = args, package = TRUE)
+  a <- r_bg(func, args = args, package = TRUE, env = bg_sim_env())
   if(isTRUE(.wait)) {
     a$wait()  
   }
@@ -219,7 +223,6 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
 
 bg_mrgsim_apply <- function(data, .plan, more, output, .seed = FALSE, 
                             .format = "none", ...) {
-  options(future.fork.enable = TRUE)
   plan(.plan)  
   future_mapply(
     FUN = bg_mrgsim_d_impl, 
