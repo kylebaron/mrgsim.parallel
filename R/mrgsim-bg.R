@@ -223,16 +223,26 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
 
 bg_mrgsim_apply <- function(data, .plan, more, output, .seed = FALSE, 
                             .format = "none", ...) {
-  plan(.plan)  
+  plan(.plan)
+  #plan(future::multisession, workers = 6)
   future_mapply(
-    FUN = bg_mrgsim_d_impl, 
+    FUN = bg_mrgsim_d_impl,
     data = data,
     output = output,
     MoreArgs = more,
-    SIMPLIFY = FALSE, 
-    future.seed = .seed, 
+    SIMPLIFY = FALSE,
+    future.seed = .seed,
     .format = .format
-  )  
+  )
+  # parallel::mcmapply(
+  #   FUN = bg_mrgsim_d_impl,
+  #   data = data,
+  #   output = output,
+  #   MoreArgs = more,
+  #   SIMPLIFY = FALSE,
+  #   future.seed = .seed,
+  #   .format = .format
+  # )
 }
 
 bg_mrgsim_d_impl <- function(data, mod, output = NULL, .seed = NULL, 
