@@ -10,13 +10,13 @@ Description: Simulation from an 'mrgsolve'
     mclapply() or future_lapply() 
     <https://cran.r-project.org/package=future.apply>.
 License: GPL (>=2)
-Imports: parallel, dplyr, future,  future.apply, callr, fst
+Imports: parallel, dplyr, future, future.apply, callr, fst
 Depends: mrgsolve, R (>= 3.5.0)
-Suggests: testthat
+Suggests: testthat, arrow
 Encoding: UTF-8
 URL: https://github.com/kylebaron/mrgsim.parallel
 BugReports: https://github.com/kylebaron/mrgsim.parallel/issues
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 Language: en-US
 NeedsCompilation: no

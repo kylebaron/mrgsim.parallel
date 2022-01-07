@@ -2,13 +2,14 @@
 % Please edit documentation in R/mrgsim-bg.R
 \name{list_fst}
 \alias{list_fst}
-\title{List all bg output files in a directory}
+\title{List all output files in a fst file set}
 \usage{
 list_fst(path)
 }
 \arguments{
-\item{path}{the directory to search}
+\item{path}{the (full) directory path to search}
 }
 \description{
-List all bg output files in a directory
+Use the funcation to read all of the \code{.fst} files that were saved when
+\code{bg_mrgsim_d} was called and \code{.path} was passed along with \code{.format = "fst"}.
 }

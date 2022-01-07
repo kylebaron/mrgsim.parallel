@@ -44,10 +44,7 @@ library(future)
 
 library(mrgsim.parallel)
 
-options(future.fork.enable=TRUE, mc.cores = 6L)
-
-plan(multiprocess, workers = 6L)
-
+options(future.fork.enable = TRUE, parallelly.fork.enable = TRUE, mc.cores = 4L)
 ```
 ## First workflow: split and simulate a data set
 
@@ -65,9 +62,14 @@ dim(data)
 
 We can simulate in parallel with the future package or the parallel package like this:
 ```{r}
-system.time(ans1 <- future_mrgsim_d(mod, data, nchunk = 6L))
+plan(multisession, workers = 4L)
+system.time(ans1 <- future_mrgsim_d(mod, data, nchunk = 4L))
 
-system.time(ans2 <- mc_mrgsim_d(mod, data, nchunk = 6L))
+plan(multicore, workers = 4L)
+system.time(ans1b <- future_mrgsim_d(mod, data, nchunk = 4L))
+
+
+system.time(ans2 <- mc_mrgsim_d(mod, data, nchunk = 4L))
 ```
 
 To compare an identical simulation done without parallelization
@@ -84,7 +86,7 @@ identical(ans2,as.data.frame(ans3))
 
 Backend and the model
 ```{r}
-plan(multiprocess, workers = 6)
+plan(multisession, workers = 6)
 
 mod <- modlib("pk1cmt", end = 168*4, delta = 1)
 ```
@@ -137,7 +139,7 @@ See also: `chunk_by_row`
 plan(transparent)
 system.time(x <- fu_mrgsim_d(mod, data, nchunk = 8, .dry = TRUE))
 
-plan(multiprocess,workers = 8L)
+plan(multisession, workers = 8L)
 system.time(x <- fu_mrgsim_d(mod, data, nchunk = 8, .dry = TRUE))
 
 ```

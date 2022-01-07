@@ -16,3 +16,6 @@ head_fst(path, n = 5, i = 1)
 \description{
 Get the head of an fst file set
 }
+\seealso{
+\code{\link[=get_fst]{get_fst()}}, \code{\link[=list_fst]{list_fst()}}
+}

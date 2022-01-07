@@ -10,18 +10,18 @@ n_of_N <- function(i) {
 make_output_files <- function(n) {
   i <- seq_len(n)
   stems <- n_of_N(i)
-  files <- paste0(stems, "-bg.fst")
+  files <- paste0(stems, "-bg.")
   files
 }
 
-setup_locker <- function(locker, tag, n) {
+setup_locker <- function(locker, tag, n, .format = "fst") {
   will_save <- is.character(locker) && length(locker)==1
   output_paths <- vector(mode = "list", length = n)
   if(is.character(locker)) {
     output_folder <- file.path(locker,tag)
     output_files <- make_output_files(n)
+    output_files <- paste0(output_files, .format)
     output_paths <- file.path(output_folder, output_files)
-    
     if(!dir.exists(locker)) {
       dir.create(locker, recursive = TRUE)  
     }
@@ -29,9 +29,15 @@ setup_locker <- function(locker, tag, n) {
       unlink(output_folder, recursive = TRUE)  
     }
     dir.create(output_folder)
-    
-    for(path in output_paths) {
-      write_fst(tibble(ID = 0)[0,], path = path)
+    if(.format == "fst") {
+      for(path in output_paths) {
+        write_fst(tibble(ID = 0)[0,], path = path)
+      }
+    }
+    if(.format == "feather") {
+      for(path in output_paths) {
+        arrow::write_feather(tibble(ID = 0)[0,], sink = path)
+      }
     }
   }  
   if(will_save) {
@@ -40,10 +46,13 @@ setup_locker <- function(locker, tag, n) {
   output_paths
 }
 
-#' List all bg output files in a directory
+#' List all output files in a fst file set
 #' 
+#' Use the funcation to read all of the `.fst` files that were saved when 
+#' `bg_mrgsim_d` was called and `.path` was passed along with `.format = "fst"`.
 #' 
-#' @param path the directory to search
+#' @param path the (full) directory path to search
+#' 
 #' @export
 list_fst <- function(path) {
   list.files(
@@ -58,6 +67,8 @@ list_fst <- function(path) {
 #' @inheritParams head_fst
 #' @param .as_list should the results be returned as a list (`TRUE`) or a 
 #' tibble (`FALSE`)
+#' 
+#' @seealso [list_fst()], [head_fst()]
 #' 
 #' @export
 get_fst <- function(path, .as_list = FALSE) {
@@ -75,13 +86,14 @@ get_fst <- function(path, .as_list = FALSE) {
 #' @param path the directory to search
 #' @param n number of rows to show
 #' @param i which output output chunk to show 
+#' 
+#' @seealso [get_fst()], [list_fst()]
+#' 
 #' @export
 head_fst <- function(path, n = 5, i = 1) {
   x <- list_fst(path)
   read_fst(x[i], from = 1, to = n)
 }
-
-
 
 #' Run mrgsim in the background
 #' 
@@ -93,8 +105,6 @@ head_fst <- function(path, n = 5, i = 1) {
 #' 
 #' @param mod a model object
 #' @param ... arguments passed to [mrgsolve::mrgsim()]
-#' @param .plan passed to [future::plan()]; this controls how the problem is 
-#' parallelized when `nchunk` is greater than 1
 #' @param .path a directory for saving simulated data; use this to collect 
 #' results from several different runs in a single folder
 #' @param .tag a name to use for the current run; results are saved under 
@@ -103,6 +113,12 @@ head_fst <- function(path, n = 5, i = 1) {
 #' wait until the background job is finished
 #' @param .seed numeric; passed to [future.apply::future_mapply()] as 
 #' `future.seed`, but only numeric values are accepted
+#' @param .format the output format for saving simulations; using format
+#' `fst` will allow saved results to be read with [fst::read_fst()]; using
+#' format `arrow` will allow saved results to be read with 
+#' [arrow::open_dataset()] with `format = "feather` or [arrow::read_feather()]; 
+#' note that `fst` is installed with `mrgsim.parallel` but `arrow` may need 
+#' explicit installation.
 #' 
 #' @details 
 #' [bg_mrgsim_d()] returns a [processx::process] object (follow that link to 
@@ -118,7 +134,7 @@ head_fst <- function(path, n = 5, i = 1) {
 #' @examples
 #' mod <- mrgsolve::house(delta = 24, end = 168)
 #' data <- mrgsolve::expand.ev(
-#'   amt =c(100, 300, 450), 
+#'   amt = c(100, 300, 450), 
 #'   ID = 1:100, 
 #'   ii = 24, 
 #'   addl = 6
@@ -140,9 +156,31 @@ head_fst <- function(path, n = 5, i = 1) {
 #' @export
 bg_mrgsim_d <- function(mod, data, nchunk = 1,   
                         ..., 
-                        .plan = future::plan(),
                         .path = NULL, .tag = NULL, 
-                        .wait = FALSE, .seed = FALSE) {
+                        .wait = FALSE, .seed = FALSE, 
+                        .format = c("fst", "rds", "feather")) {
+  
+  .plan <- future::plan()
+  notag <- is.null(.tag)
+  .format <- match.arg(.format)
+  if(notag) {
+    .tag <- mod@model  
+  }
+  if(is.character(.path)) {
+    if(.format == "arrow") {
+      stopifnot(requireNamespace("arrow")) 
+    }
+    if(notag) {
+      .tag <- basename(.path)
+    }
+    .path <- dirname(.path)
+  }
+  if(!is.character(.tag)) {
+    stop(".tag must have type character")  
+  }
+  if(length(.tag) != 1) {
+    stop(".tag must have length 1")  
+  }
   
   if(is.data.frame(data)) {
     if(nchunk <= 1) {
@@ -152,13 +190,7 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     }
   }
   
-  if(is.null(.tag)) {
-    .tag <- mod@model
-  }
-  stopifnot(is.character(.tag))
-  stopifnot(length(.tag)==1)
-  
-  output_paths <- setup_locker(.path, .tag, n = length(data))
+  output_paths <- setup_locker(.path, .tag, n = length(data), .format = .format)
   
   if(length(data)==1) {
     func <- bg_mrgsim_d_impl
@@ -167,6 +199,7 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     args$data <- data[[1]]
     args$output <- output_paths[[1]]
     args$.seed <- .seed
+    args$.format <- .format
   } else {
     func <- bg_mrgsim_apply
     args <- list()
@@ -175,33 +208,46 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     args$data <- data
     args$.plan <- .plan
     args$.seed <- .seed
+    args$.format <- .format
   }
-  
   a <- r_bg(func, args = args, package = TRUE)
   if(isTRUE(.wait)) {
     a$wait()  
   }
-  
   a
 }
 
-bg_mrgsim_apply <- function(data, .plan, more, output, .seed = FALSE, ...) {
+bg_mrgsim_apply <- function(data, .plan, more, output, .seed = FALSE, 
+                            .format = "none", ...) {
   options(future.fork.enable = TRUE)
-  future::plan(.plan)  
-  future.apply::future_mapply(
+  plan(.plan)  
+  future_mapply(
     FUN = bg_mrgsim_d_impl, 
     data = data,
     output = output,
     MoreArgs = more,
     SIMPLIFY = FALSE, 
-    future.seed = .seed
+    future.seed = .seed, 
+    .format = .format
   )  
 }
 
-bg_mrgsim_d_impl <- function(data, mod, output = NULL, .seed = NULL,  ...) {
+bg_mrgsim_d_impl <- function(data, mod, output = NULL, .seed = NULL, 
+                             .format = "none",  ...) {
   if(is.numeric(.seed)) set.seed(.seed, kind = "L'Ecuyer-CMRG")
   out <- mrgsim(mod, data, ..., output = "df")
   if(is.null(output)) return(out)
-  fst::write_fst(path = output, x = out)
+  if(.format == "fst") {
+    write_fst(x = out, path = output)
+    return(output)
+  }
+  if(.format == "feather") {
+    arrow::write_feather( 
+      x = out,
+      sink = output
+    )
+    return(output)
+  } 
+  saveRDS(object = out, file = output)
   return(output)
 }

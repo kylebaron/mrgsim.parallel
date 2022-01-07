@@ -9,11 +9,11 @@ bg_mrgsim_d(
   data,
   nchunk = 1,
   ...,
-  .plan = future::plan(),
   .path = NULL,
   .tag = NULL,
   .wait = FALSE,
-  .seed = FALSE
+  .seed = FALSE,
+  .format = c("fst", "rds", "feather")
 )
 }
 \arguments{
@@ -24,9 +24,6 @@ bg_mrgsim_d(
 \item{nchunk}{number of chunks in which to split the data set}
 
 \item{...}{arguments passed to \code{\link[mrgsolve:mrgsim]{mrgsolve::mrgsim()}}}
-
-\item{.plan}{passed to \code{\link[future:plan]{future::plan()}}; this controls how the problem is
-parallelized when \code{nchunk} is greater than 1}
 
 \item{.path}{a directory for saving simulated data; use this to collect
 results from several different runs in a single folder}
@@ -39,6 +36,13 @@ wait until the background job is finished}
 
 \item{.seed}{numeric; passed to \code{\link[future.apply:future_mapply]{future.apply::future_mapply()}} as
 \code{future.seed}, but only numeric values are accepted}
+
+\item{.format}{the output format for saving simulations; using format
+\code{fst} will allow saved results to be read with \code{\link[fst:write_fst]{fst::read_fst()}}; using
+format \code{arrow} will allow saved results to be read with
+\code{\link[arrow:open_dataset]{arrow::open_dataset()}} with \verb{format = "feather} or \code{\link[arrow:read_feather]{arrow::read_feather()}};
+note that \code{fst} is installed with \code{mrgsim.parallel} but \code{arrow} may need
+explicit installation.}
 }
 \value{
 An \code{r_process} object; see \code{\link[callr:r_bg]{callr::r_bg()}}. Call \code{process$get_resuilt()} to
@@ -63,7 +67,7 @@ something equivalent on the result if you are expecting data frame.
 \examples{
 mod <- mrgsolve::house(delta = 24, end = 168)
 data <- mrgsolve::expand.ev(
-  amt =c(100, 300, 450), 
+  amt = c(100, 300, 450), 
   ID = 1:100, 
   ii = 24, 
   addl = 6
