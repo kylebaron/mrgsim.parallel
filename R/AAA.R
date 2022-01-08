@@ -1,9 +1,9 @@
 #' @importFrom future.apply future_lapply future_mapply
 #' @importFrom future plan sequential
 #' @importFrom dplyr bind_rows as_tibble tibble
-#' @importFrom parallel mclapply
+#' @importFrom parallel mclapply mcmapply
 #' @importFrom mrgsolve loadso mrgsim_d mrgsim_ei house mrgsim_i mrgsim
-#' @importFrom callr r_bg
+#' @importFrom callr r_bg rcmd_safe_env
 #' @importFrom fst read_fst write_fst
 #' @importMethodsFrom mrgsolve as.list
 #' @importFrom utils assignInMyNamespace

@@ -1,4 +1,11 @@
 
+# mark_done <- function(dataset, start_time) {
+#   end_time <- date()
+#   file <- file.path(dataset, "DONE")
+#   cat(file = file, paste0("start: ", start_time), "\n")
+#   cat(file = file, paste0("end:   ", end_time), "\n", append = TRUE)
+# }
+
 bg_sim_env <- function() {
   c(RSTUDIO="0", rcmd_safe_env())  
 }
@@ -71,18 +78,22 @@ list_fst <- function(path) {
 #' @inheritParams head_fst
 #' @param .as_list should the results be returned as a list (`TRUE`) or a 
 #' tibble (`FALSE`)
+#' @param ... not used
 #' 
 #' @seealso [list_fst()], [head_fst()]
 #' 
 #' @export
-get_fst <- function(path, .as_list = FALSE) {
+open_dataset_fst <- function(path, .as_list = FALSE, ...) {
   files <- list_fst(path)
   ans <- lapply(files, read_fst)
   if(isTRUE(.as_list)) {
     return(ans)  
   }
-  as_tibble(bind_rows(ans))
+  as_tibble(bind_rows(ans)) 
 }
+#' @export
+#' @rdname open_dataset_fst
+get_fst <- open_dataset_fst
 
 #' Get the head of an fst file set
 #' 
@@ -109,20 +120,24 @@ head_fst <- function(path, n = 5, i = 1) {
 #' 
 #' @param mod a model object
 #' @param ... arguments passed to [mrgsolve::mrgsim()]
-#' @param .path a directory for saving simulated data; use this to collect 
+#' @param .dataset a directory for saving simulated data; use this to collect 
 #' results from several different runs in a single folder
 #' @param .tag a name to use for the current run; results are saved under 
 #' `.tag` in `.path` folder
-#' @param .wait if `FALSE`, the function returns immediately; if `TRUE`, then 
-#' wait until the background job is finished
-#' @param .seed numeric; passed to [future.apply::future_mapply()] as 
-#' `future.seed`, but only numeric values are accepted
 #' @param .format the output format for saving simulations; using format
 #' `fst` will allow saved results to be read with [fst::read_fst()]; using
 #' format `arrow` will allow saved results to be read with 
 #' [arrow::open_dataset()] with `format = "feather` or [arrow::read_feather()]; 
 #' note that `fst` is installed with `mrgsim.parallel` but `arrow` may need 
-#' explicit installation.
+#' explicit installation
+#' @param .wait if `FALSE`, the function returns immediately; if `TRUE`, then 
+#' wait until the background job is finished
+#' @param .seed numeric; passed to [future.apply::future_mapply()] as 
+#' `future.seed`, but only numeric values are accepted
+#' @param .cores the number of cores to parallelize across; pass 1 to run the 
+#' simulation sequentially
+#' @param .plan the name of a [future::plan()] strategy; if passed, the 
+#' parallelization will be handled by the `future` package.
 #' 
 #' @details 
 #' [bg_mrgsim_d()] returns a [processx::process] object (follow that link to 
@@ -150,34 +165,55 @@ head_fst <- function(path, n = 5, i = 1) {
 #'   carry_out = "dose", 
 #'   outvars = "CP",
 #'   .wait = TRUE
-#'   ) 
-#'  process$get_result()
+#' ) 
+#' process$get_result()
+#'  
+#'  
+#' ds <- file.path(tempdir(), "sims")
+#' files <- bg_mrgsim_d(
+#'   mod, data, carry_out = "dose", 
+#'   .wait = TRUE, 
+#'   .dataset = ,
+#'   .format = "fst"
+#' )
+#' files
+#' sims <- open_dataset_fst(ds)
+#' head(sims)
 #'   
+#' 
 #' @return 
 #' An `r_process` object; see [callr::r_bg()]. Call `process$get_resuilt()` to 
-#' get the actual result (see `details`).
+#' get the actual result (see `details`). If a `.dataset` path is supplied, 
+#' the simulated data is saved to disk and a list of file names is returned. 
 #' 
 #' @export
 bg_mrgsim_d <- function(mod, data, nchunk = 1,   
                         ..., 
-                        .path = NULL, .tag = NULL, 
-                        .wait = FALSE, .seed = FALSE, 
-                        .format = c("fst", "rds", "feather")) {
+                        .dataset = NULL, .tag = NULL, 
+                        .format = c("fst", "feather", "rds"),
+                        .wait = TRUE, .seed = FALSE, 
+                        .cores = 1, .plan = NULL) {
   
-  .plan <- future::plan()
   notag <- is.null(.tag)
+  Plan <- list(workers = .cores)
   .format <- match.arg(.format)
+  .path <- NULL
+  
+  if(is.character(.plan)) {
+    Plan$strategy <- .plan
+    if(.cores==1) Plan$workers <- NULL
+  }
   if(notag) {
     .tag <- mod@model  
   }
-  if(is.character(.path)) {
-    if(.format == "arrow") {
-      stopifnot(requireNamespace("arrow")) 
+  if(is.character(.dataset)) {
+    if(.format == "arrow" && !arrow_installed()) {
+      stop("the arrow package must be installed to complete this task.")
     }
     if(notag) {
-      .tag <- basename(.path)
+      .tag <- basename(.dataset)
     }
-    .path <- dirname(.path)
+    .path <- dirname(.dataset)
   }
   if(!is.character(.tag)) {
     stop(".tag must have type character")  
@@ -185,13 +221,15 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
   if(length(.tag) != 1) {
     stop(".tag must have length 1")  
   }
-  
   if(is.data.frame(data)) {
     if(nchunk <= 1) {
       data <- list(data)
     } else {
       data <- chunk_by_id(data, nchunk = nchunk)      
     }
+  }
+  if(!is.list(data)) {
+    stop("`data` didn't resolver to list format.")  
   }
   
   output_paths <- setup_locker(.path, .tag, n = length(data), .format = .format)
@@ -210,7 +248,7 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     args$more <- list(mod = mod, ...)
     args$output <- output_paths
     args$data <- data
-    args$.plan <- .plan
+    args$Plan <- Plan
     args$.seed <- .seed
     args$.format <- .format
   }
@@ -222,27 +260,49 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
 }
 
 bg_mrgsim_apply <- function(data, .plan, more, output, .seed = FALSE, 
-                            .format = "none", ...) {
-  plan(.plan)
-  #plan(future::multisession, workers = 6)
-  future_mapply(
+                            .format = "none", Plan = list(), ...) {
+  
+  future <- "strategy" %in% names(Plan)
+  mc <- is.numeric(Plan$workers) && Plan$workers > 1
+  
+  if(mc && !future && mc_able()) {
+    set.seed(.seed, kind = "L'Ecuyer-CMRG")
+    ans <- mcmapply(
+      FUN = bg_mrgsim_d_impl,
+      data = data,
+      output = output,
+      MoreArgs = more,
+      SIMPLIFY = FALSE,
+      .format = .format, 
+      mc.cores = Plan$workers
+    )
+    return(ans)    
+  }
+  
+  if(future) {
+    do.call(plan, Plan)
+    ans <- future_mapply(
+      FUN = bg_mrgsim_d_impl,
+      data = data,
+      output = output,
+      MoreArgs = more,
+      SIMPLIFY = FALSE,
+      future.seed = .seed,
+      .format = .format
+    )
+    return(ans)
+  }
+  
+  set.seed(.seed, kind = "L'Ecuyer-CMRG")
+  ans <- mapply(
     FUN = bg_mrgsim_d_impl,
     data = data,
     output = output,
     MoreArgs = more,
     SIMPLIFY = FALSE,
-    future.seed = .seed,
     .format = .format
   )
-  # parallel::mcmapply(
-  #   FUN = bg_mrgsim_d_impl,
-  #   data = data,
-  #   output = output,
-  #   MoreArgs = more,
-  #   SIMPLIFY = FALSE,
-  #   future.seed = .seed,
-  #   .format = .format
-  # )
+  return(ans) 
 }
 
 bg_mrgsim_d_impl <- function(data, mod, output = NULL, .seed = NULL, 

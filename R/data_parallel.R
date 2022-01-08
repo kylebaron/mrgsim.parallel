@@ -36,7 +36,7 @@
 #'
 #' data <- mrgsolve::expand.ev(amt = seq(10))
 #'
-#' out <- future_mrgsim_d(mod,data, nchunk = 2)
+#' out <- future_mrgsim_d(mod, data, nchunk = 2)
 #'
 #' @name parallel_mrgsim_d
 #' @export

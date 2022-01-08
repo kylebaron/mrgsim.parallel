@@ -54,7 +54,6 @@ test_that("bg is same as fg, not chunked", {
 })
 
 test_that("bg is same as fg, chunked", { 
-  future::plan(future::sequential)
   bg <- bg_mrgsim_d(
     mod, 
     data, 
@@ -62,9 +61,11 @@ test_that("bg is same as fg, chunked", {
     outvars = "DV",
     .wait = TRUE , 
     .seed = 123256L, 
+    .plan = "sequential",
     nchunk = 2
   )
   bg <- bind_rows(bg$get_result())
+  future::plan(future::sequential)
   fg <- future_mrgsim_d(
     mod, 
     data, 

@@ -9,11 +9,13 @@ bg_mrgsim_d(
   data,
   nchunk = 1,
   ...,
-  .path = NULL,
+  .dataset = NULL,
   .tag = NULL,
-  .wait = FALSE,
+  .format = c("fst", "feather", "rds"),
+  .wait = TRUE,
   .seed = FALSE,
-  .format = c("fst", "rds", "feather")
+  .cores = 1,
+  .plan = NULL
 )
 }
 \arguments{
@@ -25,11 +27,18 @@ bg_mrgsim_d(
 
 \item{...}{arguments passed to \code{\link[mrgsolve:mrgsim]{mrgsolve::mrgsim()}}}
 
-\item{.path}{a directory for saving simulated data; use this to collect
+\item{.dataset}{a directory for saving simulated data; use this to collect
 results from several different runs in a single folder}
 
 \item{.tag}{a name to use for the current run; results are saved under
 \code{.tag} in \code{.path} folder}
+
+\item{.format}{the output format for saving simulations; using format
+\code{fst} will allow saved results to be read with \code{\link[fst:write_fst]{fst::read_fst()}}; using
+format \code{arrow} will allow saved results to be read with
+\code{\link[arrow:open_dataset]{arrow::open_dataset()}} with \verb{format = "feather} or \code{\link[arrow:read_feather]{arrow::read_feather()}};
+note that \code{fst} is installed with \code{mrgsim.parallel} but \code{arrow} may need
+explicit installation}
 
 \item{.wait}{if \code{FALSE}, the function returns immediately; if \code{TRUE}, then
 wait until the background job is finished}
@@ -37,16 +46,16 @@ wait until the background job is finished}
 \item{.seed}{numeric; passed to \code{\link[future.apply:future_mapply]{future.apply::future_mapply()}} as
 \code{future.seed}, but only numeric values are accepted}
 
-\item{.format}{the output format for saving simulations; using format
-\code{fst} will allow saved results to be read with \code{\link[fst:write_fst]{fst::read_fst()}}; using
-format \code{arrow} will allow saved results to be read with
-\code{\link[arrow:open_dataset]{arrow::open_dataset()}} with \verb{format = "feather} or \code{\link[arrow:read_feather]{arrow::read_feather()}};
-note that \code{fst} is installed with \code{mrgsim.parallel} but \code{arrow} may need
-explicit installation.}
+\item{.cores}{the number of cores to parallelize across; pass 1 to run the
+simulation sequentially}
+
+\item{.plan}{the name of a \code{\link[future:plan]{future::plan()}} strategy; if passed, the
+parallelization will be handled by the \code{future} package.}
 }
 \value{
 An \code{r_process} object; see \code{\link[callr:r_bg]{callr::r_bg()}}. Call \code{process$get_resuilt()} to
-get the actual result (see \code{details}).
+get the actual result (see \code{details}). If a \code{.dataset} path is supplied,
+the simulated data is saved to disk and a list of file names is returned.
 }
 \description{
 This function uses \code{\link[callr:r_bg]{callr::r_bg()}} to run your simulation in the background,
@@ -79,7 +88,20 @@ process <- bg_mrgsim_d(
   carry_out = "dose", 
   outvars = "CP",
   .wait = TRUE
-  ) 
- process$get_result()
+) 
+process$get_result()
+ 
+ 
+ds <- file.path(tempdir(), "sims")
+files <- bg_mrgsim_d(
+  mod, data, carry_out = "dose", 
+  .wait = TRUE, 
+  .dataset = ,
+  .format = "fst"
+)
+files
+sims <- open_dataset_fst(ds)
+head(sims)
   
+
 }

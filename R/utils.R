@@ -97,3 +97,10 @@ mc_able <- function() {
   if(.Platform$OS.type=="windows") return(FALSE)
   return(isTRUE(getOption("mrgsim.parallel.mc.enable",TRUE)))
 }
+
+require_arrow <- function() {
+  if(!requireNamespace("arrow")) {
+    stop("the arrow package must be installed to complete this task.")  
+  }
+}
+arrow_installed <- function() requireNamespace("arrow")
