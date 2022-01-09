@@ -1,6 +1,6 @@
 library(testthat)
 
-context("bbackground simulation")
+context("background simulation")
 
 mod <- mrgsolve::modlib("popex", delta = 24, end = 168)
 data <- mrgsolve::expand.ev(

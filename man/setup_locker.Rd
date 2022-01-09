@@ -2,9 +2,15 @@
 % Please edit documentation in R/mrgsim-bg.R
 \name{setup_locker}
 \alias{setup_locker}
-\title{Set up a data storag locker}
+\title{Set up a data storage locker}
 \usage{
-setup_locker(locker, tag, n = 0, .format = "fst", write_dummy = FALSE)
+setup_locker(
+  locker,
+  tag = locker_tag(locker),
+  n = 0,
+  .format = "fst",
+  write_dummy = FALSE
+)
 }
 \arguments{
 \item{locker}{the directory that contains tagged directories of run
@@ -20,9 +26,18 @@ each time it is used to store output from a new simulation run}
 outputs using \code{\link[fst:write_fst]{fst::write_fst()}}; use \code{feather} to create outputs using}
 
 \item{write_dummy}{if \code{TRUE} placeholder files are created containing
-tibbles with no rows
-\code{\link[arrow:write_feather]{arrow::write_feather()}}}
+tibbles with no rows}
 }
 \description{
-Set up a data storag locker
+Set up a data storage locker
+}
+\details{
+The \code{arrow} package must be installed to \code{write_dummy} files when \code{.format}
+is \code{feather}.
+}
+\examples{
+
+x <- setup_locker(tempdir(), tag = "my-sims", n = 5)
+x
+
 }

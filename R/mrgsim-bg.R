@@ -14,7 +14,7 @@ n_of_N <- function(i) {
   pad <- ceiling(log10(max(i))) + 1
   mx <- max(i)
   i <- formatC(i, width = pad, flag = "0")
-  mx <- formatC(mx, width = pad, flag = "0")
+  mx <- i[length(i)]
   paste0(i, "-", mx)  
 }
 
@@ -25,7 +25,9 @@ make_output_files <- function(n) {
   files
 }
 
-#' Set up a data storag locker
+locker_tag <- function(locker) basename(locker)
+
+#' Set up a data storage locker
 #' 
 #' @param locker the directory that contains tagged directories of run 
 #' results
@@ -37,9 +39,20 @@ make_output_files <- function(n) {
 #' outputs using [fst::write_fst()]; use `feather` to create outputs using 
 #' @param write_dummy if `TRUE` placeholder files are created containing 
 #' tibbles with no rows
-#' [arrow::write_feather()]
-setup_locker <- function(locker, tag, n = 0, .format = "fst", 
-                         write_dummy = FALSE) {
+#' 
+#' @details
+#' 
+#' The `arrow` package must be installed to `write_dummy` files when `.format`
+#' is `feather`.
+#' 
+#' @examples
+#' 
+#' x <- setup_locker(tempdir(), tag = "my-sims", n = 5)
+#' x
+#' 
+#' @export
+setup_locker <- function(locker, tag = locker_tag(locker), n = 0, 
+                         .format = "fst",  write_dummy = FALSE) {
   will_save <- is.character(locker) && length(locker)==1
   output_paths <- vector(mode = "list", length = n)
   if(!will_save) return(output_paths)
@@ -65,7 +78,7 @@ setup_locker <- function(locker, tag, n = 0, .format = "fst",
     output_files <- make_output_files(n)
     output_files <- paste0(output_files, .format)
     output_paths <- file.path(output_folder, output_files)
-    example_data <- tibble(ID = 0)[0,]
+    example_data <- tibble()
     if(.format == "fst" && write_dummy) {
       for(path in output_paths) {
         write_fst(example_data, path = path)
@@ -261,7 +274,7 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     .path, 
     .tag, n = length(data), 
     .format = .format, 
-    write_dummy = TRUE
+    write_dummy = FALSE
   )
   
   if(length(data)==1) {
@@ -344,13 +357,13 @@ bg_mrgsim_d_impl <- function(data, mod, output = NULL, .seed = NULL,
     write_fst(x = out, path = output)
     return(output)
   }
-  if(.format == "feather") {
+  if(.format == "feather") { #nocov start
     arrow::write_feather( 
       x = out,
       sink = output
     )
     return(output)
-  } 
+  }  
   saveRDS(object = out, file = output)
-  return(output)
+  return(output) #nocov end
 }
