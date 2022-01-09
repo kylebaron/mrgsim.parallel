@@ -36,21 +36,20 @@ results from several different runs in a single folder}
 \item{.format}{the output format for saving simulations; using format
 \code{fst} will allow saved results to be read with \code{\link[fst:write_fst]{fst::read_fst()}}; using
 format \code{arrow} will allow saved results to be read with
-\code{\link[arrow:open_dataset]{arrow::open_dataset()}} with \verb{format = "feather} or \code{\link[arrow:read_feather]{arrow::read_feather()}};
-note that \code{fst} is installed with \code{mrgsim.parallel} but \code{arrow} may need
-explicit installation}
+\code{\link[arrow:open_dataset]{arrow::open_dataset()}} with \verb{format = "feather}; note that \code{fst} is
+installed with \code{mrgsim.parallel} but \code{arrow} may need explicit installation}
 
 \item{.wait}{if \code{FALSE}, the function returns immediately; if \code{TRUE}, then
 wait until the background job is finished}
 
-\item{.seed}{numeric; passed to \code{\link[future.apply:future_mapply]{future.apply::future_mapply()}} as
-\code{future.seed}, but only numeric values are accepted}
+\item{.seed}{numeric; used to set the seed for the simulation; this is the
+only way to control the random number generation for your simulation}
 
 \item{.cores}{the number of cores to parallelize across; pass 1 to run the
 simulation sequentially}
 
 \item{.plan}{the name of a \code{\link[future:plan]{future::plan()}} strategy; if passed, the
-parallelization will be handled by the \code{future} package.}
+parallelization will be handled by the \code{future} package}
 }
 \value{
 An \code{r_process} object; see \code{\link[callr:r_bg]{callr::r_bg()}}. Call \code{process$get_resuilt()} to
@@ -58,9 +57,10 @@ get the actual result (see \code{details}). If a \code{.dataset} path is supplie
 the simulated data is saved to disk and a list of file names is returned.
 }
 \description{
-This function uses \code{\link[callr:r_bg]{callr::r_bg()}} to run your simulation in the background,
+This function uses \code{\link[callr:r_bg]{callr::r_bg()}} to simulate a dataset in the background,
 optionally in parallel and optionally saving the results directly to
-disk in the fst format.
+disk in  \code{fst}, \code{arrow} or \code{rds} format. Parallelization can be mediated
+by the \code{parallel} package on unix or macos or \code{future} on any os.
 }
 \details{
 \code{\link[=bg_mrgsim_d]{bg_mrgsim_d()}} returns a \link[processx:process]{processx::process} object (follow that link to
@@ -100,7 +100,7 @@ files <- bg_mrgsim_d(
   .format = "fst"
 )
 files
-sims <- open_dataset_fst(ds)
+sims <- internalize_fst(ds)
 head(sims)
   
 
