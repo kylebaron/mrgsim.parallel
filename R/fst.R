@@ -1,0 +1,52 @@
+#' List all output files in a fst file set
+#' 
+#' Use the funcation to read all of the `.fst` files that were saved when 
+#' `bg_mrgsim_d` was called and `.path` was passed along with `.format = "fst"`.
+#' 
+#' @param path the (full) directory path to search
+#' 
+#' @export
+list_fst <- function(path) {
+  list.files(
+    path, 
+    full.names = TRUE, 
+    pattern = "*.\\-bg\\.fst$"
+  )
+}
+
+#' Get the contents of an fst file set
+#' 
+#' @inheritParams head_fst
+#' @param .as_list should the results be returned as a list (`TRUE`) or a 
+#' tibble (`FALSE`)
+#' @param ... not used
+#' 
+#' @seealso [list_fst()], [head_fst()]
+#' 
+#' @export
+internalize_fst <- function(path, .as_list = FALSE, ...) {
+  files <- list_fst(path)
+  ans <- lapply(files, read_fst)
+  if(isTRUE(.as_list)) {
+    return(ans)  
+  }
+  as_tibble(bind_rows(ans)) 
+}
+#' @export
+#' @rdname internalize_fst
+get_fst <- internalize_fst
+
+#' Get the head of an fst file set
+#' 
+#' 
+#' @param path the directory to search
+#' @param n number of rows to show
+#' @param i which output output chunk to show 
+#' 
+#' @seealso [get_fst()], [list_fst()]
+#' 
+#' @export
+head_fst <- function(path, n = 5, i = 1) {
+  x <- list_fst(path)
+  read_fst(x[i], from = 1, to = n)
+}
