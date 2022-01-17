@@ -96,7 +96,7 @@ test_that("save results as fst", {
   expect_is(sims, "data.frame")
   expect_equal(names(sims), c("ID", "time", "dose", "DV"))
   files <- list.files(dataset)
-  expect_equal(files[1:2], c("bg-01-02.fst", "bg-02-02.fst"))
+  expect_equal(files[1:2], c("bg-1-2.fst", "bg-2-2.fst"))
   files <- list.files(dataset, all.files=TRUE)
   expect_match(files, ".locker-dir", fixed = TRUE, all = FALSE)
 })

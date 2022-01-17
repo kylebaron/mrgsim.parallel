@@ -7,6 +7,7 @@ do_bg_mclapply <- function(X, FUN, mc.cores = 1, seed = NULL, ...) {
 
 #' Multicore lapply in the background
 #' 
+#' @inheritParams bg_mrgsim_d
 #' @param X A list. 
 #' @param FUN The function to be applied to each element of `X`.
 #' @param mc.cores Passed to [parallel::mclapply()].

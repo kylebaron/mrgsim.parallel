@@ -11,3 +11,9 @@ test_that("generate file set list", {
   expect_equal(dirname(x[[1]]$file), tempdir())
 })
 
+test_that("generate file set names", {
+  x <- file_set(150, tag = "foo", file_only = TRUE)
+  expect_length(x, 150)
+  expect_is(x, "character")
+  expect_equal(x[[122]], "foo-122-150")
+})

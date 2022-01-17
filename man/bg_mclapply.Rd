@@ -14,6 +14,13 @@ bg_mclapply(X, FUN, mc.cores = 1, ..., .wait = TRUE, .seed = NULL)
 \item{mc.cores}{Passed to \code{\link[parallel:mclapply]{parallel::mclapply()}}.}
 
 \item{...}{Arguments passed to \code{FUN}.}
+
+\item{.wait}{If \code{FALSE}, the function returns immediately; if \code{TRUE}, then
+wait until the background job is finished.}
+
+\item{.seed}{A \code{numeric} value used to set the seed for the simulation;
+this is the only way to control the random number generation for your
+simulation.}
 }
 \description{
 Multicore lapply in the background
