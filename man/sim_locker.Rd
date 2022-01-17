@@ -7,7 +7,7 @@
 \usage{
 sim_locker(..., file_only = FALSE)
 
-setup_locker(dir, tag = locker_tag(dir), n = 0, ext = "fst")
+setup_locker(dir, tag = locker_tag(dir), n = 0, ext = ".fst")
 }
 \arguments{
 \item{...}{Arguments passed to \code{setup_locker}.}
@@ -23,23 +23,20 @@ re-created each time it is used to store output from a new simulation run.}
 
 \item{n}{The number of output files to be saved.}
 
-\item{ext}{The format extension for output files; use \code{fst} to create
-outputs using \code{\link[fst:write_fst]{fst::write_fst()}}; use \code{feather} to create outputs using
-\code{\link[arrow:write_feather]{arrow::write_feather()}}.}
+\item{ext}{The format extension for output files, including \code{.}.}
 }
 \value{
 When \code{n} is given, \code{setup_locker} returns a character vector of target file
 names; \code{sim_locker} returns a list of objects, containing the file name
-(\code{file}) and an index of the list position (\code{i}). When \code{n} is not given,
-an empty list is returned.
+(\code{file}) and an index of the list position (\code{i}). When \code{n} is not given, an
+empty list is returned.
 }
 \description{
 A locker is a directory structure where an enclosing folder contains
-subfolders that in turn contain the results of different simulation
-runs. When the number of simulation result sets is known, a stream
-of file names (\code{setup_locker}) or file name objects (\code{sim_locker}) can be
-returned, which can then be fed into any number of parallel apply-like
-functions.
+subfolders that in turn contain the results of different simulation runs.
+When the number of simulation result sets is known, a stream of file names
+(\code{setup_locker}) or file name objects (\code{sim_locker}) can be returned, which
+can then be fed into any number of parallel apply-like functions.
 }
 \details{
 \code{dir} must exist when setting up the locker. The directory \code{tag} will be
@@ -50,8 +47,7 @@ folders. When recreating the \code{tag} directory, it will be unlinked and creat
 new.
 }
 \examples{
-
-x <- setup_locker(tempdir(), tag = "my-sims", n = 5)
+x <- setup_locker(tempdir(), tag = "my-sims", n = 2)
 x
 
 y <- sim_locker(tempdir(), tag = "my-sim-2", n = 2)

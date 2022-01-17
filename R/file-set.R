@@ -1,7 +1,10 @@
 new_file_object <- function(file, i) {
   list(i = i, file = file)  
 }
-
+stream_add_object <- function(stream, object) {
+  stream$x <- object
+  stream
+}
 
 #' Generate a sequence of file objects
 #' 
@@ -46,4 +49,66 @@ file_set <- function(n, tag = NULL, where = NULL, pad = TRUE, sep = "-",
   }
   if(isTRUE(file_only)) return(file)
   Map(file, seq_along(file), f = new_file_object, USE.NAMES = FALSE)
+}
+
+#' Create a stream of outputs and inputs
+#' 
+#' By stream we mean a list that pre-specifies the list of output file names, 
+#' replicate numbers and possibly input objects for a simulation. Use 
+#' `file_stream` to only generate file names with indices (see [file_set()]). 
+#' Use `object_stream` to create a `file_stream` that contains an input 
+#' data structure. Passing `dataset` initiates a call to [setup_locker()], 
+#' which sets up the output directories. 
+#' 
+#' @param objects A list of objects or a vector.
+#' @param n The number of streams to create.
+#' @param dataset Passed to [setup_locker()]; important to note that the 
+#' directory will be unlinked if it exists and is an established locker 
+#' directory. 
+#' @param ... Passed to [file_set()] (if `dataset` not provided) or 
+#' [setup_locker()] (if `dataset` is provided).
+#' 
+#' @return
+#' A list with the following elements: `i` the position number; `file` 
+#' the output file name; `x` the input object (for `object_stream` only).
+#' 
+#' @examples
+#' file_stream(n = 3)
+#' file_stream(n = 2, dataset = file.path(tempdir(), "foo"))
+#' 
+#' df <- data.frame(ID = c(1,2,3,4))
+#' data <- chunk_by_id(df, nchunk = 2)
+#' object_stream(objects = data)
+#' 
+#' @seealso [setup_locker()], [file_set()], [internalize_fst()]
+#' 
+#' @export
+file_stream <- function(n, dataset = NULL, ...) {
+  if(!n > 0) {
+    stop("`n` must be >= 1.")  
+  }
+  if(!is.character(dataset)) {
+    ans <- file_set(n = n, file_only = FALSE, ...)
+  } else {
+    ans <- sim_locker(..., n = n, file_only = FALSE, dir = dataset) 
+    class(ans) <- unique(c("locker_stream", class(ans)))
+  }
+  class(ans) <- unique(c("file_stream", class(ans)))
+  ans
+}
+
+#' @rdname file_stream
+#' @export
+object_stream <- function(objects, dataset = NULL, ...) {
+  if(!any(is.list(objects), is.vector(objects))) {
+    stop("`objects` must be a list or a vector.")
+  }
+  if(length(objects)==0) {
+    stop("`objects` must have length >= 1.")  
+  }
+  ans <- file_stream(dataset = dataset, n = length(objects), ...)
+  cl <- class(ans)
+  ans <- Map(ans, objects, f = stream_add_object, USE.NAMES = FALSE)
+  class(ans) <- c("object_stream", cl)
+  ans
 }

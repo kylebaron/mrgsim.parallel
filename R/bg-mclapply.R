@@ -2,7 +2,11 @@ do_bg_mclapply <- function(X, FUN, mc.cores = 1, seed = NULL, ...) { #nocov star
   if(is.numeric(seed)) {
     set.seed(seed, kind="L'Ecuyer-CMRG")  
   }
-  mclapply(X, FUN, mc.cores = mc.cores, ...)
+  if(mc_able()) {
+    mclapply(X, FUN, mc.cores = mc.cores, ...)
+  } else {
+    lapply(X, FUN, ...)
+  }
 }
 
 #' Multicore lapply in the background

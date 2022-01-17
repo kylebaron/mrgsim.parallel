@@ -128,11 +128,13 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     stop("`data` didn't resolve to list format.")  
   }
   
+  ext <- ifelse(substr(.format, 1, 1)=='.', .format, paste0(".", .format))
+  
   output_paths <- setup_locker(
     .path, 
     .tag, 
     n = length(data), 
-    ext = .format
+    ext = ext
   )
   
   if(length(data)==1) {
