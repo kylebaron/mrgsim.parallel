@@ -1,6 +1,6 @@
 #' List all output files in a fst file set
 #' 
-#' Use the funcation to read all of the `.fst` files that were saved when 
+#' Use the function to read all of the `.fst` files that were saved when 
 #' `bg_mrgsim_d` was called and `.path` was passed along with `.format = "fst"`.
 #' 
 #' @param path The (full) directory path to search.
@@ -37,7 +37,6 @@ internalize_fst <- function(path, .as_list = FALSE, ...) {
 get_fst <- internalize_fst
 
 #' Get the head of an fst file set
-#' 
 #' 
 #' @param path The directory to search.
 #' @param n Number of rows to show.

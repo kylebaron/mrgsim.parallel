@@ -1,4 +1,4 @@
-do_bg_mclapply <- function(X, FUN, mc.cores = 1, seed = NULL, ...) {
+do_bg_mclapply <- function(X, FUN, mc.cores = 1, seed = NULL, ...) { #nocov start
   if(is.numeric(seed)) {
     set.seed(seed, kind="L'Ecuyer-CMRG")  
   }
@@ -14,7 +14,10 @@ do_bg_mclapply <- function(X, FUN, mc.cores = 1, seed = NULL, ...) {
 #' @param ... Arguments passed to `FUN`.
 #' 
 #' @examples
-#' ans <- bg_mclapply(seq(100), sqrt, mc.cores = 2)
+#' ans <- bg_mclapply(seq(10), sqrt, mc.cores = 2)
+#' 
+#' @return
+#' A list of output data.
 #' 
 #' @export
 bg_mclapply <- function(X, FUN, mc.cores = 1, ..., .wait = TRUE, .seed = NULL) {
@@ -31,4 +34,4 @@ bg_mclapply <- function(X, FUN, mc.cores = 1, ..., .wait = TRUE, .seed = NULL) {
   )
   if(.wait) ans$wait()
   ans$get_result()
-}
+} # nocov end

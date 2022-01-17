@@ -107,5 +107,6 @@ head(sims)
 
 }
 \seealso{
-\code{\link[=future_mrgsim_d]{future_mrgsim_d()}}, \code{\link[=internalize_fst]{internalize_fst()}}, \code{\link[=list_fst]{list_fst()}}, \code{\link[=head_fst]{head_fst()}}
+\code{\link[=future_mrgsim_d]{future_mrgsim_d()}}, \code{\link[=internalize_fst]{internalize_fst()}}, \code{\link[=list_fst]{list_fst()}},
+\code{\link[=head_fst]{head_fst()}}, \code{\link[=setup_locker]{setup_locker()}}
 }

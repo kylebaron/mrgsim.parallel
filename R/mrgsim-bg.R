@@ -79,7 +79,8 @@ bg_sim_env <- function() {
 #' get the actual result (see `details`). If a `.dataset` path is supplied, 
 #' the simulated data is saved to disk and a list of file names is returned. 
 #' 
-#' @seealso [future_mrgsim_d()], [internalize_fst()], [list_fst()], [head_fst()]
+#' @seealso [future_mrgsim_d()], [internalize_fst()], [list_fst()], 
+#' [head_fst()], [setup_locker()]
 #' 
 #' @export
 bg_mrgsim_d <- function(mod, data, nchunk = 1,   

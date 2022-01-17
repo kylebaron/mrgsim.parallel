@@ -10,6 +10,6 @@ list_fst(path)
 \item{path}{The (full) directory path to search.}
 }
 \description{
-Use the funcation to read all of the \code{.fst} files that were saved when
+Use the function to read all of the \code{.fst} files that were saved when
 \code{bg_mrgsim_d} was called and \code{.path} was passed along with \code{.format = "fst"}.
 }

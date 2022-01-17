@@ -22,10 +22,13 @@ wait until the background job is finished.}
 this is the only way to control the random number generation for your
 simulation.}
 }
+\value{
+A list of output data.
+}
 \description{
 Multicore lapply in the background
 }
 \examples{
-ans <- bg_mclapply(seq(100), sqrt, mc.cores = 2)
+ans <- bg_mclapply(seq(10), sqrt, mc.cores = 2)
 
 }

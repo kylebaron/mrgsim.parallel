@@ -114,3 +114,4 @@ test_that("error when saving to existing directory", {
     regexp = "the dataset directory exists"
   )
 })
+
