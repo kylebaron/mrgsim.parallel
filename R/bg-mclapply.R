@@ -7,10 +7,10 @@ do_bg_mclapply <- function(X, FUN, mc.cores = 1, seed = NULL, ...) {
 
 #' Multicore lapply in the background
 #' 
-#' @param X a list
-#' @param FUN the function to be applied to each element of `X`
-#' @param mc.cores passed to [parallel::mclapply()]
-#' @param ... arguments passed to `FUN`
+#' @param X A list. 
+#' @param FUN The function to be applied to each element of `X`.
+#' @param mc.cores Passed to [parallel::mclapply()].
+#' @param ... Arguments passed to `FUN`.
 #' 
 #' @examples
 #' ans <- bg_mclapply(seq(100), sqrt, mc.cores = 2)

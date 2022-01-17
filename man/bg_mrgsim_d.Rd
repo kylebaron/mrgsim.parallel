@@ -19,37 +19,38 @@ bg_mrgsim_d(
 )
 }
 \arguments{
-\item{mod}{a model object}
+\item{mod}{A model object.}
 
-\item{data}{data set to simulate; see \link[mrgsolve:data_set]{mrgsolve::data_set}}
+\item{data}{Data set to simulate; see \code{\link[mrgsolve:data_set]{mrgsolve::data_set()}}.}
 
-\item{nchunk}{number of chunks in which to split the data set}
+\item{nchunk}{Number of chunks in which to split the data set}
 
-\item{...}{arguments passed to \code{\link[mrgsolve:mrgsim]{mrgsolve::mrgsim()}}}
+\item{...}{Arguments passed to \code{\link[mrgsolve:mrgsim]{mrgsolve::mrgsim()}}.}
 
-\item{.dataset}{a directory for saving simulated data; use this to collect
-results from several different runs in a single folder}
+\item{.dataset}{A directory for saving simulated data; use this to collect
+results from several different runs in a single folder.}
 
-\item{.tag}{a name to use for the current run; results are saved under
-\code{.tag} in \code{.path} folder}
+\item{.tag}{A name to use for the current run; results are saved under
+\code{.tag} in \code{.path} folder.}
 
-\item{.format}{the output format for saving simulations; using format
+\item{.format}{The output format for saving simulations; using format
 \code{fst} will allow saved results to be read with \code{\link[fst:write_fst]{fst::read_fst()}}; using
 format \code{arrow} will allow saved results to be read with
-\code{\link[arrow:open_dataset]{arrow::open_dataset()}} with \verb{format = "feather}; note that \code{fst} is
-installed with \code{mrgsim.parallel} but \code{arrow} may need explicit installation}
+\code{\link[arrow:open_dataset]{arrow::open_dataset()}} with \code{format = "feather"}; note that \code{fst} is
+installed with \code{mrgsim.parallel} but \code{arrow} may need explicit installation.}
 
-\item{.wait}{if \code{FALSE}, the function returns immediately; if \code{TRUE}, then
-wait until the background job is finished}
+\item{.wait}{If \code{FALSE}, the function returns immediately; if \code{TRUE}, then
+wait until the background job is finished.}
 
-\item{.seed}{numeric; used to set the seed for the simulation; this is the
-only way to control the random number generation for your simulation}
+\item{.seed}{A \code{numeric} value used to set the seed for the simulation;
+this is the only way to control the random number generation for your
+simulation.}
 
-\item{.cores}{the number of cores to parallelize across; pass 1 to run the
-simulation sequentially}
+\item{.cores}{The number of cores to parallelize across; pass 1 to run the
+simulation sequentially.}
 
-\item{.plan}{the name of a \code{\link[future:plan]{future::plan()}} strategy; if passed, the
-parallelization will be handled by the \code{future} package}
+\item{.plan}{The name of a \code{\link[future:plan]{future::plan()}} strategy; if passed, the
+parallelization will be handled by the \code{future} package.}
 }
 \value{
 An \code{r_process} object; see \code{\link[callr:r_bg]{callr::r_bg()}}. Call \code{process$get_resuilt()} to
@@ -65,10 +66,10 @@ by the \code{parallel} package on unix or macos or \code{future} on any os.
 \details{
 \code{\link[=bg_mrgsim_d]{bg_mrgsim_d()}} returns a \link[processx:process]{processx::process} object (follow that link to
 see a list of methods). You will have to call \code{process$get_result()} to
-retrieve the result. When an output \code{.path} is not specified, simulated
-results are returned; when an output \code{.path} is specified, the path to
+retrieve the result. When an output \code{.dataset} is not specified, simulated
+data are returned; when an output \code{.dataset} is specified, the path to
 the \code{fst} file on disk is returned.  The \code{fst} files  should be read with
-\code{\link[fst:write_fst]{fst::read_fst()}}. When the results are not saved to \code{.path}, you will
+\code{\link[fst:write_fst]{fst::read_fst()}}. When the results are not saved to \code{.dataset}, you will
 get a single data frame when \code{nchunk} is 1 or a list of data frames when
 \code{nchunk} is greater than 1. It is safest to call \code{\link[dplyr:bind]{dplyr::bind_rows()}} or
 something equivalent on the result if you are expecting data frame.
@@ -104,4 +105,7 @@ sims <- internalize_fst(ds)
 head(sims)
   
 
+}
+\seealso{
+\code{\link[=future_mrgsim_d]{future_mrgsim_d()}}, \code{\link[=internalize_fst]{internalize_fst()}}, \code{\link[=list_fst]{list_fst()}}, \code{\link[=head_fst]{head_fst()}}
 }

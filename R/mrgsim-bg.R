@@ -1,11 +1,4 @@
 
-# mark_done <- function(dataset, start_time) {
-#   end_time <- date()
-#   file <- file.path(dataset, "DONE")
-#   cat(file = file, paste0("start: ", start_time), "\n")
-#   cat(file = file, paste0("end:   ", end_time), "\n", append = TRUE)
-# }
-
 bg_sim_env <- function() {
   c(RSTUDIO="0", rcmd_safe_env())  
 }
@@ -17,38 +10,38 @@ bg_sim_env <- function() {
 #' disk in  `fst`, `arrow` or `rds` format. Parallelization can be mediated 
 #' by the `parallel` package on unix or macos or `future` on any os. 
 #' 
-#' @inheritParams parallel_mrgsim_d
-#' 
-#' @param mod a model object
-#' @param ... arguments passed to [mrgsolve::mrgsim()]
-#' @param .dataset a directory for saving simulated data; use this to collect 
-#' results from several different runs in a single folder
-#' @param .tag a name to use for the current run; results are saved under 
-#' `.tag` in `.path` folder
-#' @param .format the output format for saving simulations; using format
-#' `fst` will allow saved results to be read with [fst::read_fst()]; using
-#' format `arrow` will allow saved results to be read with 
-#' [arrow::open_dataset()] with `format = "feather`; note that `fst` is 
-#' installed with `mrgsim.parallel` but `arrow` may need explicit installation
-#' @param .wait if `FALSE`, the function returns immediately; if `TRUE`, then 
-#' wait until the background job is finished
-#' @param .seed numeric; used to set the seed for the simulation; this is the 
-#' only way to control the random number generation for your simulation
-#' @param .cores the number of cores to parallelize across; pass 1 to run the 
-#' simulation sequentially
-#' @param .plan the name of a [future::plan()] strategy; if passed, the 
-#' parallelization will be handled by the `future` package
-#' 
-#' @details 
 #' [bg_mrgsim_d()] returns a [processx::process] object (follow that link to 
 #' see a list of methods). You will have to call `process$get_result()` to 
-#' retrieve the result. When an output `.path` is not specified, simulated 
-#' results are returned; when an output `.path` is specified, the path to 
+#' retrieve the result. When an output `.dataset` is not specified, simulated 
+#' data are returned; when an output `.dataset` is specified, the path to 
 #' the `fst` file on disk is returned.  The `fst` files  should be read with 
-#' [fst::read_fst()]. When the results are not saved to `.path`, you will 
+#' [fst::read_fst()]. When the results are not saved to `.dataset`, you will 
 #' get a single data frame when `nchunk` is 1 or a list of data frames when 
 #' `nchunk` is greater than 1. It is safest to call [dplyr::bind_rows()] or 
 #' something equivalent on the result if you are expecting data frame.
+#' 
+#' @inheritParams parallel_mrgsim_d
+#' 
+#' @param mod A model object.
+#' @param ... Arguments passed to [mrgsolve::mrgsim()].
+#' @param .dataset A directory for saving simulated data; use this to collect 
+#' results from several different runs in a single folder.
+#' @param .tag A name to use for the current run; results are saved under 
+#' `.tag` in `.path` folder.
+#' @param .format The output format for saving simulations; using format
+#' `fst` will allow saved results to be read with [fst::read_fst()]; using
+#' format `arrow` will allow saved results to be read with 
+#' [arrow::open_dataset()] with `format = "feather"`; note that `fst` is 
+#' installed with `mrgsim.parallel` but `arrow` may need explicit installation.
+#' @param .wait If `FALSE`, the function returns immediately; if `TRUE`, then 
+#' wait until the background job is finished.
+#' @param .seed A `numeric` value used to set the seed for the simulation; 
+#' this is the only way to control the random number generation for your 
+#' simulation.
+#' @param .cores The number of cores to parallelize across; pass 1 to run the 
+#' simulation sequentially.
+#' @param .plan The name of a [future::plan()] strategy; if passed, the 
+#' parallelization will be handled by the `future` package.
 #' 
 #' @examples
 #' mod <- mrgsolve::house(delta = 24, end = 168)
@@ -85,6 +78,8 @@ bg_sim_env <- function() {
 #' An `r_process` object; see [callr::r_bg()]. Call `process$get_resuilt()` to 
 #' get the actual result (see `details`). If a `.dataset` path is supplied, 
 #' the simulated data is saved to disk and a list of file names is returned. 
+#' 
+#' @seealso [future_mrgsim_d()], [internalize_fst()], [list_fst()], [head_fst()]
 #' 
 #' @export
 bg_mrgsim_d <- function(mod, data, nchunk = 1,   
@@ -134,9 +129,9 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
   
   output_paths <- setup_locker(
     .path, 
-    .tag, n = length(data), 
-    .format = .format, 
-    write_dummy = FALSE
+    .tag, 
+    n = length(data), 
+    ext = .format
   )
   
   if(length(data)==1) {
@@ -178,6 +173,7 @@ bg_mrgsim_apply <- function(data, .plan, more, output, .seed = FALSE,
       output = output,
       MoreArgs = more,
       SIMPLIFY = FALSE,
+      USE.NAMES = FALSE,
       .format = .format, 
       mc.cores = Plan$workers
     )
@@ -192,6 +188,7 @@ bg_mrgsim_apply <- function(data, .plan, more, output, .seed = FALSE,
       output = output,
       MoreArgs = more,
       SIMPLIFY = FALSE,
+      USE.NAMES = FALSE,
       future.seed = .seed,
       .format = .format
     )
@@ -205,6 +202,7 @@ bg_mrgsim_apply <- function(data, .plan, more, output, .seed = FALSE,
     output = output,
     MoreArgs = more,
     SIMPLIFY = FALSE,
+    USE.NAMES = FALSE,
     .format = .format
   )
   return(ans) 

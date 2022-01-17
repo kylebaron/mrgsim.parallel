@@ -22,11 +22,12 @@
 #' [mc_mrgsim_ei] to simulate with `parallel::mclapply`.
 #'
 #' @inheritParams parallel_mrgsim_d
-#' @param events an event object from mrgsolve; see [mrgsolve::ev]
-#' @param idata an idata set of parameters, one per simulation unit (individual);
-#' see [mrgsolve::idata_set]
+#' @param events An event object from mrgsolve; see [mrgsolve::ev()].
+#' @param idata An idata set of parameters, one per simulation unit (individual);
+#' see [mrgsolve::idata_set()].
 #'
-#' @return A data frame or list of simulated data
+#' @return 
+#' A data frame or list of simulated data.
 #'
 #' @examples
 #'

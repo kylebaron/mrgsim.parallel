@@ -1,53 +1,58 @@
-n_of_N <- function(i) {
-  pad <- ceiling(log10(max(i))) + 1
-  mx <- max(i)
-  i <- formatC(i, width = pad, flag = "0")
-  mx <- i[length(i)]
-  paste0(i, "-", mx)  
-}
-
-make_output_files <- function(n) {
-  i <- seq_len(n)
-  stems <- n_of_N(i)
-  files <- paste0(stems, "-bg.")
-  files
-}
 
 locker_tag <- function(locker) basename(locker)
 
 #' Set up a data storage locker
 #' 
-#' @param locker the directory that contains tagged directories of run 
-#' results
-#' @param tag the name of a folder under `locker`; this directory must not 
-#' exist the first time the locker is set up and will be deleted and re-created
-#' each time it is used to store output from a new simulation run
-#' @param n the number of output files to be saved
-#' @param .format the format extension for output files; use `fst` to create
+#' A locker is a directory structure where an enclosing folder contains 
+#' subfolders that in turn contain the results of different simulation 
+#' runs. When the number of simulation result sets is known, a stream 
+#' of file names (`setup_locker`) or file name objects (`sim_locker`) can be 
+#' returned, which can then be fed into any number of parallel apply-like 
+#' functions.
+#' 
+#' `dir` must exist when setting up the locker. The directory `tag` will be 
+#' created under `dir` and must not exist except if it had previously been 
+#' set up using `setup_locker`. Established `tag` directories will have a 
+#' hidden file in them indicating that they are established simulation output
+#' folders. When recreating the `tag` directory, it will be unlinked and created
+#' new. 
+#' 
+#' @param dir The directory that contains tagged directories of run 
+#' results.
+#' @param tag The name of a folder under `dir`; this directory must not 
+#' exist the first time the locker is set up and __will be deleted__ and 
+#' re-created each time it is used to store output from a new simulation run.
+#' @param n The number of output files to be saved.
+#' @param ext The format extension for output files; use `fst` to create
 #' outputs using [fst::write_fst()]; use `feather` to create outputs using 
-#' @param write_dummy if `TRUE` placeholder files are created containing 
-#' tibbles with no rows
+#' [arrow::write_feather()].
 #' 
-#' @details
-#' 
-#' The `arrow` package must be installed to `write_dummy` files when `.format`
-#' is `feather`.
+#' @return
+#' When `n` is given, `setup_locker` returns a character vector of target file 
+#' names; `sim_locker` returns a list of objects, containing the file name 
+#' (`file`) and an index of the list position (`i`). When `n` is not given, 
+#' an empty list is returned. 
 #' 
 #' @examples
 #' 
 #' x <- setup_locker(tempdir(), tag = "my-sims", n = 5)
 #' x
 #' 
+#' y <- sim_locker(tempdir(), tag = "my-sim-2", n = 2)
+#' y
+#' 
+#' @seealso [file_set()]
+#' 
 #' @export
-setup_locker <- function(locker, tag = locker_tag(locker), n = 0, 
-                         .format = "fst",  write_dummy = FALSE) {
-  will_save <- is.character(locker) && length(locker)==1
+setup_locker <- function(dir, tag = locker_tag(dir), n = 0, 
+                         ext = "fst") {
+  will_save <- is.character(dir) && length(dir)==1
   output_paths <- vector(mode = "list", length = n)
   if(!will_save) return(output_paths)
-  output_folder <- file.path(locker, tag)  
+  output_folder <- file.path(dir, tag)  
   locker_file <- file.path(output_folder, ".locker-dir")
-  if(!dir.exists(locker)) {
-    dir.create(locker, recursive = TRUE)
+  if(!dir.exists(dir)) {
+    dir.create(dir, recursive = TRUE)
   }
   if(dir.exists(output_folder)) {
     if(!file.exists(locker_file)) {
@@ -63,23 +68,17 @@ setup_locker <- function(locker, tag = locker_tag(locker), n = 0,
   dir.create(output_folder)
   cat(file = locker_file, "#")
   if(n > 0) {
-    output_files <- make_output_files(n)
-    output_files <- paste0(output_files, .format)
+    output_files <- file_set(n, tag = "bg", file_only = TRUE)
+    output_files <- paste0(output_files, ".", ext)
     output_paths <- file.path(output_folder, output_files)
-    example_data <- tibble()
-    if(.format == "fst" && write_dummy) {
-      for(path in output_paths) {
-        write_fst(example_data, path = path)
-      }
-    }
-    if(.format == "feather" && write_dummy) {
-      require_arrow()
-      for(path in output_paths) {
-        arrow::write_feather(example_data, sink = path)
-      }
-    }
   }
   class(output_paths) <- c("will_save", "list")
   output_paths
 }
 
+#' @export
+sim_locker <- function(..., file_only = FALSE) {
+  file <- setup_locker(...)
+  if(isTRUE(file_only)) return(file)
+  Map(file, seq_along(file), f = new_file_object, USE.NAMES = FALSE)
+}

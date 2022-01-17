@@ -4,24 +4,35 @@
 \alias{file_set}
 \title{Generate a sequence of file objects}
 \usage{
-file_set(n, tag = NULL, where = NULL, pad = TRUE, sep = "-", ext = "")
+file_set(
+  n,
+  tag = NULL,
+  where = NULL,
+  pad = TRUE,
+  sep = "-",
+  ext = "",
+  file_only = FALSE
+)
 }
 \arguments{
-\item{n}{the number of file names / objects to create}
+\item{n}{The number of file names / objects to create.}
 
-\item{tag}{a character prefix for the file name}
+\item{tag}{A character prefix for the file name.}
 
-\item{where}{an optional file path}
+\item{where}{An optional file path.}
 
-\item{pad}{if \code{TRUE}, numbers will be padded with zeros}
+\item{pad}{If \code{TRUE}, numbers will be padded with zeros.}
 
-\item{sep}{separator character}
+\item{sep}{Separator character.}
 
-\item{ext}{a file extension, including the dot}
+\item{ext}{A file extension, including the dot.}
+
+\item{file_only}{If \code{TRUE} then only return an vector of file names.}
 }
 \value{
-A list length \code{n} of lists length 2; each sublist contains the integer
-file number as \code{i} and the file name as \code{file}.
+By default a list length \code{n} of lists length 2; each sublist contains the
+integer file number as \code{i} and the file name as \code{file}. If \code{file_only} is
+\code{TRUE}, then a vector of file names.
 }
 \description{
 Generate a sequence of file objects
@@ -34,4 +45,9 @@ length(x[[1]])
 x[[2]]$i
 x[[3]]$file
 
+file_set(2, file_only = TRUE)
+
+}
+\seealso{
+\code{\link[=sim_locker]{sim_locker()}}, \code{\link[=setup_locker]{setup_locker()}}
 }
