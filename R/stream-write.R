@@ -15,9 +15,34 @@ re_set_dir <- function(x, where) {
 
 #' Writer functions for stream_file objects
 #' 
+#' This function will write out objects that have been assigned a format 
+#' with either [stream_format()] or the `format` argument to [stream_new()].
+#' 
+#' The default method writes to `rds` using [saveRDS()] and would be invoked 
+#' `stream_write` is called without setting the `format`.
+#' 
 #' @param x A `stream_file` object.
 #' @param data An object to write.
 #' @param ... Not used.
+#' 
+#' @examples
+#' ds <- temp_ds("example")
+#' 
+#' fs <- stream_new(2, dataset = ds, format = "fst")
+#' 
+#' data <- data.frame(x = rnorm(10))
+#' 
+#' x <- lapply(fs, stream_write, data = data)
+#' 
+#' list.files(ds)
+#' 
+#' reset_locker(ds)
+#' 
+#' fs <- stream_format(fs, "rds")
+#' 
+#' x <- lapply(fs, stream_write, data = data)
+#' 
+#' list.files(ds)
 #' 
 #' @seealso [stream_format()], [stream_file()]
 #' 
@@ -65,6 +90,9 @@ stream_write.stream_format_rds <- function(x, data, ...) {
 
 #' Set the format for a stream_file object
 #' 
+#' The format is set on the file objects inside the list so that the file 
+#' object can be used to call a write method. See [stream_write()].
+#' 
 #' @param x A `file_stream` object.
 #' @param type The file format type; if `feather` is chosen, then a check will
 #' be made to ensure the `arrow` package is loaded. 
@@ -72,6 +100,11 @@ stream_write.stream_format_rds <- function(x, data, ...) {
 #' and a new extension is added based on the value of `type`.
 #' 
 #' @seealso [stream_locate()], [stream_file()]
+#' 
+#' @examples
+#' fs <- stream_new(2)
+#' fs <- stream_format(fs, "fst")
+#' fs
 #' 
 #' @export
 stream_format <- function(x, type = c("fst", "feather", "qs", "rds"), 

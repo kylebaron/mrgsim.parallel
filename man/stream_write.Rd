@@ -29,7 +29,32 @@ stream_write(x, ...)
 \item{data}{An object to write.}
 }
 \description{
-Writer functions for stream_file objects
+This function will write out objects that have been assigned a format
+with either \code{\link[=stream_format]{stream_format()}} or the \code{format} argument to \code{\link[=stream_new]{stream_new()}}.
+}
+\details{
+The default method writes to \code{rds} using \code{\link[=saveRDS]{saveRDS()}} and would be invoked
+\code{stream_write} is called without setting the \code{format}.
+}
+\examples{
+ds <- temp_ds("example")
+
+fs <- stream_new(2, dataset = ds, format = "fst")
+
+data <- data.frame(x = rnorm(10))
+
+x <- lapply(fs, stream_write, data = data)
+
+list.files(ds)
+
+reset_locker(ds)
+
+fs <- stream_format(fs, "rds")
+
+x <- lapply(fs, stream_write, data = data)
+
+list.files(ds)
+
 }
 \seealso{
 \code{\link[=stream_format]{stream_format()}}, \code{\link[=stream_file]{stream_file()}}

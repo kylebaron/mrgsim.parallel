@@ -110,3 +110,10 @@ require_qs <- function() {
   }
 }
 qs_installed <- function() requireNamespace("qs")
+
+#' Create a path to a dataset in tempdir
+#' 
+#' @param tag The dataset subdirectory.
+#' 
+#' @export
+temp_ds <- function(tag) file.path(tempdir(), tag)

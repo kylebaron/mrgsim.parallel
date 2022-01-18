@@ -16,7 +16,14 @@ be made to ensure the \code{arrow} package is loaded.}
 and a new extension is added based on the value of \code{type}.}
 }
 \description{
-Set the format for a stream_file object
+The format is set on the file objects inside the list so that the file
+object can be used to call a write method. See \code{\link[=stream_write]{stream_write()}}.
+}
+\examples{
+fs <- stream_new(2)
+fs <- stream_format(fs, "fst")
+fs
+
 }
 \seealso{
 \code{\link[=stream_locate]{stream_locate()}}, \code{\link[=stream_file]{stream_file()}}
