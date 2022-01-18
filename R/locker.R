@@ -18,6 +18,7 @@ locker_tag <- function(locker) {
 #' folders. When recreating the `tag` directory, it will be unlinked and created
 #' new. 
 #' 
+#' @inheritParams file_set
 #' @param ... Arguments passed to `setup_locker`. 
 #' @param dir The directory that contains tagged directories of run 
 #' results.
@@ -42,6 +43,14 @@ locker_tag <- function(locker) {
 #' 
 #' @seealso [file_set()]
 #' 
+#' @export
+sim_locker <- function(..., file_only = FALSE) {
+  file <- setup_locker(...)
+  if(isTRUE(file_only)) return(file)
+  Map(file, seq_along(file), f = new_file_object, USE.NAMES = FALSE)
+}
+
+#' @rdname sim_locker
 #' @export
 setup_locker <- function(dir, tag = locker_tag(dir), n = 0, ext = "") {
   will_save <- is.character(dir) && length(dir)==1
