@@ -4,7 +4,7 @@
 \alias{reset_locker}
 \title{Initialize the locker directory}
 \usage{
-reset_locker(where)
+reset_locker(where, ext = NULL)
 }
 \arguments{
 \item{where}{The full path to the locker.}

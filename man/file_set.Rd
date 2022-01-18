@@ -6,8 +6,8 @@
 \usage{
 file_set(
   n,
-  tag = NULL,
   where = NULL,
+  prefix = NULL,
   pad = TRUE,
   sep = "-",
   ext = "",
@@ -17,9 +17,9 @@ file_set(
 \arguments{
 \item{n}{The number of file names / objects to create.}
 
-\item{tag}{A character prefix for the file name.}
-
 \item{where}{An optional file path.}
+
+\item{prefix}{A character prefix for the file name.}
 
 \item{pad}{If \code{TRUE}, numbers will be padded with zeros.}
 

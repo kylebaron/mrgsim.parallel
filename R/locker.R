@@ -31,12 +31,18 @@ reset_locker <- function(where, ext = NULL) {
       full.names = TRUE
     )
     unlink(files, recursive = TRUE)  
+    if(length(list.files(where)) > 0) {
+      msg <- c(
+        "Could not clear locker directory; ", 
+        "use initialize_locker to manually clear the files."
+      )
+      warning(msg)  
+    }
   }
   if(!dir.exists(where)) dir.create(where, recursive = TRUE)
   cat(file = locker_path, "#")
   return(invisible(NULL))
 }
-
 
 #' Set up a data storage locker
 #' 
@@ -103,7 +109,7 @@ setup_locker <- function(dir, tag = locker_tag(dir),
   }
   reset_locker(output_folder)
   if(n > 0) {
-    output_files <- file_set(n, tag = prefix, file_only = TRUE)
+    output_files <- file_set(n, prefix = prefix, file_only = TRUE)
     output_files <- paste0(output_files, ext)
     output_paths <- file.path(output_folder, output_files)
   }
