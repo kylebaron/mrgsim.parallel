@@ -8,8 +8,7 @@ re_set_ext <- function(x, ext) {
 }
 
 re_set_dir <- function(x, where) {
-  stem <- basename(x$file)
-  x$file <- file.path(where, x$file)
+  x$file <- file.path(where, basename(x$file))
   x
 }
 
@@ -106,8 +105,11 @@ format_stream <- function(x, type = c("fst", "feather", "qs", "rds"),
 #' 
 #' @export
 locate_stream <- function(x, where) {
+  clx <- class(x)
   if(!is.file_stream(x)) {
     stop("`x` must be a file_stream object")  
   }
-  lapply(x, re_set_dir, where = where)
+  ans <- lapply(x, re_set_dir, where = where)
+  class(ans) <- clx
+  ans
 }

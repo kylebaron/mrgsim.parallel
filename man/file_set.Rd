@@ -49,5 +49,5 @@ file_set(2, file_only = TRUE)
 
 }
 \seealso{
-\code{\link[=sim_locker]{sim_locker()}}, \code{\link[=setup_locker]{setup_locker()}}
+\code{\link[=setup_locker]{setup_locker()}}
 }

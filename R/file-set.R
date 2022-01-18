@@ -34,7 +34,7 @@ is.file_stream <- function(x) inherits(x, "file_stream")
 #' 
 #' file_set(2, file_only = TRUE)
 #' 
-#' @seealso [sim_locker()], [setup_locker()]
+#' @seealso [setup_locker()]
 #' 
 #' @export
 file_set <- function(n, tag = NULL, where = NULL, pad = TRUE, sep = "-", 

@@ -3,6 +3,23 @@ locker_tag <- function(locker) {
   basename(locker)
 }
 
+initialize_locker <- function(where, locker_file) {
+  if(dir.exists(where)) {
+    if(!file.exists(locker_file)) {
+      msg <- c(
+        "the dataset directory exists, but doesn't appear to be a valid ",
+        "dataset location; please manually remove the folder or specify a new ",
+        "folder and try again."
+      )
+      stop(msg)
+    }
+    unlink(where, recursive = TRUE)  
+  }
+  dir.create(where)
+  cat(file = locker_file, "#")
+}
+
+
 #' Set up a data storage locker
 #' 
 #' A locker is a directory structure where an enclosing folder contains 
@@ -62,23 +79,12 @@ setup_locker <- function(dir, tag = locker_tag(dir), n = 0, ext = "") {
   } else {
     output_folder <- file.path(dir, tag)
   }
-  locker_file <- file.path(output_folder, ".locker-dir")
+  
   if(!dir.exists(dir)) {
     dir.create(dir, recursive = TRUE)
   }
-  if(dir.exists(output_folder)) {
-    if(!file.exists(locker_file)) {
-      msg <- c(
-        "the dataset directory exists, but doesn't appear to be a valid ",
-        "dataset location; please manually remove the folder or specify a new ",
-        "folder and try again."
-      )
-      stop(msg)
-    }
-    unlink(output_folder, recursive = TRUE)  
-  }
-  dir.create(output_folder)
-  cat(file = locker_file, "#")
+  locker_file <- file.path(output_folder, ".locker-dir")
+  initialize_locker(output_folder, locker_file)
   if(n > 0) {
     output_files <- file_set(n, tag = "bg", file_only = TRUE)
     output_files <- paste0(output_files, ext)
