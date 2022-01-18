@@ -134,7 +134,8 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     .path, 
     .tag, 
     n = length(data), 
-    ext = ext
+    ext = ext, 
+    prefix = "bg"
   )
   
   if(length(data)==1) {

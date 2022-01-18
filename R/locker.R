@@ -3,9 +3,16 @@ locker_tag <- function(locker) {
   basename(locker)
 }
 
-initialize_locker <- function(where, locker_file) {
+#' Initialize the locker directory
+#' 
+#' @param where The full path to the locker. 
+#' 
+#' @export
+reset_locker <- function(where, ext = NULL) {
+  locker_file <- ".mrgsim-parallel-locker-dir."
+  locker_path <- file.path(where, locker_file)
   if(dir.exists(where)) {
-    if(!file.exists(locker_file)) {
+    if(!file.exists(locker_path)) {
       msg <- c(
         "the dataset directory exists, but doesn't appear to be a valid ",
         "dataset location; please manually remove the folder or specify a new ",
@@ -13,10 +20,21 @@ initialize_locker <- function(where, locker_file) {
       )
       stop(msg)
     }
-    unlink(where, recursive = TRUE)  
+    if(!is.character(ext)) {
+      pat <- "\\.(fst|feather|csv|qs|rds)$"
+    } else {
+      pat <- paste0("\\.(", paste0(ext, collapse = "|"), ")$") 
+    }
+    files <- list.files(
+      where, 
+      pattern = pat, 
+      full.names = TRUE
+    )
+    unlink(files, recursive = TRUE)  
   }
-  dir.create(where)
-  cat(file = locker_file, "#")
+  if(!dir.exists(where)) dir.create(where, recursive = TRUE)
+  cat(file = locker_path, "#")
+  return(invisible(NULL))
 }
 
 
@@ -69,7 +87,8 @@ sim_locker <- function(..., file_only = FALSE) {
 
 #' @rdname sim_locker
 #' @export
-setup_locker <- function(dir, tag = locker_tag(dir), n = 0, ext = "") {
+setup_locker <- function(dir, tag = locker_tag(dir), 
+                         n = 0, ext = "", prefix = NULL) {
   will_save <- is.character(dir) && length(dir)==1
   output_paths <- vector(mode = "list", length = n)
   if(!will_save) return(output_paths)
@@ -79,14 +98,12 @@ setup_locker <- function(dir, tag = locker_tag(dir), n = 0, ext = "") {
   } else {
     output_folder <- file.path(dir, tag)
   }
-  
   if(!dir.exists(dir)) {
     dir.create(dir, recursive = TRUE)
   }
-  locker_file <- file.path(output_folder, ".locker-dir")
-  initialize_locker(output_folder, locker_file)
+  reset_locker(output_folder)
   if(n > 0) {
-    output_files <- file_set(n, tag = "bg", file_only = TRUE)
+    output_files <- file_set(n, tag = prefix, file_only = TRUE)
     output_files <- paste0(output_files, ext)
     output_paths <- file.path(output_folder, output_files)
   }

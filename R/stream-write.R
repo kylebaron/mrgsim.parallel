@@ -1,5 +1,6 @@
 stream_types <- c("fst", "feather", "qs", "rds")
 stream_format_classes <- paste0("stream_format_", stream_types)
+names(stream_format_classes) <- stream_types
 
 re_set_ext <- function(x, ext) {
   x$file <- tools::file_path_sans_ext(x$file)
@@ -72,17 +73,9 @@ format_stream <- function(x, type = c("fst", "feather", "qs", "rds"),
     stop("`x` must be a file_stream object")  
   }
   type <- match.arg(type)
-  format <- "none"
-  if(type=="fst") format <- "stream_format_fst"
-  if(type=="feather") {
-    format <- "stream_format_feather"
-    require_arrow()
-  }
-  if(type=="qs") {
-    format <- "stream_format_qs"
-    require_qs()
-  }
-  if(type=="rds") format <- "stream_format_rds"
+  format <- stream_format_classes[type]
+  if(type=="feather") require_arrow()
+  if(type=="qs") require_qs()
   clx <- class(x)
   cl <- c(format, "list")
   cl <- unique(cl)

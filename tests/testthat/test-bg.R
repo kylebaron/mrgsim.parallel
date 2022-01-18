@@ -98,7 +98,7 @@ test_that("save results as fst", {
   files <- list.files(dataset)
   expect_equal(files[1:2], c("bg-1-2.fst", "bg-2-2.fst"))
   files <- list.files(dataset, all.files=TRUE)
-  expect_match(files, ".locker-dir", fixed = TRUE, all = FALSE)
+  expect_match(files, ".mrgsim-parallel-locker-dir.", fixed = TRUE, all = FALSE)
 })
 
 test_that("error when saving to existing directory", {
