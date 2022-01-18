@@ -1,7 +1,7 @@
 Package: mrgsim.parallel
 Type: Package
 Title: Simulate with 'mrgsolve' in Parallel
-Version: 0.1.1.9004
+Version: 0.1.1.9005
 Author: Kyle Baron
 Maintainer: Kyle Baron <kylebtwin@imap.cc>
 Description: Simulation from an 'mrgsolve' 
@@ -12,7 +12,7 @@ Description: Simulation from an 'mrgsolve'
 License: GPL (>=2)
 Imports: parallel, dplyr, future, future.apply, callr, fst
 Depends: mrgsolve, R (>= 3.5.0)
-Suggests: testthat, arrow
+Suggests: testthat, arrow, qs
 Encoding: UTF-8
 URL: https://github.com/kylebaron/mrgsim.parallel
 BugReports: https://github.com/kylebaron/mrgsim.parallel/issues

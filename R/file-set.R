@@ -6,6 +6,9 @@ stream_add_object <- function(stream, object) {
   stream
 }
 
+is.locker_stream <- function(x) inherits(x, "locker_stream")
+is.file_stream <- function(x) inherits(x, "file_stream")
+
 #' Generate a sequence of file objects
 #' 
 #' @param n The number of file names / objects to create.

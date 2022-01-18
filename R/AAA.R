@@ -5,6 +5,7 @@
 #' @importFrom mrgsolve loadso mrgsim_d mrgsim_ei house mrgsim_i mrgsim
 #' @importFrom callr r_bg rcmd_safe_env
 #' @importFrom fst read_fst write_fst
+#' @importFrom tools file_path_sans_ext
 #' @importMethodsFrom mrgsolve as.list
 #' @importFrom utils assignInMyNamespace
 NULL

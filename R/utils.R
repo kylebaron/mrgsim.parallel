@@ -104,3 +104,9 @@ require_arrow <- function() {
   }
 }
 arrow_installed <- function() requireNamespace("arrow")
+require_qs <- function() {
+  if(!requireNamespace("qs")) {
+    stop("the qs package must be installed to complete this task.")  
+  }
+}
+qs_installed <- function() requireNamespace("qs")

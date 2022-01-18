@@ -52,7 +52,7 @@ sim_locker <- function(..., file_only = FALSE) {
 
 #' @rdname sim_locker
 #' @export
-setup_locker <- function(dir, tag = locker_tag(dir), n = 0, ext = ".fst") {
+setup_locker <- function(dir, tag = locker_tag(dir), n = 0, ext = "") {
   will_save <- is.character(dir) && length(dir)==1
   output_paths <- vector(mode = "list", length = n)
   if(!will_save) return(output_paths)

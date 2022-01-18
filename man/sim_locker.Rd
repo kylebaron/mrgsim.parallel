@@ -7,7 +7,7 @@
 \usage{
 sim_locker(..., file_only = FALSE)
 
-setup_locker(dir, tag = locker_tag(dir), n = 0, ext = ".fst")
+setup_locker(dir, tag = locker_tag(dir), n = 0, ext = "")
 }
 \arguments{
 \item{...}{Arguments passed to \code{setup_locker}.}
