@@ -68,6 +68,7 @@ file_set <- function(n, tag = NULL, where = NULL, pad = TRUE, sep = "-",
 #' @param dataset Passed to [setup_locker()]; important to note that the 
 #' directory will be unlinked if it exists and is an established locker 
 #' directory. 
+#' @param format Passed to [format_stream()].
 #' @param ... Passed to [file_set()] (if `dataset` not provided) or 
 #' [setup_locker()] (if `dataset` is provided).
 #' 
@@ -86,7 +87,7 @@ file_set <- function(n, tag = NULL, where = NULL, pad = TRUE, sep = "-",
 #' @seealso [setup_locker()], [file_set()], [internalize_fst()]
 #' 
 #' @export
-file_stream <- function(n, dataset = NULL, ...) {
+file_stream <- function(n, dataset = NULL, format = NULL, ...) {
   if(!n > 0) {
     stop("`n` must be >= 1.")  
   }
@@ -97,12 +98,15 @@ file_stream <- function(n, dataset = NULL, ...) {
     class(ans) <- unique(c("locker_stream", class(ans)))
   }
   class(ans) <- unique(c("file_stream", class(ans)))
+  if(is.character(format)) {
+    ans <- format_stream(ans, format)  
+  }
   ans
 }
 
 #' @rdname file_stream
 #' @export
-object_stream <- function(objects, dataset = NULL, ...) {
+object_stream <- function(objects, dataset = NULL, format = NULL, ...) {
   if(!any(is.list(objects), is.vector(objects))) {
     stop("`objects` must be a list or a vector.")
   }
@@ -113,5 +117,8 @@ object_stream <- function(objects, dataset = NULL, ...) {
   cl <- class(ans)
   ans <- Map(ans, objects, f = stream_add_object, USE.NAMES = FALSE)
   class(ans) <- c("object_stream", cl)
+  if(is.character(format)) {
+    ans <- format_stream(ans, format)  
+  }
   ans
 }

@@ -18,3 +18,6 @@ and a new extension is added based on the value of \code{type}.}
 \description{
 Set the format for a file_stream object
 }
+\seealso{
+\code{\link[=locate_stream]{locate_stream()}}, \code{\link[=file_stream]{file_stream()}}, \code{\link[=object_stream]{object_stream()}}
+}

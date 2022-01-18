@@ -29,5 +29,5 @@ write_stream(x, ...)
 Writer functions for file_stream objects
 }
 \seealso{
-\code{\link[=stream_format]{stream_format()}}, \code{\link[=file_stream]{file_stream()}}, \code{\link[=object_stream]{object_stream()}}
+\code{\link[=format_stream]{format_stream()}}, \code{\link[=file_stream]{file_stream()}}, \code{\link[=object_stream]{object_stream()}}
 }

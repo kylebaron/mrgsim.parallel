@@ -5,9 +5,9 @@
 \alias{object_stream}
 \title{Create a stream of outputs and inputs}
 \usage{
-file_stream(n, dataset = NULL, ...)
+file_stream(n, dataset = NULL, format = NULL, ...)
 
-object_stream(objects, dataset = NULL, ...)
+object_stream(objects, dataset = NULL, format = NULL, ...)
 }
 \arguments{
 \item{n}{The number of streams to create.}
@@ -15,6 +15,8 @@ object_stream(objects, dataset = NULL, ...)
 \item{dataset}{Passed to \code{\link[=setup_locker]{setup_locker()}}; important to note that the
 directory will be unlinked if it exists and is an established locker
 directory.}
+
+\item{format}{Passed to \code{\link[=format_stream]{format_stream()}}.}
 
 \item{...}{Passed to \code{\link[=file_set]{file_set()}} (if \code{dataset} not provided) or
 \code{\link[=setup_locker]{setup_locker()}} (if \code{dataset} is provided).}
