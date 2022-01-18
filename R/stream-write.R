@@ -113,3 +113,21 @@ stream_locate <- function(x, where) {
   class(ans) <- clx
   ans
 }
+
+#' Change the extension on stream_file names
+#' 
+#' @param x A `stream_file` object.
+#' @param ext The new extension. 
+#' 
+#' @seealso [stream_format()], [stream_file()]
+#' 
+#' @export
+stream_ext <- function(x, ext) {
+  clx <- class(x)
+  if(!is.stream_file(x)) {
+    stop("`x` must be a stream_file object.")  
+  }
+  ans <- lapply(x, re_set_ext, ext = ext)
+  class(ans) <- clx
+  ans
+}
