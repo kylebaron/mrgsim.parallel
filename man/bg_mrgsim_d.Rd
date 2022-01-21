@@ -9,7 +9,7 @@ bg_mrgsim_d(
   data,
   nchunk = 1,
   ...,
-  .dataset = NULL,
+  .locker = NULL,
   .tag = NULL,
   .format = c("fst", "feather", "rds"),
   .wait = TRUE,
@@ -27,7 +27,7 @@ bg_mrgsim_d(
 
 \item{...}{Arguments passed to \code{\link[mrgsolve:mrgsim]{mrgsolve::mrgsim()}}.}
 
-\item{.dataset}{A directory for saving simulated data; use this to collect
+\item{.locker}{A directory for saving simulated data; use this to collect
 results from several different runs in a single folder.}
 
 \item{.tag}{A name to use for the current run; results are saved under
@@ -54,7 +54,7 @@ parallelization will be handled by the \code{future} package.}
 }
 \value{
 An \code{r_process} object; see \code{\link[callr:r_bg]{callr::r_bg()}}. Call \code{process$get_resuilt()} to
-get the actual result (see \code{details}). If a \code{.dataset} path is supplied,
+get the actual result (see \code{details}). If a \code{.locker} path is supplied,
 the simulated data is saved to disk and a list of file names is returned.
 }
 \description{
@@ -66,10 +66,10 @@ by the \code{parallel} package on unix or macos or \code{future} on any os.
 \details{
 \code{\link[=bg_mrgsim_d]{bg_mrgsim_d()}} returns a \link[processx:process]{processx::process} object (follow that link to
 see a list of methods). You will have to call \code{process$get_result()} to
-retrieve the result. When an output \code{.dataset} is not specified, simulated
-data are returned; when an output \code{.dataset} is specified, the path to
+retrieve the result. When an output \code{.locker} is not specified, simulated
+data are returned; when an output \code{.locker} is specified, the path to
 the \code{fst} file on disk is returned.  The \code{fst} files  should be read with
-\code{\link[fst:write_fst]{fst::read_fst()}}. When the results are not saved to \code{.dataset}, you will
+\code{\link[fst:write_fst]{fst::read_fst()}}. When the results are not saved to \code{.locker}, you will
 get a single data frame when \code{nchunk} is 1 or a list of data frames when
 \code{nchunk} is greater than 1. It is safest to call \code{\link[dplyr:bind]{dplyr::bind_rows()}} or
 something equivalent on the result if you are expecting data frame.
@@ -97,7 +97,7 @@ ds <- file.path(tempdir(), "sims")
 files <- bg_mrgsim_d(
   mod, data, carry_out = "dose", 
   .wait = TRUE, 
-  .dataset = ,
+  .locker = ds,
   .format = "fst"
 )
 files

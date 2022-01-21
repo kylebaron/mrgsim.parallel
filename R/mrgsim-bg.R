@@ -12,10 +12,10 @@ bg_sim_env <- function() {
 #' 
 #' [bg_mrgsim_d()] returns a [processx::process] object (follow that link to 
 #' see a list of methods). You will have to call `process$get_result()` to 
-#' retrieve the result. When an output `.dataset` is not specified, simulated 
-#' data are returned; when an output `.dataset` is specified, the path to 
+#' retrieve the result. When an output `.locker` is not specified, simulated 
+#' data are returned; when an output `.locker` is specified, the path to 
 #' the `fst` file on disk is returned.  The `fst` files  should be read with 
-#' [fst::read_fst()]. When the results are not saved to `.dataset`, you will 
+#' [fst::read_fst()]. When the results are not saved to `.locker`, you will 
 #' get a single data frame when `nchunk` is 1 or a list of data frames when 
 #' `nchunk` is greater than 1. It is safest to call [dplyr::bind_rows()] or 
 #' something equivalent on the result if you are expecting data frame.
@@ -24,7 +24,7 @@ bg_sim_env <- function() {
 #' 
 #' @param mod A model object.
 #' @param ... Arguments passed to [mrgsolve::mrgsim()].
-#' @param .dataset A directory for saving simulated data; use this to collect 
+#' @param .locker A directory for saving simulated data; use this to collect 
 #' results from several different runs in a single folder.
 #' @param .tag A name to use for the current run; results are saved under 
 #' `.tag` in `.path` folder.
@@ -66,7 +66,7 @@ bg_sim_env <- function() {
 #' files <- bg_mrgsim_d(
 #'   mod, data, carry_out = "dose", 
 #'   .wait = TRUE, 
-#'   .dataset = ,
+#'   .locker = ds,
 #'   .format = "fst"
 #' )
 #' files
@@ -76,7 +76,7 @@ bg_sim_env <- function() {
 #' 
 #' @return 
 #' An `r_process` object; see [callr::r_bg()]. Call `process$get_resuilt()` to 
-#' get the actual result (see `details`). If a `.dataset` path is supplied, 
+#' get the actual result (see `details`). If a `.locker` path is supplied, 
 #' the simulated data is saved to disk and a list of file names is returned. 
 #' 
 #' @seealso [future_mrgsim_d()], [internalize_fst()], [list_fst()], 
@@ -85,7 +85,7 @@ bg_sim_env <- function() {
 #' @export
 bg_mrgsim_d <- function(mod, data, nchunk = 1,   
                         ..., 
-                        .dataset = NULL, .tag = NULL, 
+                        .locker = NULL, .tag = NULL, 
                         .format = c("fst", "feather", "rds"),
                         .wait = TRUE, .seed = FALSE, 
                         .cores = 1, .plan = NULL) {
@@ -102,14 +102,14 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
   if(notag) {
     .tag <- mod@model  
   }
-  if(is.character(.dataset)) {
+  if(is.character(.locker)) {
     if(.format == "arrow" && !arrow_installed()) {
       stop("the arrow package must be installed to complete this task.")
     }
     if(notag) {
-      .tag <- basename(.dataset)
+      .tag <- basename(.locker)
     }
-    .path <- dirname(.dataset)
+    .path <- dirname(.locker)
   }
   if(!is.character(.tag)) {
     stop(".tag must have type character")  

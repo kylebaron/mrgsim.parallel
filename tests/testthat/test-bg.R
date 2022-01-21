@@ -80,7 +80,7 @@ test_that("bg is same as fg, chunked", {
 
 test_that("save results as fst", {
   locker <- tempdir()
-  dataset <- file.path(locker, "A1")
+  ds <- file.path(locker, "A1")
   bg <- bg_mrgsim_d(
     mod, 
     data, 
@@ -90,26 +90,26 @@ test_that("save results as fst", {
     .seed = 123256L, 
     nchunk = 2, 
     .ncores = 1,
-    .dataset = dataset
+    .locker = ds
   )
-  sims <- internalize_fst(dataset)
+  sims <- internalize_fst(ds)
   expect_is(sims, "data.frame")
   expect_equal(names(sims), c("ID", "time", "dose", "DV"))
-  files <- list.files(dataset)
+  files <- list.files(ds)
   expect_equal(files[1:2], c("bg-1-2.fst", "bg-2-2.fst"))
-  files <- list.files(dataset, all.files=TRUE)
+  files <- list.files(ds, all.files=TRUE)
   expect_match(files, ".mrgsim-parallel-locker-dir.", fixed = TRUE, all = FALSE)
 })
 
 test_that("error when saving to existing directory", {
   locker <- tempdir()
-  dataset <- file.path(locker, "A1123")
-  dir.create(dataset)
+  ds <- file.path(locker, "A1123")
+  dir.create(ds)
   expect_error(
     bg <- bg_mrgsim_d(
       mod, 
       data, 
-      .dataset = dataset
+      .locker = ds
     ), 
     regexp = "the dataset directory exists"
   )

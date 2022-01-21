@@ -3,7 +3,7 @@ library(testthat)
 context("file set")
 
 test_that("generate file set list", {
-  x <- file_set(10, tag = "foo", ext = ".bar")
+  x <- file_set(10, prefix = "foo", ext = ".bar")
   expect_length(x, 10)
   expect_equal(x[[5]]$i, 5)
   expect_equal(x[[8]]$file, "foo-08-10.bar")
@@ -13,21 +13,10 @@ test_that("generate file set list", {
 })
 
 test_that("generate file set names", {
-  x <- file_set(150, tag = "foo", file_only = TRUE)
+  x <- file_set(150, prefix = "foo", file_only = TRUE)
   expect_length(x, 150)
   expect_is(x, "character")
   expect_equal(x[[122]], "foo-122-150")
-})
-
-test_that("create object stream", {
-  data <- letters
-  ans <- object_stream(letters, ext = "-hij")
-  expect_length(ans, 26)
-  check <- ans[[4]]
-  expect_equal(check$i, 4)
-  expect_equal(check$x, "d")
-  expect_equal(check$file, "04-26-hij")
-  expect_error(object_stream(list()), regexp = "must have length >= 1")
 })
 
 test_that("create file stream", {
