@@ -140,7 +140,7 @@ new_stream.numeric <- function(x, ...) {
 #' @rdname new_stream
 #' @export
 new_stream.character <- function(x, ...) {
-  stream_new(as.list(x), ...)
+  new_stream(as.list(x), ...)
 }
 
 #' Create a stream of files
