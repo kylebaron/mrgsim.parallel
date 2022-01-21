@@ -13,26 +13,37 @@ re_set_dir <- function(x, where) {
   x
 }
 
+write_stream_dir_check <- function(file, dir = NULL) {
+  if(dirname(file)=="." && is.null(dir)) {
+    stop("Cannot use `write_stream` to save to the working directory.") 
+  }
+  if(is.character(dir) && length(dir)==1) {
+    file.path(dir, file)  
+  } else {
+    file  
+  }
+}
+
 #' Writer functions for stream_file objects
 #' 
 #' This function will write out objects that have been assigned a format 
-#' with either [stream_format()] or the `format` argument to [stream_new()].
+#' with either [format_stream()] or the `format` argument to [new_stream()].
 #' 
 #' The default method writes to `rds` using [saveRDS()] and would be invoked 
-#' `stream_write` is called without setting the `format`.
+#' `write_stream` is called without setting the `format`.
 #' 
-#' @param x A `stream_file` object.
+#' @param x A `file_stream` object.
 #' @param data An object to write.
 #' @param ... Not used.
 #' 
 #' @examples
 #' ds <- temp_ds("example")
 #' 
-#' fs <- stream_new(2, dataset = ds, format = "fst")
+#' fs <- new_stream(2, dataset = ds, format = "fst")
 #' 
 #' data <- data.frame(x = rnorm(10))
 #' 
-#' x <- lapply(fs, stream_write, data = data)
+#' x <- lapply(fs, write_streame, data = data)
 #' 
 #' list.files(ds)
 #' 
@@ -44,46 +55,51 @@ re_set_dir <- function(x, where) {
 #' 
 #' list.files(ds)
 #' 
-#' @seealso [stream_format()], [stream_file()]
+#' @seealso [format_stream()], [file_stream()]
 #' 
 #' @export
-stream_write <- function(x, ...) UseMethod("stream_write")
+write_stream <- function(x, ...) UseMethod("write_stream")
 
-#' @rdname stream_write
+#' @rdname write_stream
 #' @export
-stream_write.default <- function(x, data, ...) {
+write_stream.default <- function(x, data, dir = NULL, ...) {
+  x$file <- write_stream_dir_check(x$file, dir)
   saveRDS(object = data, file = x$file)
   return(invisible(NULL))
 }
 
-#' @rdname stream_write
+#' @rdname write_stream
 #' @export
-stream_write.stream_format_fst <- function(x, data, ...) {
+write_stream.stream_format_fst <- function(x, data, dir = NULL, ...) {
   if(!is.data.frame(data)) stop("`x` must be a data.frame")
+  x$file <- write_stream_dir_check(x$file, dir)
   fst::write_fst(x = data, path = x$file)
-  return(invisible(NULL))
+  return(invisible(x))
 }
 
-#' @rdname stream_write
+#' @rdname write_stream
 #' @export
-stream_write.stream_format_feather <- function(x, data, ...) {
+write_stream.stream_format_feather <- function(x, data, dir = NULL, ...) {
   if(!is.data.frame(data)) stop("`x` must be a data.frame")
   require_arrow()
+  x$file <- write_stream_dir_check(x$file, dir)
   arrow::write_feather(x = data, sink = x$file)
   return(invisible(NULL))
 }
 
-#' @rdname stream_write
+#' @rdname write_stream
 #' @export
-stream_write.stream_format_qs <- function(x, data, ...) {
+write_stream.stream_format_qs <- function(x, data, dir = NULL, ...) {
   require_qs()
+  x$file <- write_stream_dir_check(x$file, dir)
   qs::qsave(x = data, file = x$file)
   return(invisible(NULL))
 }
 
-#' @rdname stream_write
+#' @rdname write_stream
 #' @export
-stream_write.stream_format_rds <- function(x, data, ...) {
+write_stream.stream_format_rds <- function(x, data, dir = NULL, ...) {
+  x$file <- write_stream_dir_check(x$file, dir)
   saveRDS(object = data, file = x$file)
   return(invisible(NULL))
 }
@@ -91,7 +107,7 @@ stream_write.stream_format_rds <- function(x, data, ...) {
 #' Set the format for a stream_file object
 #' 
 #' The format is set on the file objects inside the list so that the file 
-#' object can be used to call a write method. See [stream_write()].
+#' object can be used to call a write method. See [write_stream()].
 #' 
 #' @param x A `file_stream` object.
 #' @param type The file format type; if `feather` is chosen, then a check will
@@ -99,18 +115,18 @@ stream_write.stream_format_rds <- function(x, data, ...) {
 #' @param set_ext If `TRUE`, the existing extension (if it exists) is stripped
 #' and a new extension is added based on the value of `type`.
 #' 
-#' @seealso [stream_locate()], [stream_file()]
+#' @seealso [locate_stream()], [file_stream()]
 #' 
 #' @examples
-#' fs <- stream_new(2)
-#' fs <- stream_format(fs, "fst")
+#' fs <- new_stream(2)
+#' fs <- format_stream(fs, "fst")
 #' fs
 #' 
 #' @export
-stream_format <- function(x, type = c("fst", "feather", "qs", "rds"), 
-                          set_ext = TRUE) {
-  if(!is.stream_file(x)) {
-    stop("`x` must be a stream_file object")  
+format_stream <- function(x, type = c("fst", "feather", "qs", "rds"), 
+                          set_ext = TRUE, warn = FALSE) {
+  if(!is.file_stream(x)) {
+    stop("`x` must be a file_stream object.")  
   }
   type <- match.arg(type)
   format <- stream_format_classes[type]
@@ -126,39 +142,42 @@ stream_format <- function(x, type = c("fst", "feather", "qs", "rds"),
   if(isTRUE(set_ext)) {
     ans <- lapply(ans, re_set_ext, ext = type)  
   }
+  if(dirname(ans[[1]]$file)=='.') {
+    warning("format was set, but file name [1] has no directory specified.")  
+  }
   class(ans) <- clx
   ans
 }
-#' Re-sets the directory for stream_file objects
+#' Re-sets the directory for file_stream objects
 #' 
-#' @param x A `stream_file` object.
+#' @param x A `file_stream` object.
 #' @param where The new location. 
 #' 
-#' @seealso [stream_format()], [stream_file()]
+#' @seealso [format_stream()], [file_stream()]
 #' 
 #' @export
-stream_locate <- function(x, where) {
+locate_stream <- function(x, where) {
   clx <- class(x)
-  if(!is.stream_file(x)) {
-    stop("`x` must be a stream_file object")  
+  if(!is.file_stream(x)) {
+    stop("`x` must be a file_stream object")  
   }
   ans <- lapply(x, re_set_dir, where = where)
   class(ans) <- clx
   ans
 }
 
-#' Change the extension on stream_file names
+#' Change the extension on file_stream names
 #' 
-#' @param x A `stream_file` object.
+#' @param x A `file_stream` object.
 #' @param ext The new extension. 
 #' 
-#' @seealso [stream_format()], [stream_file()]
+#' @seealso [format_stream()], [file_stream()]
 #' 
 #' @export
-stream_ext <- function(x, ext) {
+ext_stream <- function(x, ext) {
   clx <- class(x)
-  if(!is.stream_file(x)) {
-    stop("`x` must be a stream_file object.")  
+  if(!is.file_stream(x)) {
+    stop("`x` must be a file_stream object.")  
   }
   ans <- lapply(x, re_set_ext, ext = ext)
   class(ans) <- clx

@@ -6,8 +6,8 @@ stream_add_object <- function(stream, object) {
   stream
 }
 
-is.stream_locker <- function(x) inherits(x, "stream_locker")
-is.stream_file <- function(x) inherits(x, "stream_file")
+is.locker_stream <- function(x) inherits(x, "locker_stream")
+is.file_stream <- function(x) inherits(x, "file_stream")
 
 #' Generate a sequence of file objects
 #' 
@@ -56,8 +56,8 @@ file_set <- function(n, where = NULL, prefix = NULL, pad = TRUE, sep = "-",
 
 #' Create a stream of outputs and inputs
 #' 
-#' By stream we mean a list that pre-specifies the list of output file names, 
-#' replicate numbers and possibly input objects for a simulation.  Passing 
+#' By stream we mean a list that pre-specifies the output file names, 
+#' replicate numbers and possibly input objects for a simulation. Passing 
 #' `dataset` initiates a call to [setup_locker()], which sets up the output 
 #' directories. 
 #' 
@@ -66,7 +66,7 @@ file_set <- function(n, where = NULL, prefix = NULL, pad = TRUE, sep = "-",
 #' @param dataset Passed to [setup_locker()]; important to note that the 
 #' directory will be unlinked if it exists and is an established locker 
 #' directory. 
-#' @param format Passed to [stream_format()].
+#' @param format Passed to [format_stream()].
 #' @param ... Passed to [file_set()].
 #' 
 #' @return
@@ -84,36 +84,36 @@ file_set <- function(n, where = NULL, prefix = NULL, pad = TRUE, sep = "-",
 #' @seealso [setup_locker()], [file_set()], [internalize_fst()]
 #' 
 #' @export
-stream_new <- function(x, ...) UseMethod("stream_new")
+new_stream <- function(x, ...) UseMethod("new_stream")
 
-#' @rdname stream_new
+#' @rdname new_stream
 #' @export
-stream_new.list <- function(x, dataset = NULL, format = NULL, ...) {
+new_stream.list <- function(x, dataset = NULL, format = NULL, ...) {
   if(length(x)==0) {
     stop("`x` must have length >= 1.")  
   }
-  ans <- stream_file(dataset = dataset, n = length(x),  ...)
+  ans <- file_stream(dataset = dataset, n = length(x),  ...)
   cl <- class(ans)
   ans <- Map(ans, x, f = stream_add_object, USE.NAMES = FALSE)
   class(ans) <- cl
   if(is.character(format)) {
-    ans <- stream_format(ans, format)  
+    ans <- format_stream(ans, format)  
   }
   ans
 }
 
-#' @rdname stream_new
+#' @rdname new_stream
 #' @export
-stream_new.numeric <- function(x, ...) {
+new_stream.numeric <- function(x, ...) {
   if(length(x)==1) {
     x <- seq(x)
   } 
-  stream_new(as.list(x), ...)
+  new_stream(as.list(x), ...)
 }
 
-#' @rdname stream_new
+#' @rdname new_stream
 #' @export
-stream_new.character <- function(x, ...) {
+new_stream.character <- function(x, ...) {
   stream_new(as.list(x), ...)
 }
 
@@ -122,8 +122,8 @@ stream_new.character <- function(x, ...) {
 #' Optionally, setup a locker storage space on disk with a specific file 
 #' format (e.g. `fst` or `feather`).
 #' 
-#' @inheritParams stream_format
-#' @inheritParams stream_new
+#' @inheritParams format_stream
+#' @inheritParams new_stream
 #' @param n The number of file names to generate.
 #' @param ... Passed to [file_set()].
 #' 
@@ -131,18 +131,21 @@ stream_new.character <- function(x, ...) {
 #' stream_file(3)
 #' 
 #' @export
-stream_file <- function(n, dataset = NULL, format = NULL, ...) {
+file_stream <- function(n, dataset = NULL, format = NULL, where = NULL, ...) {
   if(!n > 0) {
     stop("`n` must be >= 1.")  
   }
-  ans <- file_set(n = n, file_only = FALSE, where = dataset, ...)
+  if(!is.null(dataset)) {
+    where <- dataset  
+  } 
+  ans <- file_set(n = n, file_only = FALSE, where = where, ...)
   if(is.character(dataset)) {
     blah <- setup_locker(dir = dataset, n = 0)
-    class(ans) <- c("stream_locker", class(ans))
+    class(ans) <- c("locker_stream", class(ans))
   }
-  class(ans) <- unique(c("stream_file", class(ans)))
+  class(ans) <- unique(c("file_stream", class(ans)))
   if(is.character(format)) {
-    ans <- stream_format(ans, format)  
+    ans <- format_stream(ans, format)  
   }
   ans
 }
@@ -154,7 +157,7 @@ summary.stream_file <- function(object, ...) {
   format <- class(x[[1]])[1]
   b <- paste0("Format: ", format)
   c <- paste0("Type: ", class(x[[1]]$x)[1])
-  d <- paste0("Locker: ", is.stream_locker(x))
+  d <- paste0("Locker: ", is.locker_stream(x))
   e <- paste0("File[1]: ", x[[1]]$file)
   cat(a, c, b, e, d, sep = "\n")
 }
