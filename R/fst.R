@@ -10,7 +10,7 @@ list_fst <- function(path) {
   list.files(
     path, 
     full.names = TRUE, 
-    pattern = "^bg-.*\\.fst$"
+    pattern = ".*\\.fst$"
   )
 }
 
