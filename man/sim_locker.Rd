@@ -5,14 +5,12 @@
 \alias{setup_locker}
 \title{Set up a data storage locker}
 \usage{
-sim_locker(..., file_only = FALSE)
+sim_locker(...)
 
 setup_locker(dir, tag = locker_tag(dir), n = 0, ext = "", prefix = NULL)
 }
 \arguments{
 \item{...}{Arguments passed to \code{setup_locker}.}
-
-\item{file_only}{If \code{TRUE} then only return an vector of file names.}
 
 \item{dir}{The directory that contains tagged directories of run
 results.}

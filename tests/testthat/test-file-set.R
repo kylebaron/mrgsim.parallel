@@ -5,15 +5,14 @@ context("file set")
 test_that("generate file set list", {
   x <- file_set(10, prefix = "foo", ext = ".bar")
   expect_length(x, 10)
-  expect_equal(x[[5]]$i, 5)
-  expect_equal(x[[8]]$file, "foo-08-10.bar")
+  expect_equal(x[[8]], "foo-08-10.bar")
   path <- normalizePath(tempdir(), winslash="/")
   x <- file_set(1, where = path)
-  expect_equal(basename(dirname(x[[1]]$file)), basename(path))
+  expect_equal(basename(dirname(x[[1]])), basename(path))
 })
 
 test_that("generate file set names", {
-  x <- file_set(150, prefix = "foo", file_only = TRUE)
+  x <- file_set(150, prefix = "foo")
   expect_length(x, 150)
   expect_is(x, "character")
   expect_equal(x[[122]], "foo-122-150")

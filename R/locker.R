@@ -86,9 +86,8 @@ reset_locker <- function(where, pattern = NULL) {
 #' @seealso [file_set()]
 #' 
 #' @export
-sim_locker <- function(..., file_only = FALSE) {
+sim_locker <- function(...) {
   file <- setup_locker(...)
-  if(isTRUE(file_only)) return(file)
   Map(file, seq_along(file), f = new_file_object, USE.NAMES = FALSE)
 }
 
@@ -110,7 +109,7 @@ setup_locker <- function(dir, tag = locker_tag(dir),
   }
   reset_locker(output_folder)
   if(n > 0) {
-    output_files <- file_set(n, prefix = prefix, file_only = TRUE)
+    output_files <- file_set(n, prefix = prefix)
     output_files <- paste0(output_files, ext)
     output_paths <- file.path(output_folder, output_files)
   }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/stream.R
 \name{locate_stream}
 \alias{locate_stream}
-\title{Re-sets the directory for file_stream objects}
+\title{Set or change the directory for file_stream objects}
 \usage{
 locate_stream(x, where)
 }
@@ -12,7 +12,8 @@ locate_stream(x, where)
 \item{where}{The new location.}
 }
 \description{
-Re-sets the directory for file_stream objects
+Add or update the directory location for items in a \code{file_stream} object.
+If a directory path already exists, it is removed first.
 }
 \examples{
 x <- new_stream(5)

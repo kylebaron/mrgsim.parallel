@@ -2,7 +2,7 @@
 % Please edit documentation in R/stream.R
 \name{ext_stream}
 \alias{ext_stream}
-\title{Change the extension on file_stream names}
+\title{Set or change the file extension on file_stream names}
 \usage{
 ext_stream(x, ext)
 }
@@ -12,7 +12,8 @@ ext_stream(x, ext)
 \item{ext}{The new extension.}
 }
 \description{
-Change the extension on file_stream names
+Add or update the file extension for items in a \code{file_stream} object.
+If a file extension exists, it is removed first.
 }
 \examples{
 x <- new_stream(3)
