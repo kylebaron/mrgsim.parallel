@@ -35,7 +35,7 @@ A list with the following elements:
 \item \code{x} the input object.
 }
 
-The list has class \code{file_stream} as well as \code{locer_stream}( if \code{locker} was
+The list has class \code{file_stream} as well as \code{locker_stream}( if \code{locker} was
 passed) and a class attribute for the output if \code{format} was passed.
 }
 \description{

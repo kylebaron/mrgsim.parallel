@@ -30,11 +30,7 @@ Generate a sequence of file objects
 
 x <- file_set(3, where = "foo/bar")
 length(x)
-length(x[[1]])
-x[[2]]$i
-x[[3]]$file
-
-file_set(2)
+length(x[1])
 
 }
 \seealso{

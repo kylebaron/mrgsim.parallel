@@ -26,10 +26,10 @@ write_stream_dir_check <- function(file, dir = NULL) {
 
 new_file_object <- function(file, i) {
   ans <- list(i = i, file = file)  
+  attr(ans, "file_set_item") <- TRUE
   ans
-  #attributes(ans) <- list(file_set_item = TRUE)
-  #ans
 }
+
 stream_add_object <- function(stream, object) {
   stream$x <- object
   stream
@@ -62,7 +62,7 @@ is.file_set_item <- function(x) !is.null(attr(x, "file_set_item", exact=TRUE))
 #' - `file` the output file name
 #' - `x` the input object.
 #' 
-#' The list has class `file_stream` as well as `locer_stream`( if `locker` was
+#' The list has class `file_stream` as well as `locker_stream`( if `locker` was
 #' passed) and a class attribute for the output if `format` was passed.
 #' 
 #' @examples
