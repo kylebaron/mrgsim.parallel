@@ -227,6 +227,12 @@ write_stream <- function(x, ...) UseMethod("write_stream")
 #' @rdname write_stream
 #' @export
 write_stream.default <- function(x, data, dir = NULL, ...) {
+  if(!tolower(file_ext(x$file)) %in% c("",  "rds")) {
+    stop(
+      "the default `write_stream` method requires no file extension or ", 
+      "extension of RDS or rds."
+    )
+  }
   x$file <- write_stream_dir_check(x$file, dir)
   saveRDS(object = data, file = x$file)
   return(invisible(NULL))
