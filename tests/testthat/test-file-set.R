@@ -23,5 +23,5 @@ test_that("create file stream", {
   expect_length(ans, 3)
   expect_equal(ans[[3]]$i, 3)
   expect_equal(ans[[2]]$file, "2-3.abc")
-  expect_error(file_stream(n=0), regexp = "must be >= 1")
+  expect_error(file_stream(n=0), regexp = "must be a positive numeric value")
 })
