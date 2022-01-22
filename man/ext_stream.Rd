@@ -14,6 +14,13 @@ ext_stream(x, ext)
 \description{
 Change the extension on file_stream names
 }
+\examples{
+x <- new_stream(3)
+x <- ext_stream(x, "feather")
+x[[1]]$file
+
+}
 \seealso{
-\code{\link[=format_stream]{format_stream()}}, \code{\link[=file_stream]{file_stream()}}
+\code{\link[=format_stream]{format_stream()}}, \code{\link[=locate_stream]{locate_stream()}}, \code{\link[=new_stream]{new_stream()}}, \code{\link[=file_stream]{file_stream()}},
+\code{\link[=file_set]{file_set()}}
 }

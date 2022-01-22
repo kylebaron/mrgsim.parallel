@@ -14,6 +14,13 @@ locate_stream(x, where)
 \description{
 Re-sets the directory for file_stream objects
 }
+\examples{
+x <- new_stream(5)
+x <- locate_stream(x, file.path(tempdir(), "foo"))
+x[[1]]$file
+
+}
 \seealso{
-\code{\link[=format_stream]{format_stream()}}, \code{\link[=file_stream]{file_stream()}}
+\code{\link[=format_stream]{format_stream()}}, \code{\link[=ext_stream]{ext_stream()}}, \code{\link[=new_stream]{new_stream()}}, \code{\link[=file_stream]{file_stream()}},
+\code{\link[=file_set]{file_set()}}
 }

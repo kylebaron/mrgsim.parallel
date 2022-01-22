@@ -19,6 +19,14 @@ be made to ensure the \code{arrow} package is loaded.}
 
 \item{set_ext}{If \code{TRUE}, the existing extension (if it exists) is stripped
 and a new extension is added based on the value of \code{type}.}
+
+\item{warn}{If \code{TRUE} a warning will be issued in case the output format
+is set but there is no directory path associated with the \code{file} spot in
+\code{x[[1]]}.}
+}
+\value{
+\code{x} is returned with a new calss attribute reflecting the expected output
+format (\code{fst}, \code{feather} (arrow), \code{qs} or \code{rds}).
 }
 \description{
 The format is set on the file objects inside the list so that the file
@@ -27,9 +35,10 @@ object can be used to call a write method. See \code{\link[=write_stream]{write_
 \examples{
 fs <- new_stream(2)
 fs <- format_stream(fs, "fst")
-fs
+fs[[1]]
 
 }
 \seealso{
-\code{\link[=locate_stream]{locate_stream()}}, \code{\link[=file_stream]{file_stream()}}
+\code{\link[=locate_stream]{locate_stream()}}, \code{\link[=ext_stream]{ext_stream()}}, \code{\link[=new_stream]{new_stream()}}, \code{\link[=file_stream]{file_stream()}},
+\code{\link[=file_set]{file_set()}}
 }

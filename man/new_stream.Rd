@@ -21,31 +21,42 @@ passing a single number will fill \code{x} with a sequence of that length.}
 
 \item{...}{Passed to \code{\link[=file_set]{file_set()}}.}
 
-\item{format}{Passed to \code{\link[=format_stream]{format_stream()}}.}
-
-\item{dataset}{Passed to \code{\link[=setup_locker]{setup_locker()}}; important to note that the
+\item{locker}{Passed to \code{\link[=setup_locker]{setup_locker()}} as \code{dir}; important to note that the
 directory will be unlinked if it exists and is an established locker
 directory.}
+
+\item{format}{Passed to \code{\link[=format_stream]{format_stream()}}.}
 }
 \value{
-A list with the following elements: \code{i} the position number; \code{file}
-the output file name; \code{x} the input object.
+A list with the following elements:
+\itemize{
+\item \code{i} the position number
+\item \code{file} the output file name
+\item \code{x} the input object.
+}
+
+The list has class \code{file_stream} as well as \code{locer_stream}( if \code{locker} was
+passed) and a class attribute for the output if \code{format} was passed.
 }
 \description{
 By stream we mean a list that pre-specifies the output file names,
 replicate numbers and possibly input objects for a simulation. Passing
-\code{dataset} initiates a call to \code{\link[=setup_locker]{setup_locker()}}, which sets up the output
-directories.
+\code{locker} initiates a call to \code{\link[=setup_locker]{setup_locker()}}, which sets up or resets
+the output directories.
 }
 \examples{
-stream_new(3)
-stream_newm(2, dataset = file.path(tempdir(), "foo"))
+x <- new_stream(3)
+x[[1]]
+
+new_stream(2, locker = file.path(tempdir(), "foo"))
 
 df <- data.frame(ID = c(1,2,3,4))
 data <- chunk_by_id(df, nchunk = 2)
-stream_new(data)
+x <- new_stream(data)
+x[[1]]
 
 }
 \seealso{
-\code{\link[=setup_locker]{setup_locker()}}, \code{\link[=file_set]{file_set()}}, \code{\link[=internalize_fst]{internalize_fst()}}
+\code{\link[=format_stream]{format_stream()}}, \code{\link[=locate_stream]{locate_stream()}}, \code{\link[=ext_stream]{ext_stream()}}, \code{\link[=file_stream]{file_stream()}},
+\code{\link[=file_set]{file_set()}}
 }

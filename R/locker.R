@@ -6,9 +6,11 @@ locker_tag <- function(locker) {
 #' Initialize the locker directory
 #' 
 #' @param where The full path to the locker. 
+#' @param pattern A regular expression for finding files to clear from the 
+#' locker directory.
 #' 
 #' @export
-reset_locker <- function(where, ext = NULL) {
+reset_locker <- function(where, pattern = NULL) {
   locker_file <- ".mrgsim-parallel-locker-dir."
   locker_path <- file.path(where, locker_file)
   if(dir.exists(where)) {
@@ -20,14 +22,12 @@ reset_locker <- function(where, ext = NULL) {
       )
       stop(msg)
     }
-    if(!is.character(ext)) {
-      pat <- "\\.(fst|feather|csv|qs|rds)$"
-    } else {
-      pat <- paste0("\\.(", paste0(ext, collapse = "|"), ")$") 
-    }
+    if(!is.character(pattern)) {
+      pattern <- "\\.(fst|feather|csv|qs|rds)$"
+    } 
     files <- list.files(
       where, 
-      pattern = pat, 
+      pattern = pattern, 
       full.names = TRUE
     )
     unlink(files, recursive = TRUE)  

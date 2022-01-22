@@ -84,30 +84,40 @@ file_set <- function(n, where = NULL, prefix = NULL, pad = TRUE, sep = "-",
 #' 
 #' By stream we mean a list that pre-specifies the output file names, 
 #' replicate numbers and possibly input objects for a simulation. Passing 
-#' `dataset` initiates a call to [setup_locker()], which sets up the output 
-#' directories. 
+#' `locker` initiates a call to [setup_locker()], which sets up or resets
+#'  the output directories. 
 #' 
 #' @param x A list or vector to template the stream; for the `numeric` method, 
 #' passing a single number will fill `x` with a sequence of that length.
-#' @param dataset Passed to [setup_locker()]; important to note that the 
+#' @param locker Passed to [setup_locker()] as `dir`; important to note that the 
 #' directory will be unlinked if it exists and is an established locker 
 #' directory. 
 #' @param format Passed to [format_stream()].
 #' @param ... Passed to [file_set()].
 #' 
 #' @return
-#' A list with the following elements: `i` the position number; `file` 
-#' the output file name; `x` the input object.
+#' A list with the following elements: 
+#' 
+#' - `i` the position number
+#' - `file` the output file name
+#' - `x` the input object.
+#' 
+#' The list has class `file_stream` as well as `locer_stream`( if `locker` was
+#' passed) and a class attribute for the output if `format` was passed.
 #' 
 #' @examples
-#' stream_new(3)
-#' stream_newm(2, dataset = file.path(tempdir(), "foo"))
+#' x <- new_stream(3)
+#' x[[1]]
+#' 
+#' new_stream(2, locker = file.path(tempdir(), "foo"))
 #' 
 #' df <- data.frame(ID = c(1,2,3,4))
 #' data <- chunk_by_id(df, nchunk = 2)
-#' stream_new(data)
+#' x <- new_stream(data)
+#' x[[1]]
 #' 
-#' @seealso [setup_locker()], [file_set()], [internalize_fst()]
+#' @seealso [format_stream()], [locate_stream()], [ext_stream()], [file_stream()], 
+#'          [file_set()]
 #' 
 #' @export
 new_stream <- function(x, ...) UseMethod("new_stream")
@@ -143,18 +153,127 @@ new_stream.character <- function(x, ...) {
   new_stream(as.list(x), ...)
 }
 
+#' Set the format for a stream_file object
+#' 
+#' The format is set on the file objects inside the list so that the file 
+#' object can be used to call a write method. See [write_stream()].
+#' 
+#' @param x A `file_stream` object.
+#' @param type The file format type; if `feather` is chosen, then a check will
+#' be made to ensure the `arrow` package is loaded. 
+#' @param set_ext If `TRUE`, the existing extension (if it exists) is stripped
+#' and a new extension is added based on the value of `type`.
+#' @param warn If `TRUE` a warning will be issued in case the output format 
+#' is set but there is no directory path associated with the `file` spot in 
+#' `x[[1]]`.
+#' 
+#' @return
+#' `x` is returned with a new calss attribute reflecting the expected output
+#' format (`fst`, `feather` (arrow), `qs` or `rds`).
+#' 
+#' @seealso [locate_stream()], [ext_stream()], [new_stream()], [file_stream()], 
+#'          [file_set()]
+#' 
+#' @examples
+#' fs <- new_stream(2)
+#' fs <- format_stream(fs, "fst")
+#' fs[[1]]
+#' 
+#' @export
+format_stream <- function(x, type = c("fst", "feather", "qs", "rds"), 
+                          set_ext = TRUE, warn = FALSE) {
+  if(!is.file_stream(x)) {
+    stop("`x` must be a file_stream object.")  
+  }
+  type <- match.arg(type)
+  format <- stream_format_classes[type]
+  if(type=="feather") require_arrow()
+  if(type=="qs") require_qs()
+  clx <- class(x)
+  cl <- c(format, "list")
+  cl <- unique(cl)
+  ans <- lapply(x, function(xx) {
+    class(xx) <- cl
+    xx
+  })
+  if(isTRUE(set_ext)) {
+    ans <- lapply(ans, re_set_ext, ext = type)  
+  }
+  if(dirname(ans[[1]]$file)=='.' & isTRUE(warn)) {
+    warning("format was set, but file name [1] has no directory specified.")  
+  }
+  class(ans) <- clx
+  ans
+}
+#' Re-sets the directory for file_stream objects
+#' 
+#' @param x A `file_stream` object.
+#' @param where The new location. 
+#' 
+#' @examples
+#' x <- new_stream(5)
+#' x <- locate_stream(x, file.path(tempdir(), "foo"))
+#' x[[1]]$file
+#' 
+#' @seealso [format_stream()], [ext_stream()], [new_stream()], [file_stream()], 
+#'          [file_set()]
+#' 
+#' @export
+locate_stream <- function(x, where) {
+  clx <- class(x)
+  if(!is.file_stream(x)) {
+    stop("`x` must be a file_stream object")  
+  }
+  ans <- lapply(x, re_set_dir, where = where)
+  class(ans) <- clx
+  ans
+}
+
+#' Change the extension on file_stream names
+#' 
+#' @param x A `file_stream` object.
+#' @param ext The new extension. 
+#' 
+#' @examples
+#' x <- new_stream(3)
+#' x <- ext_stream(x, "feather")
+#' x[[1]]$file
+#' 
+#' @seealso [format_stream()], [locate_stream()], [new_stream()], [file_stream()], 
+#'          [file_set()]
+#' 
+#' @export
+ext_stream <- function(x, ext) {
+  clx <- class(x)
+  if(!is.file_stream(x)) {
+    stop("`x` must be a file_stream object.")  
+  }
+  ans <- lapply(x, re_set_ext, ext = ext)
+  class(ans) <- clx
+  ans
+}
+
 #' Create a stream of files
 #' 
 #' Optionally, setup a locker storage space on disk with a specific file 
 #' format (e.g. `fst` or `feather`).
 #' 
+#' Pass `locker` to set up locker space for saving outputs; this also sets
+#' the path for output files. If you want to set up the path for output files
+#' without setting up `locker` space, pass `where`. 
+#' 
 #' @inheritParams format_stream
 #' @inheritParams new_stream
+#' @inheritParams file_set
 #' @param n The number of file names to generate.
 #' @param ... Passed to [file_set()].
 #' 
 #' @examples
-#' stream_file(3)
+#' x <- file_stream(3, locker = temp_ds("foo"), format = "fst")
+#' x[[1]]
+#' 
+#' @seealso [format_stream()], [locate_stream()], [ext_stream()], [new_stream()],
+#'          [file_set()]
 #' 
 #' @export
 file_stream <- function(n, locker = NULL, format = NULL, where = NULL, ...) {
@@ -198,28 +317,31 @@ summary.stream_file <- function(object, ...) {
 #' 
 #' @param x A `file_stream` object.
 #' @param data An object to write.
+#' @param dir An optional directory location to be used if not already in 
+#' the `file` spot in `x`.
 #' @param ... Not used.
 #' 
 #' @examples
 #' ds <- temp_ds("example")
 #' 
-#' fs <- new_stream(2, dataset = ds, format = "fst")
+#' fs <- new_stream(2, locker = ds, format = "fst")
 #' 
 #' data <- data.frame(x = rnorm(10))
 #' 
-#' x <- lapply(fs, write_streame, data = data)
+#' x <- lapply(fs, write_stream, data = data)
 #' 
 #' list.files(ds)
 #' 
 #' reset_locker(ds)
 #' 
-#' fs <- stream_format(fs, "rds")
+#' fs <- format_stream(fs, "rds")
 #' 
-#' x <- lapply(fs, stream_write, data = data)
+#' x <- lapply(fs, write_stream, data = data)
 #' 
 #' list.files(ds)
 #' 
-#' @seealso [format_stream()], [file_stream()]
+#' @seealso [format_stream()], [ext_stream()], [locate_stream()], [new_stream()],
+#'          [file_stream()]
 #' 
 #' @export
 write_stream <- function(x, ...) UseMethod("write_stream")
@@ -272,84 +394,4 @@ write_stream.stream_format_rds <- function(x, data, dir = NULL, ...) {
   x$file <- write_stream_dir_check(x$file, dir)
   saveRDS(object = data, file = x$file)
   return(invisible(NULL))
-}
-
-#' Set the format for a stream_file object
-#' 
-#' The format is set on the file objects inside the list so that the file 
-#' object can be used to call a write method. See [write_stream()].
-#' 
-#' @param x A `file_stream` object.
-#' @param type The file format type; if `feather` is chosen, then a check will
-#' be made to ensure the `arrow` package is loaded. 
-#' @param set_ext If `TRUE`, the existing extension (if it exists) is stripped
-#' and a new extension is added based on the value of `type`.
-#' 
-#' @seealso [locate_stream()], [file_stream()]
-#' 
-#' @examples
-#' fs <- new_stream(2)
-#' fs <- format_stream(fs, "fst")
-#' fs
-#' 
-#' @export
-format_stream <- function(x, type = c("fst", "feather", "qs", "rds"), 
-                          set_ext = TRUE, warn = FALSE) {
-  if(!is.file_stream(x)) {
-    stop("`x` must be a file_stream object.")  
-  }
-  type <- match.arg(type)
-  format <- stream_format_classes[type]
-  if(type=="feather") require_arrow()
-  if(type=="qs") require_qs()
-  clx <- class(x)
-  cl <- c(format, "list")
-  cl <- unique(cl)
-  ans <- lapply(x, function(xx) {
-    class(xx) <- cl
-    xx
-  })
-  if(isTRUE(set_ext)) {
-    ans <- lapply(ans, re_set_ext, ext = type)  
-  }
-  if(dirname(ans[[1]]$file)=='.') {
-    warning("format was set, but file name [1] has no directory specified.")  
-  }
-  class(ans) <- clx
-  ans
-}
-#' Re-sets the directory for file_stream objects
-#' 
-#' @param x A `file_stream` object.
-#' @param where The new location. 
-#' 
-#' @seealso [format_stream()], [file_stream()]
-#' 
-#' @export
-locate_stream <- function(x, where) {
-  clx <- class(x)
-  if(!is.file_stream(x)) {
-    stop("`x` must be a file_stream object")  
-  }
-  ans <- lapply(x, re_set_dir, where = where)
-  class(ans) <- clx
-  ans
-}
-
-#' Change the extension on file_stream names
-#' 
-#' @param x A `file_stream` object.
-#' @param ext The new extension. 
-#' 
-#' @seealso [format_stream()], [file_stream()]
-#' 
-#' @export
-ext_stream <- function(x, ext) {
-  clx <- class(x)
-  if(!is.file_stream(x)) {
-    stop("`x` must be a file_stream object.")  
-  }
-  ans <- lapply(x, re_set_ext, ext = ext)
-  class(ans) <- clx
-  ans
 }

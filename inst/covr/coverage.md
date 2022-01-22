@@ -1,9 +1,9 @@
-# coverage: 86.35%
+# coverage: 85.45%
 
 |file              | coverage|
 |:-----------------|--------:|
-|R/locker.R        |    79.17|
-|R/stream.R        |    82.73|
+|R/stream.R        |    79.13|
+|R/locker.R        |    80.85|
 |R/mrgsim-bg.R     |    83.84|
 |R/fst.R           |    91.67|
 |R/utils.R         |    93.18|

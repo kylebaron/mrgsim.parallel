@@ -81,8 +81,9 @@ test_that("add format to stream with locker", {
 test_that("add format to stream without locker", {
   x <- new_stream(5)
   expect_warning(
-    format_stream(x, "rds"), 
-    regexpp = "format was set, but file name [1] has no directory specified"
+    format_stream(x, "rds", warn = TRUE), 
+    regexp = "format was set, but file name [1] has no directory specified.", 
+    fixed = TRUE
   )
 })
 

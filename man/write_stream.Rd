@@ -27,6 +27,9 @@ write_stream(x, ...)
 \item{...}{Not used.}
 
 \item{data}{An object to write.}
+
+\item{dir}{An optional directory location to be used if not already in
+the \code{file} spot in \code{x}.}
 }
 \description{
 This function will write out objects that have been assigned a format
@@ -39,23 +42,24 @@ The default method writes to \code{rds} using \code{\link[=saveRDS]{saveRDS()}} 
 \examples{
 ds <- temp_ds("example")
 
-fs <- new_stream(2, dataset = ds, format = "fst")
+fs <- new_stream(2, locker = ds, format = "fst")
 
 data <- data.frame(x = rnorm(10))
 
-x <- lapply(fs, write_streame, data = data)
+x <- lapply(fs, write_stream, data = data)
 
 list.files(ds)
 
 reset_locker(ds)
 
-fs <- stream_format(fs, "rds")
+fs <- format_stream(fs, "rds")
 
-x <- lapply(fs, stream_write, data = data)
+x <- lapply(fs, write_stream, data = data)
 
 list.files(ds)
 
 }
 \seealso{
-\code{\link[=format_stream]{format_stream()}}, \code{\link[=file_stream]{file_stream()}}
+\code{\link[=format_stream]{format_stream()}}, \code{\link[=ext_stream]{ext_stream()}}, \code{\link[=locate_stream]{locate_stream()}}, \code{\link[=new_stream]{new_stream()}},
+\code{\link[=file_stream]{file_stream()}}
 }

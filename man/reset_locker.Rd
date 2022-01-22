@@ -4,10 +4,13 @@
 \alias{reset_locker}
 \title{Initialize the locker directory}
 \usage{
-reset_locker(where, ext = NULL)
+reset_locker(where, pattern = NULL)
 }
 \arguments{
 \item{where}{The full path to the locker.}
+
+\item{pattern}{A regular expression for finding files to clear from the
+locker directory.}
 }
 \description{
 Initialize the locker directory

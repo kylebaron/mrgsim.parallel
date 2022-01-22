@@ -9,7 +9,13 @@ file_stream(n, locker = NULL, format = NULL, where = NULL, ...)
 \arguments{
 \item{n}{The number of file names to generate.}
 
+\item{locker}{Passed to \code{\link[=setup_locker]{setup_locker()}} as \code{dir}; important to note that the
+directory will be unlinked if it exists and is an established locker
+directory.}
+
 \item{format}{Passed to \code{\link[=format_stream]{format_stream()}}.}
+
+\item{where}{An optional file path.}
 
 \item{...}{Passed to \code{\link[=file_set]{file_set()}}.}
 }
@@ -17,7 +23,17 @@ file_stream(n, locker = NULL, format = NULL, where = NULL, ...)
 Optionally, setup a locker storage space on disk with a specific file
 format (e.g. \code{fst} or \code{feather}).
 }
+\details{
+Pass \code{locker} to set up locker space for saving outputs; this also sets
+the path for output files. If you want to set up the path for output files
+without setting up \code{locker} space, pass \code{where}.
+}
 \examples{
-stream_file(3)
+x <- file_stream(3, locker = temp_ds("foo"), format = "fst")
+x[[1]]
 
+}
+\seealso{
+\code{\link[=format_stream]{format_stream()}}, \code{\link[=locate_stream]{locate_stream()}}, \code{\link[=ext_stream]{ext_stream()}}, \code{\link[=new_stream]{new_stream()}},
+\code{\link[=file_set]{file_set()}}
 }
