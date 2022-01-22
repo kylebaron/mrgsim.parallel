@@ -51,6 +51,7 @@ test_that("relocate stream ", {
 })
 
 test_that("create new stream with locker", {
+  unlink(temp_ds("foo"), recursive = TRUE)
   x <- new_stream(5, locker = temp_ds("foo"))
   expect_is(x, "locker_stream")
   expect_is(x, "file_stream")

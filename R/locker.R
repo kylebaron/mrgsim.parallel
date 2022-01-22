@@ -17,7 +17,7 @@ reset_locker <- function(where, pattern = NULL) {
     if(!file.exists(locker_path)) {
       msg <- c(
         "the dataset directory exists, but doesn't appear to be a valid ",
-        "dataset location; please manually remove the folder or specify a new ",
+        "locker location; please manually remove the folder or specify a new ",
         "folder and try again."
       )
       stop(msg)
@@ -34,7 +34,8 @@ reset_locker <- function(where, pattern = NULL) {
     if(length(list.files(where)) > 0) {
       msg <- c(
         "Could not clear locker directory; ", 
-        "use initialize_locker to manually clear the files."
+        "use unlink(\"locker/location\", recursive = TRUE) to manually clear 
+        the files or select a different location."
       )
       warning(msg)  
     }
