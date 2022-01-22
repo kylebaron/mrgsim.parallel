@@ -61,7 +61,6 @@ reset_locker <- function(where, pattern = NULL) {
 #' new. 
 #' 
 #' @inheritParams file_set
-#' @param ... Arguments passed to `setup_locker`. 
 #' @param where The directory that contains tagged directories of run 
 #' results.
 #' @param tag The name of a folder under `dir`; this directory must not 
@@ -79,9 +78,6 @@ reset_locker <- function(where, pattern = NULL) {
 #' @examples
 #' x <- setup_locker(tempdir(), tag = "my-sims", n = 2)
 #' x
-#' 
-#' y <- sim_locker(tempdir(), tag = "my-sim-2", n = 2)
-#' y
 #' 
 #' @seealso [file_set()]
 #' 

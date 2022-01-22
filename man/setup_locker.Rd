@@ -19,8 +19,6 @@ re-created each time it is used to store output from a new simulation run.}
 \item{ext}{The format extension for output files, including \code{.}.}
 
 \item{prefix}{A character prefix for the file name.}
-
-\item{...}{Arguments passed to \code{setup_locker}.}
 }
 \value{
 When \code{n} is given, \code{setup_locker} returns a character vector of target file
@@ -46,9 +44,6 @@ new.
 \examples{
 x <- setup_locker(tempdir(), tag = "my-sims", n = 2)
 x
-
-y <- sim_locker(tempdir(), tag = "my-sim-2", n = 2)
-y
 
 }
 \seealso{
