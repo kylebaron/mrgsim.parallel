@@ -7,9 +7,9 @@
 file_set(n, where = NULL, prefix = NULL, pad = TRUE, sep = "-", ext = "")
 }
 \arguments{
-\item{n}{The number of file names / objects to create.}
+\item{n}{The number of file names to create.}
 
-\item{where}{An optional file path.}
+\item{where}{An optional output file path.}
 
 \item{prefix}{A character prefix for the file name.}
 
@@ -24,13 +24,18 @@ By default a list length \code{n} of lists length 2; each sublist contains the
 integer file number as \code{i} and the file name as \code{file}.
 }
 \description{
-Generate a sequence of file objects
+File names have a numbered core that communicates the current file number
+as well as the total number of files in the set. For example, \code{02-20} would
+indicate the second file in a set of 20. Other customizations can be added.
 }
 \examples{
 
 x <- file_set(3, where = "foo/bar")
 length(x)
-length(x[1])
+x[2]
+
+x <- file_set(25, ext = ".feather")
+x[17]
 
 }
 \seealso{

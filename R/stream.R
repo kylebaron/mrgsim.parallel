@@ -37,7 +37,7 @@ stream_add_object <- function(stream, object) {
 
 is.locker_stream <- function(x) inherits(x, "locker_stream")
 is.file_stream <- function(x) inherits(x, "file_stream")
-is.file_set_item <- function(x) !is.null(attr(x, "file_set_item", exact=TRUE))
+is.file_set_item <- function(x) !is.null(attr(x, "file_set_item", exact = TRUE))
 
 
 #' Create a stream of outputs and inputs
@@ -53,7 +53,7 @@ is.file_set_item <- function(x) !is.null(attr(x, "file_set_item", exact=TRUE))
 #' directory will be unlinked if it exists and is an established locker 
 #' directory. 
 #' @param format Passed to [format_stream()].
-#' @param ... Passed to [file_set()].
+#' @param ... Additional arguments passed to [file_set()].
 #' 
 #' @return
 #' A list with the following elements: 
@@ -62,7 +62,7 @@ is.file_set_item <- function(x) !is.null(attr(x, "file_set_item", exact=TRUE))
 #' - `file` the output file name
 #' - `x` the input object.
 #' 
-#' The list has class `file_stream` as well as `locker_stream`( if `locker` was
+#' The list has class `file_stream` as well as `locker_stream` (if `locker` was
 #' passed) and a class attribute for the output if `format` was passed.
 #' 
 #' @examples
@@ -74,7 +74,7 @@ is.file_set_item <- function(x) !is.null(attr(x, "file_set_item", exact=TRUE))
 #' df <- data.frame(ID = c(1,2,3,4))
 #' data <- chunk_by_id(df, nchunk = 2)
 #' x <- new_stream(data)
-#' x[[1]]
+#' x[[2]]
 #' 
 #' @seealso [format_stream()], [locate_stream()], [ext_stream()], [file_stream()], 
 #'          [file_set()]
@@ -160,7 +160,7 @@ format_stream <- function(x, type = c("fst", "feather", "qs", "rds"),
     ans <- lapply(ans, re_set_ext, ext = type)  
   }
   if(dirname(ans[[1]]$file)=='.' & isTRUE(warn)) {
-    warning("format was set, but file name [1] has no directory specified.")  
+    warning("The format was set, but file name [1] has no directory specified.")  
   }
   class(ans) <- clx
   ans
@@ -218,4 +218,3 @@ ext_stream <- function(x, ext) {
   class(ans) <- clx
   ans
 }
-

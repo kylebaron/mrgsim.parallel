@@ -19,7 +19,7 @@ new_stream(x, ...)
 \item{x}{A list or vector to template the stream; for the \code{numeric} method,
 passing a single number will fill \code{x} with a sequence of that length.}
 
-\item{...}{Passed to \code{\link[=file_set]{file_set()}}.}
+\item{...}{Additional arguments passed to \code{\link[=file_set]{file_set()}}.}
 
 \item{locker}{Passed to \code{\link[=setup_locker]{setup_locker()}} as \code{dir}; important to note that the
 directory will be unlinked if it exists and is an established locker
@@ -35,7 +35,7 @@ A list with the following elements:
 \item \code{x} the input object.
 }
 
-The list has class \code{file_stream} as well as \code{locker_stream}( if \code{locker} was
+The list has class \code{file_stream} as well as \code{locker_stream} (if \code{locker} was
 passed) and a class attribute for the output if \code{format} was passed.
 }
 \description{
@@ -53,7 +53,7 @@ new_stream(2, locker = file.path(tempdir(), "foo"))
 df <- data.frame(ID = c(1,2,3,4))
 data <- chunk_by_id(df, nchunk = 2)
 x <- new_stream(data)
-x[[1]]
+x[[2]]
 
 }
 \seealso{

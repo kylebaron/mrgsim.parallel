@@ -7,7 +7,8 @@
 file_stream(n, locker = NULL, format = NULL, where = NULL, ...)
 }
 \arguments{
-\item{n}{The number of file names to generate.}
+\item{n}{The number of file names to generate; must be a single numeric
+value greater than or equal to 1.}
 
 \item{locker}{Passed to \code{\link[=setup_locker]{setup_locker()}} as \code{dir}; important to note that the
 directory will be unlinked if it exists and is an established locker
@@ -15,9 +16,10 @@ directory.}
 
 \item{format}{Passed to \code{\link[=format_stream]{format_stream()}}.}
 
-\item{where}{An optional file path.}
+\item{where}{An optional file path; this is replaced by \code{locker} if it is
+also passed.}
 
-\item{...}{Passed to \code{\link[=file_set]{file_set()}}.}
+\item{...}{Additional arguments passed to \code{\link[=file_set]{file_set()}}.}
 }
 \description{
 Optionally, setup a locker storage space on disk with a specific file
