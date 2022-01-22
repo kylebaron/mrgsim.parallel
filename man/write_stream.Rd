@@ -31,6 +31,9 @@ write_stream(x, ...)
 \item{dir}{An optional directory location to be used if not already in
 the \code{file} spot in \code{x}.}
 }
+\value{
+\code{NULL} is returned, invisibly.
+}
 \description{
 This function will write out objects that have been assigned a format
 with either \code{\link[=format_stream]{format_stream()}} or the \code{format} argument to \code{\link[=new_stream]{new_stream()}}.

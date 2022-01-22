@@ -131,7 +131,7 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
   ext <- ifelse(substr(.format, 1, 1)=='.', .format, paste0(".", .format))
   
   output_paths <- setup_locker(
-    .path, 
+    where = .path, 
     .tag, 
     n = length(data), 
     ext = ext, 

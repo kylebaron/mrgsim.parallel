@@ -62,7 +62,7 @@ reset_locker <- function(where, pattern = NULL) {
 #' 
 #' @inheritParams file_set
 #' @param ... Arguments passed to `setup_locker`. 
-#' @param dir The directory that contains tagged directories of run 
+#' @param where The directory that contains tagged directories of run 
 #' results.
 #' @param tag The name of a folder under `dir`; this directory must not 
 #' exist the first time the locker is set up and __will be deleted__ and 
@@ -86,26 +86,19 @@ reset_locker <- function(where, pattern = NULL) {
 #' @seealso [file_set()]
 #' 
 #' @export
-sim_locker <- function(...) {
-  file <- setup_locker(...)
-  Map(file, seq_along(file), f = new_file_object, USE.NAMES = FALSE)
-}
-
-#' @rdname sim_locker
-#' @export
-setup_locker <- function(dir, tag = locker_tag(dir), 
-                         n = 0, ext = "", prefix = NULL) {
-  will_save <- is.character(dir) && length(dir)==1
+setup_locker <- function(where, tag = locker_tag(where), n = 0, ext = "", 
+                         prefix = NULL) {
+  will_save <- is.character(where) && length(where)==1
   output_paths <- vector(mode = "list", length = n)
   if(!will_save) return(output_paths)
   if(missing(tag)) {
-    output_folder <- dir
-    dir <- dirname(dir)
+    output_folder <- where
+    where <- dirname(where)
   } else {
-    output_folder <- file.path(dir, tag)
+    output_folder <- file.path(where, tag)
   }
-  if(!dir.exists(dir)) {
-    dir.create(dir, recursive = TRUE)
+  if(!dir.exists(where)) {
+    dir.create(where, recursive = TRUE)
   }
   reset_locker(output_folder)
   if(n > 0) {
