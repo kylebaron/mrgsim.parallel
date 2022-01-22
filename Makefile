@@ -17,7 +17,7 @@ rhub:
 
 cran:
 	make doc
-	make build
+	make build-vignettes
 	R CMD check ${TARBALL} --as-cran
 
 covr:
@@ -36,7 +36,15 @@ doc:
 	Rscript -e 'library(devtools); document()'
 .PHONY: build
 build:
+	R CMD build --md5  --no-build-vignettes $(PKGDIR)
+
+build-vignettes:
 	R CMD build --md5 $(PKGDIR)
+
+package:
+	make doc
+	make build-vignettes
+	make install
 
 install:
 	R CMD install --install-tests ${TARBALL}
