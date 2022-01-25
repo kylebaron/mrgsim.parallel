@@ -25,7 +25,7 @@ is set but there is no directory path associated with the \code{file} spot in
 \code{x[[1]]}.}
 }
 \value{
-\code{x} is returned with a new calss attribute reflecting the expected output
+\code{x} is returned with a new class attribute reflecting the expected output
 format (\code{fst}, \code{feather} (arrow), \code{qs} or \code{rds}).
 }
 \description{

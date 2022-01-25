@@ -21,3 +21,6 @@ idata
 mclapply
 parallelization
 fu
+customizations
+th
+tempdir

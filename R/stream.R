@@ -4,7 +4,7 @@ names(stream_format_classes) <- stream_types
 
 re_set_ext <- function(x, ext) {
   x$file <- tools::file_path_sans_ext(x$file)
-  x$file <- paste0(x$file, ".", ext)
+  x$file <- paste0(x$file, ext)
   x
 }
 
@@ -128,7 +128,7 @@ new_stream.character <- function(x, ...) {
 #' `x[[1]]`.
 #' 
 #' @return
-#' `x` is returned with a new calss attribute reflecting the expected output
+#' `x` is returned with a new class attribute reflecting the expected output
 #' format (`fst`, `feather` (arrow), `qs` or `rds`).
 #' 
 #' @seealso [locate_stream()], [ext_stream()], [new_stream()], [file_stream()], 
@@ -157,7 +157,7 @@ format_stream <- function(x, type = c("fst", "feather", "qs", "rds"),
     xx
   })
   if(isTRUE(set_ext)) {
-    ans <- lapply(ans, re_set_ext, ext = type)  
+    ans <- lapply(ans, re_set_ext, ext = paste0(".", type))
   }
   if(dirname(ans[[1]]$file)=='.' & isTRUE(warn)) {
     warning("The format was set, but file name [1] has no directory specified.")  
