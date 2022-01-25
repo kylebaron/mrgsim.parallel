@@ -3,6 +3,9 @@ locker_tag <- function(locker) {
   basename(locker)
 }
 
+.locker_file_name <- ".mrgsim-parallel-locker-dir." 
+
+
 #' Initialize the locker directory
 #' 
 #' @param where The full path to the locker. 
@@ -11,7 +14,7 @@ locker_tag <- function(locker) {
 #' 
 #' @export
 reset_locker <- function(where, pattern = NULL) {
-  locker_file <- ".mrgsim-parallel-locker-dir."
+  locker_file <- .locker_file_name
   locker_path <- file.path(where, locker_file)
   if(dir.exists(where)) {
     if(!file.exists(locker_path)) {
@@ -79,7 +82,7 @@ reset_locker <- function(where, pattern = NULL) {
 #' x <- setup_locker(tempdir(), tag = "my-sims", n = 2)
 #' x
 #' 
-#' @seealso [file_set()]
+#' @seealso [reset_locker()], [retire_locker()], [file_set()]
 #' 
 #' @export
 setup_locker <- function(where, tag = locker_tag(where), n = 0, ext = "", 
@@ -104,4 +107,23 @@ setup_locker <- function(where, tag = locker_tag(where), n = 0, ext = "",
   }
   class(output_paths) <- c("will_save", "list")
   output_paths
+}
+
+#' Retire an existing locker location
+#' 
+#' This function removes the the hidden locker file which designates a directory
+#' as a locker. Once the locker is retired, it cannot be reset again by 
+#' calling [setup_locker()] or [new_stream()].
+#' 
+#' @param where the locker location
+#' 
+#' @seealso [setup_locker()], [reset_locker()]
+#' 
+#' @export
+retire_locker <- function(where) {
+  locker_file <- file.path(where, .locker_file_name)
+  if(!file.exists(locker_file)) {
+    stop("`where` does not appear to be a locker")  
+  }
+  file.remove(locker_file)
 }

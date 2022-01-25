@@ -7,9 +7,9 @@ Makefile
 ^mrgsim\.parallel_.*\.tar\.gz
 mrgsim\.parallel\.Rcheck
 \.Rhistory
-README.md
-README.Rmd
-README.html
+README\.md
+README\.Rmd
+README\.html
 man/figures
 build
 docs

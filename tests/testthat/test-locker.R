@@ -19,4 +19,17 @@ test_that("warn if directory isn't empty on reset", {
   )
 })
 
-
+test_that("retire a locker", {
+  locker <- temp_ds("foo")
+  unlink(locker, recursive = TRUE)
+  x <- new_stream(5, locker = locker)
+  x <- new_stream(5, locker = locker)
+  x <- new_stream(5, locker = locker)
+  expect_true(retire_locker(locker))
+  cat("foo", file = file.path(locker, 'foo.fst'))
+  expect_error(
+    new_stream(5, locker = locker), 
+    regexp = "but doesn't appear to be a valid locker"
+  )
+  expect_equal(list.files(locker), "foo.fst")
+})

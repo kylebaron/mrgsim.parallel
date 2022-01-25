@@ -55,7 +55,7 @@ install-build:
 check:
 	make doc
 	make build
-	R CMD check ${TARBALL} -o ${CHKDIR}
+	R CMD check  --ignore-vignettes --no-manual ${TARBALL} -o ${CHKDIR}
 
 readme:
 	Rscript -e 'rmarkdown::render("README.Rmd")'

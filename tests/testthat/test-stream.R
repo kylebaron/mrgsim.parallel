@@ -39,7 +39,7 @@ test_that("create new stream with ext", {
 
 test_that("add ext to stream ", {
   x <- new_stream(11)
-  x <- ext_stream(x, "feather")
+  x <- ext_stream(x, ".feather")
   expect_equal(x[[2]]$file, "02-11.feather")
 })
 
