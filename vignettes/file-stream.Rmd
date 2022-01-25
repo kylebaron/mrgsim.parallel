@@ -412,7 +412,7 @@ directory must be contributing members of that data set. The only way to do this
 is to reset the data set space whenever the data set is re-written and that 
 happens at the time the file set is created. 
 
-To prevent the locker from being reset, use `retire_locker()`; this removes
+To prevent the locker from being reset, use `noreset_locker()`; this removes
 the hidden file designating the directory as a valid locker space and prevents
 it from being cleared.
 
@@ -424,7 +424,7 @@ unlink(locker, recursive = TRUE)
 x <- new_stream(5, locker = locker)
 x <- new_stream(5, locker = locker)
 x <- new_stream(5, locker = locker)
-retire_locker(locker)
+noreset_locker(locker)
 cat("foo", file = file.path(locker, 'foo.txt'))
 try(new_stream(5, locker = locker))
 list.files(locker)

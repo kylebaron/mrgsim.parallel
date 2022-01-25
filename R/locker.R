@@ -82,7 +82,7 @@ reset_locker <- function(where, pattern = NULL) {
 #' x <- setup_locker(tempdir(), tag = "my-sims", n = 2)
 #' x
 #' 
-#' @seealso [reset_locker()], [retire_locker()], [file_set()]
+#' @seealso [reset_locker()], [noreset_locker()], [file_set()]
 #' 
 #' @export
 setup_locker <- function(where, tag = locker_tag(where), n = 0, ext = "", 
@@ -109,21 +109,21 @@ setup_locker <- function(where, tag = locker_tag(where), n = 0, ext = "",
   output_paths
 }
 
-#' Retire an existing locker location
+#' Prohibit a loocker space from being reset
 #' 
 #' This function removes the the hidden locker file which designates a directory
-#' as a locker. Once the locker is retired, it cannot be reset again by 
-#' calling [setup_locker()] or [new_stream()].
+#' as a locker. Once the locker is modified this way, it cannot be reset again 
+#' by calling [setup_locker()] or [new_stream()].
 #' 
 #' @param where the locker location
 #' 
 #' @seealso [setup_locker()], [reset_locker()]
 #' 
 #' @export
-retire_locker <- function(where) {
+noreset_locker <- function(where) {
   locker_file <- file.path(where, .locker_file_name)
   if(!file.exists(locker_file)) {
-    stop("`where` does not appear to be a locker")  
+    stop("`where` does not appear to be a locker.")  
   }
   file.remove(locker_file)
 }

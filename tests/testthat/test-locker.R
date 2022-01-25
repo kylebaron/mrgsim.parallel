@@ -25,7 +25,7 @@ test_that("retire a locker", {
   x <- new_stream(5, locker = locker)
   x <- new_stream(5, locker = locker)
   x <- new_stream(5, locker = locker)
-  expect_true(retire_locker(locker))
+  expect_true(noreset_locker(locker))
   cat("foo", file = file.path(locker, 'foo.fst'))
   expect_error(
     new_stream(5, locker = locker), 
