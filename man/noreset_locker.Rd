@@ -2,7 +2,7 @@
 % Please edit documentation in R/locker.R
 \name{noreset_locker}
 \alias{noreset_locker}
-\title{Prohibit a loocker space from being reset}
+\title{Prohibit a locker space from being reset}
 \usage{
 noreset_locker(where)
 }

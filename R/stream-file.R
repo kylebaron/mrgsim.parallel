@@ -52,9 +52,10 @@ file_set <- function(n, where = NULL, prefix = NULL, pad = TRUE, sep = "-",
 #' Optionally, setup a locker storage space on disk with a specific file 
 #' format (e.g. `fst` or `feather`).
 #' 
-#' Pass `locker` to set up locker space for saving outputs; this also sets
-#' the path for output files. If you want to set up the path for output files
-#' without setting up `locker` space, pass `where`. 
+#' Pass `locker` to set up locker space for saving outputs; this involves
+#' clearing the `locker` directory (see [setup_locker()] for details). Passing 
+#' `locker` also sets the path for output files. If you want to set up the path 
+#' for output files without setting up `locker` space, pass `where`. 
 #' 
 #' @inheritParams format_stream
 #' @inheritParams new_stream
@@ -91,7 +92,7 @@ file_stream <- function(n, locker = NULL, format = NULL, where = NULL, ...) {
 }
 
 #' @export
-summary.file_stream <- function(object, ...) {
+summary.file_stream <- function(object, ...) { #nocov start
   x <- object
   a <- paste0("Length: ", length(x))
   format <- class(x[[1]])[1]
@@ -100,5 +101,4 @@ summary.file_stream <- function(object, ...) {
   d <- paste0("Locker: ", is.locker_stream(x))
   e <- paste0("File[1]: ", x[[1]]$file)
   cat(a, c, b, e, d, sep = "\n")
-}
-
+} #nocov end

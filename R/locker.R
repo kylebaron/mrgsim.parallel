@@ -5,45 +5,65 @@ locker_tag <- function(locker) {
 
 .locker_file_name <- ".mrgsim-parallel-locker-dir." 
 
+clear_locker <- function(where, locker_path, pattern) {
+  if(!file.exists(locker_path)) {
+    msg <- c(
+      "the dataset directory exists, but doesn't appear to be a valid ",
+      "locker location; please manually remove the folder or specify a new ",
+      "folder and try again."
+    )
+    stop(msg)
+  }
+  if(!is.character(pattern)) {
+    pattern <- "\\.(fst|feather|csv|qs|rds)$"
+  } 
+  files <- list.files(
+    where, 
+    pattern = pattern, 
+    full.names = TRUE
+  )
+  unlink(files, recursive = TRUE)  
+  if(length(list.files(where)) > 0) {
+    msg <- c(
+      "Could not clear locker directory; ", 
+      "use unlink(\"locker/location\", recursive = TRUE) to manually clear 
+        the files or select a different location."
+    )
+    warning(msg)  
+  }
+}
 
 #' Initialize the locker directory
+#' 
+#' This function is called by [setup_locker()] to initialize and 
+#' re-initialize a locker directory. We call it `reset_locker` because it is 
+#' expected that the locker space is created once and then repeatedly 
+#' reset and simulations are run and re-run. 
+#' 
+#' For the locker space to be initialized, the `where` directory must not 
+#' exist; if it exists, there will be an error. It is also an error for 
+#' `where` to exist and not contain a particular hidden locker file name
+#' that marks the directory as established locker space. 
+#' 
+#' __NOTE__: when the locker is reset, all contents are cleared according 
+#' to the files matched by `pattern`. If any un-matched files exist after
+#' clearing the directory, a warning will be issued. 
 #' 
 #' @param where The full path to the locker. 
 #' @param pattern A regular expression for finding files to clear from the 
 #' locker directory.
+#' 
+#' @seealso [setup_locker()], [noreset_locker()]
 #' 
 #' @export
 reset_locker <- function(where, pattern = NULL) {
   locker_file <- .locker_file_name
   locker_path <- file.path(where, locker_file)
   if(dir.exists(where)) {
-    if(!file.exists(locker_path)) {
-      msg <- c(
-        "the dataset directory exists, but doesn't appear to be a valid ",
-        "locker location; please manually remove the folder or specify a new ",
-        "folder and try again."
-      )
-      stop(msg)
-    }
-    if(!is.character(pattern)) {
-      pattern <- "\\.(fst|feather|csv|qs|rds)$"
-    } 
-    files <- list.files(
-      where, 
-      pattern = pattern, 
-      full.names = TRUE
-    )
-    unlink(files, recursive = TRUE)  
-    if(length(list.files(where)) > 0) {
-      msg <- c(
-        "Could not clear locker directory; ", 
-        "use unlink(\"locker/location\", recursive = TRUE) to manually clear 
-        the files or select a different location."
-      )
-      warning(msg)  
-    }
+    clear_locker(where, locker_path, pattern)
+  } else {
+    dir.create(where, recursive = TRUE)
   }
-  if(!dir.exists(where)) dir.create(where, recursive = TRUE)
   cat(file = locker_path, "#")
   return(invisible(NULL))
 }
@@ -52,21 +72,27 @@ reset_locker <- function(where, pattern = NULL) {
 #' 
 #' A locker is a directory structure where an enclosing folder contains 
 #' subfolders that in turn contain the results of different simulation runs. 
-#' When the number of simulation result sets is known, a stream of file names 
-#' (`setup_locker`) or file name objects (`sim_locker`) can be returned, which 
-#' can then be fed into any number of parallel apply-like functions.
+#' When the number of simulation result sets is known, a stream of file names
+#' is returned. This function is mainly called by other functions; an exported
+#' function and documentation is provided in order to better communicate how
+#' the locker works. 
 #' 
-#' `dir` must exist when setting up the locker. The directory `tag` will be 
-#' created under `dir` and must not exist except if it had previously been 
-#' set up using `setup_locker`. Established `tag` directories will have a 
+#' `where` must exist when setting up the locker. The directory `tag` will be 
+#' created under `where` and must not exist except if it had previously been 
+#' set up using `setup_locker`. Existing `tag` directories will have a 
 #' hidden file in them indicating that they are established simulation output
-#' folders. When recreating the `tag` directory, it will be unlinked and created
-#' new. 
+#' folders. 
+#' 
+#' When recreating the `tag` directory, it will be unlinked and created new.
+#' To not try to set up a locker directory that already contains outputs that 
+#' need to be preserved. You can call [noreset_locker()] on that directory
+#' to prevent future resets. 
+#' 
 #' 
 #' @inheritParams file_set
 #' @param where The directory that contains tagged directories of run 
 #' results.
-#' @param tag The name of a folder under `dir`; this directory must not 
+#' @param tag The name of a folder under `where`; this directory must not 
 #' exist the first time the locker is set up and __will be deleted__ and 
 #' re-created each time it is used to store output from a new simulation run.
 #' @param n The number of output files to be saved.
@@ -74,9 +100,7 @@ reset_locker <- function(where, pattern = NULL) {
 #' 
 #' @return
 #' When `n` is given, `setup_locker` returns a character vector of target file 
-#' names; `sim_locker` returns a list of objects, containing the file name 
-#' (`file`) and an index of the list position (`i`). When `n` is not given, an 
-#' empty list is returned. 
+#' names. When `n` is not given, an empty list is returned. 
 #' 
 #' @examples
 #' x <- setup_locker(tempdir(), tag = "my-sims", n = 2)
@@ -109,7 +133,7 @@ setup_locker <- function(where, tag = locker_tag(where), n = 0, ext = "",
   output_paths
 }
 
-#' Prohibit a loocker space from being reset
+#' Prohibit a locker space from being reset
 #' 
 #' This function removes the the hidden locker file which designates a directory
 #' as a locker. Once the locker is modified this way, it cannot be reset again 

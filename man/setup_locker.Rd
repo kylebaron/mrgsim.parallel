@@ -10,7 +10,7 @@ setup_locker(where, tag = locker_tag(where), n = 0, ext = "", prefix = NULL)
 \item{where}{The directory that contains tagged directories of run
 results.}
 
-\item{tag}{The name of a folder under \code{dir}; this directory must not
+\item{tag}{The name of a folder under \code{where}; this directory must not
 exist the first time the locker is set up and \strong{will be deleted} and
 re-created each time it is used to store output from a new simulation run.}
 
@@ -22,24 +22,27 @@ re-created each time it is used to store output from a new simulation run.}
 }
 \value{
 When \code{n} is given, \code{setup_locker} returns a character vector of target file
-names; \code{sim_locker} returns a list of objects, containing the file name
-(\code{file}) and an index of the list position (\code{i}). When \code{n} is not given, an
-empty list is returned.
+names. When \code{n} is not given, an empty list is returned.
 }
 \description{
 A locker is a directory structure where an enclosing folder contains
 subfolders that in turn contain the results of different simulation runs.
 When the number of simulation result sets is known, a stream of file names
-(\code{setup_locker}) or file name objects (\code{sim_locker}) can be returned, which
-can then be fed into any number of parallel apply-like functions.
+is returned. This function is mainly called by other functions; an exported
+function and documentation is provided in order to better communicate how
+the locker works.
 }
 \details{
-\code{dir} must exist when setting up the locker. The directory \code{tag} will be
-created under \code{dir} and must not exist except if it had previously been
-set up using \code{setup_locker}. Established \code{tag} directories will have a
+\code{where} must exist when setting up the locker. The directory \code{tag} will be
+created under \code{where} and must not exist except if it had previously been
+set up using \code{setup_locker}. Existing \code{tag} directories will have a
 hidden file in them indicating that they are established simulation output
-folders. When recreating the \code{tag} directory, it will be unlinked and created
-new.
+folders.
+
+When recreating the \code{tag} directory, it will be unlinked and created new.
+To not try to set up a locker directory that already contains outputs that
+need to be preserved. You can call \code{\link[=noreset_locker]{noreset_locker()}} on that directory
+to prevent future resets.
 }
 \examples{
 x <- setup_locker(tempdir(), tag = "my-sims", n = 2)

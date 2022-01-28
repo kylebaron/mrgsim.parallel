@@ -11,6 +11,5 @@ README\.md
 README\.Rmd
 README\.html
 man/figures
-build
 docs
 ^.*\.tar\.gz$

@@ -26,9 +26,10 @@ Optionally, setup a locker storage space on disk with a specific file
 format (e.g. \code{fst} or \code{feather}).
 }
 \details{
-Pass \code{locker} to set up locker space for saving outputs; this also sets
-the path for output files. If you want to set up the path for output files
-without setting up \code{locker} space, pass \code{where}.
+Pass \code{locker} to set up locker space for saving outputs; this involves
+clearing the \code{locker} directory (see \code{\link[=setup_locker]{setup_locker()}} for details). Passing
+\code{locker} also sets the path for output files. If you want to set up the path
+for output files without setting up \code{locker} space, pass \code{where}.
 }
 \examples{
 x <- file_stream(3, locker = temp_ds("foo"), format = "fst")

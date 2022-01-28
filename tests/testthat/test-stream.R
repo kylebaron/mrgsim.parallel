@@ -133,3 +133,21 @@ test_that("writer function - feather", {
     regexp="must be a data.frame"
   )
 })
+
+test_that("writer function - default", {
+  unlink(temp_ds("write/default"), recursive = TRUE)
+  x <- new_stream(1, locker = temp_ds("write/default"), ext = "rds")
+  write_stream(x[[1]], mtcars)
+  rds <- readRDS(x[[1]]$file)
+  expect_equivalent(rds, mtcars)
+  unlink(temp_ds("write/default"), recursive = TRUE)
+  x <- new_stream(1, locker = temp_ds("write/default"))
+  write_stream(x[[1]], mtcars)
+  rds <- readRDS(x[[1]]$file)
+  expect_equivalent(rds, mtcars)
+  unlink(temp_ds("write/default"), recursive = TRUE)
+  x <- new_stream(1, locker = temp_ds("write/default"), ext = ".feather")
+  expect_error(
+    write_stream(x[[1]], mtcars)
+  )
+})
