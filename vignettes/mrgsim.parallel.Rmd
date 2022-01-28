@@ -155,6 +155,91 @@ invoke multicore parallelization provided by `parallel`
 out <- mc_mrgsim_ei(mod, e, idata, .seed = 123, nchunks = 6, mc.cores = 2)
 ```
 
+# Simulate in the background
+
+To simulate in the "background", we first launch another R process using 
+`callr::r_bg()` and run a chunked simulation in that R process. Because it 
+is in the background, we can get the R prompt back and query the simulation 
+process. Once the process is done, we can collect the result. Let's run an 
+example.
+
+The function is `bg_mrgsim_d()`. Like `mc_mrgsim_d()`, we have to pass in the 
+model object and a data set
+
+```{r}
+out <- bg_mrgsim_d(mod, data, nchunk = 2)
+```
+
+Because this simulation is run in a package vignette, we'll use the default
+of waiting for the simulation to finish. Once it is done, we have a 
+process object that tells us the simulation is "done". 
+
+```{r}
+out
+```
+
+To collect the result, run 
+
+```{r}
+sims <- out$get_result()
+```
+
+And we have a list of simulated data
+
+```{r}
+length(sims)
+head(sims[[1]])
+```
+
+For very large simulations, we can write the simulated output to a data
+"locker" on disk and then read it in later.  We'll call the locker `foo` in 
+the `tempdir()`
+
+
+```{r}
+locker <- file.path(tempdir(), "foo")
+
+out <- bg_mrgsim_d(mod, data, .locker = locker, nchunk = 4)
+```
+
+Now, the output isn't simulated data but file names where the data are stored
+
+```{r}
+files <- out$get_result()
+files
+```
+
+We can read the data back in with `fst::read_fst()`
+
+```{r}
+library(fst)
+sims <- lapply(files, read_fst)
+head(sims[[2]])
+```
+
+Or use the internalize helper which returns a single data frame by default
+
+```{r}
+sims <- internalize_fst(locker)
+
+head(sims)
+```
+
+The background workflow simulates each chunk sequentially by default. We can 
+also parallelize this simulation by specifying a `.plan`
+
+```{r}
+out <- bg_mrgsim_d(
+  mod, 
+  data, 
+  nchunk = 4,
+  .plan = "multisession", 
+  .locker = locker, 
+  .cores = 2
+)
+sims <- internalize_fst(locker)
+```
+
 
 # Tools
 

@@ -1,5 +1,5 @@
 #' @importFrom future.apply future_lapply future_mapply
-#' @importFrom future plan sequential
+#' @importFrom future plan sequential multicore multisession
 #' @importFrom dplyr bind_rows as_tibble tibble
 #' @importFrom parallel mclapply mcmapply
 #' @importFrom mrgsolve loadso mrgsim_d mrgsim_ei house mrgsim_i mrgsim
