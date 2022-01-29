@@ -10,8 +10,8 @@ stories <- yaml.load_file("inst/docs/stories.yaml")
 
 story <- Map(stories, names(stories), f = function(story, storylabel) {
   tibble(
-    st = storylabel,
-    summary = story$summary,
+    STID = storylabel,
+    STORY = story$summary,
     test = story$tests
   )
 })

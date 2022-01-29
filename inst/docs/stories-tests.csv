@@ -1,95 +1,95 @@
-st,summary,test,file,context,nb,failed,skipped,error,warning,user,system,real,passed,date
+STID,STORY,test,file,context,nb,failed,skipped,error,warning,user,system,real,passed,date
 SIM001,"As a user, I want to simulate a data set in parallel.
-",sim data,test-parallel.R,basic functionality,4,0,FALSE,FALSE,0,0.04000000000000003,0.02699999999999999,0.109,4,Sat Jan 29 17:26:13 2022
+",sim data,test-parallel.R,basic functionality,4,0,FALSE,FALSE,0,0.04000000000000003,0.02699999999999999,0.109,4,Sat Jan 29 17:28:32 2022
 SIM001,"As a user, I want to simulate a data set in parallel.
-",sim with nchunk=1,test-parallel.R,basic functionality,2,0,FALSE,FALSE,0,0.01,0.003,0.01199999999999956,2,Sat Jan 29 17:26:13 2022
+",sim with nchunk=1,test-parallel.R,basic functionality,2,0,FALSE,FALSE,0,0.01,0.003,0.01199999999999956,2,Sat Jan 29 17:28:32 2022
 SIM001,"As a user, I want to simulate a data set in parallel.
-",sim dry run,test-parallel.R,basic functionality,2,0,FALSE,FALSE,0,0.02200000000000002,0.003,0.0259999999999998,2,Sat Jan 29 17:26:13 2022
+",sim dry run,test-parallel.R,basic functionality,2,0,FALSE,FALSE,0,0.02200000000000002,0.003,0.0259999999999998,2,Sat Jan 29 17:28:32 2022
 SIM001,"As a user, I want to simulate a data set in parallel.
-",sim post processing function,test-parallel.R,basic functionality,3,0,FALSE,FALSE,0,0.03500000000000014,0.006,0.04100000000000037,3,Sat Jan 29 17:26:13 2022
+",sim post processing function,test-parallel.R,basic functionality,3,0,FALSE,FALSE,0,0.03500000000000014,0.006,0.04100000000000037,3,Sat Jan 29 17:28:32 2022
 SIM001,"As a user, I want to simulate a data set in parallel.
-",sim pass in chunked data,test-parallel.R,basic functionality,1,0,FALSE,FALSE,0,0.02699999999999991,0.00399999999999994,0.03200000000000003,1,Sat Jan 29 17:26:13 2022
+",sim pass in chunked data,test-parallel.R,basic functionality,1,0,FALSE,FALSE,0,0.02699999999999991,0.00399999999999994,0.03200000000000003,1,Sat Jan 29 17:28:32 2022
 SIM001,"As a user, I want to simulate a data set in parallel.
-",sim reproducible results,test-parallel.R,basic functionality,2,0,FALSE,FALSE,0,0.04000000000000003,0.005,0.04599999999999937,2,Sat Jan 29 17:26:13 2022
+",sim reproducible results,test-parallel.R,basic functionality,2,0,FALSE,FALSE,0,0.04000000000000003,0.005,0.04599999999999937,2,Sat Jan 29 17:28:32 2022
 SIM002,"As a user, I want to simulate and idata set + event object in parallel.
-",sim idata,test-parallel.R,basic functionality,4,0,FALSE,FALSE,0,0.04700000000000015,0.02500000000000002,0.10599999999999989,4,Sat Jan 29 17:26:13 2022
+",sim idata,test-parallel.R,basic functionality,4,0,FALSE,FALSE,0,0.04700000000000015,0.02500000000000002,0.10599999999999989,4,Sat Jan 29 17:28:32 2022
 SIM002,"As a user, I want to simulate and idata set + event object in parallel.
-",sim with nchunk=1,test-parallel.R,basic functionality,2,0,FALSE,FALSE,0,0.01,0.003,0.01199999999999956,2,Sat Jan 29 17:26:13 2022
+",sim with nchunk=1,test-parallel.R,basic functionality,2,0,FALSE,FALSE,0,0.01,0.003,0.01199999999999956,2,Sat Jan 29 17:28:32 2022
 SIM003,"As a user, I want to simulate a data frame in a background R process.
-",bg simulation has same result as fg,test-bg.R,background simulation,1,0,FALSE,FALSE,0,0.02800000000000002,0.01299999999999999,0.902,1,Sat Jan 29 17:26:13 2022
+",bg simulation has same result as fg,test-bg.R,background simulation,1,0,FALSE,FALSE,0,0.02800000000000002,0.01299999999999999,0.902,1,Sat Jan 29 17:28:32 2022
 SIM003,"As a user, I want to simulate a data frame in a background R process.
-","bg is same as fg, not chunked",test-bg.R,background simulation,1,0,FALSE,FALSE,0,0.00899999999999989,0.01199999999999999,0.871,1,Sat Jan 29 17:26:13 2022
+","bg is same as fg, not chunked",test-bg.R,background simulation,1,0,FALSE,FALSE,0,0.00899999999999989,0.01199999999999999,0.871,1,Sat Jan 29 17:28:32 2022
 SIM003,"As a user, I want to simulate a data frame in a background R process.
-","bg is same as fg, chunked",test-bg.R,background simulation,1,0,FALSE,FALSE,0,0.09600000000000009,0.02299999999999999,1.043,1,Sat Jan 29 17:26:13 2022
+","bg is same as fg, chunked",test-bg.R,background simulation,1,0,FALSE,FALSE,0,0.09600000000000009,0.02299999999999999,1.043,1,Sat Jan 29 17:28:32 2022
 SIM003,"As a user, I want to simulate a data frame in a background R process.
-",bg save results as fst,test-bg.R,background simulation,4,0,FALSE,FALSE,0,0.06799999999999984,0.02100000000000002,0.9370000000000004,4,Sat Jan 29 17:26:13 2022
+",bg save results as fst,test-bg.R,background simulation,4,0,FALSE,FALSE,0,0.06799999999999984,0.02100000000000002,0.9370000000000004,4,Sat Jan 29 17:28:32 2022
 SIM003,"As a user, I want to simulate a data frame in a background R process.
-",bg error when saving to existing directory,test-bg.R,background simulation,1,0,FALSE,FALSE,0,0.006,0.001,0.00699999999999967,1,Sat Jan 29 17:26:13 2022
+",bg error when saving to existing directory,test-bg.R,background simulation,1,0,FALSE,FALSE,0,0.006,0.001,0.00699999999999967,1,Sat Jan 29 17:28:32 2022
 SIM004,"As a user, I want to simulate a data frame in parallel in a background R process.
-",bg simulate parallel,test-bg.R,background simulation,2,0,FALSE,FALSE,0,0.008,0.01099999999999998,0.9429999999999996,2,Sat Jan 29 17:26:13 2022
+",bg simulate parallel,test-bg.R,background simulation,2,0,FALSE,FALSE,0,0.008,0.01099999999999998,0.9429999999999996,2,Sat Jan 29 17:28:32 2022
 CHUNK001,"As a user, I want to chunk a data frame into a list of smaller data frames by the row number. 
-",chunk data,test-parallel.R,basic functionality,10,0,FALSE,FALSE,0,0.01500000000000012,0,0.01500000000000056,10,Sat Jan 29 17:26:13 2022
+",chunk data,test-parallel.R,basic functionality,10,0,FALSE,FALSE,0,0.01500000000000012,0,0.01500000000000056,10,Sat Jan 29 17:28:32 2022
 CHUNK001,"As a user, I want to chunk a data frame into a list of smaller data frames by the row number. 
-",chunk bad input,test-parallel.R,basic functionality,14,0,FALSE,FALSE,0,0.05100000000000015,0.004,0.05600000000000005,14,Sat Jan 29 17:26:13 2022
+",chunk bad input,test-parallel.R,basic functionality,14,0,FALSE,FALSE,0,0.05100000000000015,0.004,0.05600000000000005,14,Sat Jan 29 17:28:32 2022
 CHUNK002,"As a user, I want to chunk a data frame into a list of smaller data frames by the row number. 
-",chunk data,test-parallel.R,basic functionality,10,0,FALSE,FALSE,0,0.01500000000000012,0,0.01500000000000056,10,Sat Jan 29 17:26:13 2022
+",chunk data,test-parallel.R,basic functionality,10,0,FALSE,FALSE,0,0.01500000000000012,0,0.01500000000000056,10,Sat Jan 29 17:28:32 2022
 LOCKER001,"As a user, I want to set up a directory that is dedicated for storing a  single set of output files from a single simulation.
-",set up locker,test-locker.R,locker,2,0,FALSE,FALSE,0,9.9999999999989e-4,0,0.00200000000000066,2,Sat Jan 29 17:26:13 2022
+",set up locker,test-locker.R,locker,2,0,FALSE,FALSE,0,9.9999999999989e-4,0,0.00200000000000066,2,Sat Jan 29 17:28:32 2022
 LOCKER001,"As a user, I want to set up a directory that is dedicated for storing a  single set of output files from a single simulation.
-",warn if directory isn't empty on reset,test-locker.R,locker,1,0,FALSE,FALSE,0,0.002,0.001,0.00300000000000011,1,Sat Jan 29 17:26:13 2022
+",warn if directory isn't empty on reset,test-locker.R,locker,1,0,FALSE,FALSE,0,0.002,0.001,0.00300000000000011,1,Sat Jan 29 17:28:32 2022
 LOCKER001,"As a user, I want to set up a directory that is dedicated for storing a  single set of output files from a single simulation.
-",create new stream with locker and format,test-stream.R,test-stream,5,0,FALSE,FALSE,0,0.004,0.001,0.00400000000000044,5,Sat Jan 29 17:26:13 2022
+",create new stream with locker and format,test-stream.R,test-stream,5,0,FALSE,FALSE,0,0.004,0.001,0.00400000000000044,5,Sat Jan 29 17:28:32 2022
 LOCKER001,"As a user, I want to set up a directory that is dedicated for storing a  single set of output files from a single simulation.
-",bg error when saving to existing directory,test-bg.R,background simulation,1,0,FALSE,FALSE,0,0.006,0.001,0.00699999999999967,1,Sat Jan 29 17:26:13 2022
+",bg error when saving to existing directory,test-bg.R,background simulation,1,0,FALSE,FALSE,0,0.006,0.001,0.00699999999999967,1,Sat Jan 29 17:28:32 2022
 LOCKER002,"As a user, I want to reset a pre-established locker space. 
-",reset locker,test-locker.R,locker,3,0,FALSE,FALSE,0,0.00900000000000011,0.003,0.01199999999999956,3,Sat Jan 29 17:26:13 2022
+",reset locker,test-locker.R,locker,3,0,FALSE,FALSE,0,0.00900000000000011,0.003,0.01199999999999956,3,Sat Jan 29 17:28:32 2022
 LOCKER003,"As a user, I want to mark a locker space to be ineligible for reset. 
-",retire a locker,test-locker.R,locker,3,0,FALSE,FALSE,0,0.00699999999999989,0.002,0.008,3,Sat Jan 29 17:26:13 2022
+",retire a locker,test-locker.R,locker,3,0,FALSE,FALSE,0,0.00699999999999989,0.002,0.008,3,Sat Jan 29 17:28:32 2022
 LOCKER004,"As a user, I want to create a backup version of a locker space. 
-",version a locker,test-locker.R,locker,4,0,FALSE,FALSE,0,0.01200000000000001,0.003,0.01600000000000001,4,Sat Jan 29 17:26:13 2022
+",version a locker,test-locker.R,locker,4,0,FALSE,FALSE,0,0.01200000000000001,0.003,0.01600000000000001,4,Sat Jan 29 17:28:32 2022
 STREAM001,"As a user, I want to create a stream of output file names. 
-",create new stream,test-stream.R,test-stream,5,0,FALSE,FALSE,0,0.004,0.001,0.00399999999999955,5,Sat Jan 29 17:26:13 2022
+",create new stream,test-stream.R,test-stream,5,0,FALSE,FALSE,0,0.004,0.001,0.00399999999999955,5,Sat Jan 29 17:28:32 2022
 STREAM001,"As a user, I want to create a stream of output file names. 
-",create new stream from character,test-stream.R,test-stream,6,0,FALSE,FALSE,0,0.004,0.001,0.00499999999999989,6,Sat Jan 29 17:26:13 2022
+",create new stream from character,test-stream.R,test-stream,6,0,FALSE,FALSE,0,0.004,0.001,0.00499999999999989,6,Sat Jan 29 17:28:32 2022
 STREAM001,"As a user, I want to create a stream of output file names. 
-",create new stream with locker,test-stream.R,test-stream,4,0,FALSE,FALSE,0,0.00300000000000011,0.001,0.00399999999999955,4,Sat Jan 29 17:26:13 2022
+",create new stream with locker,test-stream.R,test-stream,4,0,FALSE,FALSE,0,0.00300000000000011,0.001,0.00399999999999955,4,Sat Jan 29 17:28:32 2022
 STREAM002,"As a user, I want to associate an output format for a stream of output file names.
-",create new stream with locker and format,test-stream.R,test-stream,5,0,FALSE,FALSE,0,0.004,0.001,0.00400000000000044,5,Sat Jan 29 17:26:13 2022
+",create new stream with locker and format,test-stream.R,test-stream,5,0,FALSE,FALSE,0,0.004,0.001,0.00400000000000044,5,Sat Jan 29 17:28:32 2022
 STREAM002,"As a user, I want to associate an output format for a stream of output file names.
-",add format to stream with locker,test-stream.R,test-stream,5,0,FALSE,FALSE,0,0.004,0,0.00399999999999955,5,Sat Jan 29 17:26:13 2022
+",add format to stream with locker,test-stream.R,test-stream,5,0,FALSE,FALSE,0,0.004,0,0.00399999999999955,5,Sat Jan 29 17:28:32 2022
 STREAM002,"As a user, I want to associate an output format for a stream of output file names.
-",add format to stream without locker,test-stream.R,test-stream,1,0,FALSE,FALSE,0,9.9999999999989e-4,0,0.00199999999999977,1,Sat Jan 29 17:26:13 2022
+",add format to stream without locker,test-stream.R,test-stream,1,0,FALSE,FALSE,0,9.9999999999989e-4,0,0.00199999999999977,1,Sat Jan 29 17:28:32 2022
 STREAM003,"As a user, I want to relocate a stream of output file names. 
-",relocate stream,test-stream.R,test-stream,1,0,FALSE,FALSE,0,0.00100000000000033,0,0.00100000000000033,1,Sat Jan 29 17:26:13 2022
+",relocate stream,test-stream.R,test-stream,1,0,FALSE,FALSE,0,0.00100000000000033,0,0.00100000000000033,1,Sat Jan 29 17:28:32 2022
 STREAM003,"As a user, I want to relocate a stream of output file names. 
-",relocate and initialize stream,test-stream.R,test-stream,4,0,FALSE,FALSE,0,0.008,0.001,0.00999999999999978,4,Sat Jan 29 17:26:13 2022
+",relocate and initialize stream,test-stream.R,test-stream,4,0,FALSE,FALSE,0,0.008,0.001,0.00999999999999978,4,Sat Jan 29 17:28:32 2022
 STREAM004,"As a user, I want to set or update the extension for a stream of output  file names. 
-",create new stream with ext,test-stream.R,test-stream,1,0,FALSE,FALSE,0,9.9999999999989e-4,0,0.00100000000000033,1,Sat Jan 29 17:26:13 2022
+",create new stream with ext,test-stream.R,test-stream,1,0,FALSE,FALSE,0,9.9999999999989e-4,0,0.00100000000000033,1,Sat Jan 29 17:28:32 2022
 STREAM004,"As a user, I want to set or update the extension for a stream of output  file names. 
-",add ext to stream,test-stream.R,test-stream,1,0,FALSE,FALSE,0,0.00199999999999977,0,0.00100000000000033,1,Sat Jan 29 17:26:13 2022
+",add ext to stream,test-stream.R,test-stream,1,0,FALSE,FALSE,0,0.00199999999999977,0,0.00100000000000033,1,Sat Jan 29 17:28:32 2022
 STREAM005,"As a user, I want to be able to template an output file stream based on a  list of input objects.
-",create new stream from list,test-stream.R,test-stream,6,0,FALSE,FALSE,0,0.00499999999999989,0,0.00600000000000022,6,Sat Jan 29 17:26:13 2022
+",create new stream from list,test-stream.R,test-stream,6,0,FALSE,FALSE,0,0.00499999999999989,0,0.00600000000000022,6,Sat Jan 29 17:28:32 2022
 STREAM006,"As a user, I want to be able to initialize output file locker space at the  time the file stream location is set or updated.
-",relocate and initialize stream,test-stream.R,test-stream,4,0,FALSE,FALSE,0,0.008,0.001,0.00999999999999978,4,Sat Jan 29 17:26:13 2022
+",relocate and initialize stream,test-stream.R,test-stream,4,0,FALSE,FALSE,0,0.008,0.001,0.00999999999999978,4,Sat Jan 29 17:28:32 2022
 STREAM006,"As a user, I want to be able to initialize output file locker space at the  time the file stream location is set or updated.
-",create new stream with locker,test-stream.R,test-stream,4,0,FALSE,FALSE,0,0.00300000000000011,0.001,0.00399999999999955,4,Sat Jan 29 17:26:13 2022
+",create new stream with locker,test-stream.R,test-stream,4,0,FALSE,FALSE,0,0.00300000000000011,0.001,0.00399999999999955,4,Sat Jan 29 17:28:32 2022
 STREAM007,"As a user, I want to automatically write simulated output in fst format.
-",writer function - fst,test-stream.R,test-stream,3,0,FALSE,FALSE,0,0.00700000000000011,0.002,0.008,3,Sat Jan 29 17:26:13 2022
+",writer function - fst,test-stream.R,test-stream,3,0,FALSE,FALSE,0,0.00700000000000011,0.002,0.008,3,Sat Jan 29 17:28:32 2022
 STREAM008,"As a user, I want to automatically write simulated output in feather format.
-",writer function - feather,test-stream.R,test-stream,3,0,FALSE,FALSE,0,0.17600000000000016,0.01600000000000001,0.18799999999999972,3,Sat Jan 29 17:26:13 2022
+",writer function - feather,test-stream.R,test-stream,3,0,FALSE,FALSE,0,0.17600000000000016,0.01600000000000001,0.18799999999999972,3,Sat Jan 29 17:28:32 2022
 STREAM009,"As a user, I want to automatically write simulated output in qs format.
-",writer function - qs,test-stream.R,test-stream,2,0,FALSE,FALSE,0,0.02499999999999991,0.004,0.03000000000000025,2,Sat Jan 29 17:26:13 2022
+",writer function - qs,test-stream.R,test-stream,2,0,FALSE,FALSE,0,0.02499999999999991,0.004,0.03000000000000025,2,Sat Jan 29 17:28:32 2022
 STREAM010,"As a user, I want to automatically write simulated output in rds format.
-",writer function - rds,test-stream.R,test-stream,1,0,FALSE,FALSE,0,0.00199999999999977,0.001,0.00300000000000011,1,Sat Jan 29 17:26:13 2022
+",writer function - rds,test-stream.R,test-stream,1,0,FALSE,FALSE,0,0.00199999999999977,0.001,0.00300000000000011,1,Sat Jan 29 17:28:32 2022
 STREAM010,"As a user, I want to automatically write simulated output in rds format.
-",writer function - default,test-stream.R,test-stream,3,0,FALSE,FALSE,0,0.00599999999999978,0.003,0.00900000000000034,3,Sat Jan 29 17:26:13 2022
+",writer function - default,test-stream.R,test-stream,3,0,FALSE,FALSE,0,0.00599999999999978,0.003,0.00900000000000034,3,Sat Jan 29 17:28:32 2022
 STREAM011,"As a user, I want the locker space automatically reset whenever the file  stream is re-created with the same locker name.
-",reset locker,test-locker.R,locker,3,0,FALSE,FALSE,0,0.00900000000000011,0.003,0.01199999999999956,3,Sat Jan 29 17:26:13 2022
+",reset locker,test-locker.R,locker,3,0,FALSE,FALSE,0,0.00900000000000011,0.003,0.01199999999999956,3,Sat Jan 29 17:28:32 2022
 FST001,"As a user, I want to be able to internalize a set of output files in  a locker space when saved in fst format.
-",save to fst,test-fst.R,test-fst,4,0,FALSE,FALSE,0,0.008,0.002,0.01100000000000012,4,Sat Jan 29 17:26:13 2022
+",save to fst,test-fst.R,test-fst,4,0,FALSE,FALSE,0,0.008,0.002,0.01100000000000012,4,Sat Jan 29 17:28:32 2022
 FST001,"As a user, I want to be able to internalize a set of output files in  a locker space when saved in fst format.
-",bg save results as fst,test-bg.R,background simulation,4,0,FALSE,FALSE,0,0.06799999999999984,0.02100000000000002,0.9370000000000004,4,Sat Jan 29 17:26:13 2022
+",bg save results as fst,test-bg.R,background simulation,4,0,FALSE,FALSE,0,0.06799999999999984,0.02100000000000002,0.9370000000000004,4,Sat Jan 29 17:28:32 2022
 FST002,"As a user, I want to be able to get a list of output files in a locker  space when saved in fst format.
-",save to fst,test-fst.R,test-fst,4,0,FALSE,FALSE,0,0.008,0.002,0.01100000000000012,4,Sat Jan 29 17:26:13 2022
+",save to fst,test-fst.R,test-fst,4,0,FALSE,FALSE,0,0.008,0.002,0.01100000000000012,4,Sat Jan 29 17:28:32 2022
 FST003,"As a user, I want to be able to look at the head of a set of output files in a locker space when saved in fst format.
-",save to fst,test-fst.R,test-fst,4,0,FALSE,FALSE,0,0.008,0.002,0.01100000000000012,4,Sat Jan 29 17:26:13 2022
+",save to fst,test-fst.R,test-fst,4,0,FALSE,FALSE,0,0.008,0.002,0.01100000000000012,4,Sat Jan 29 17:28:32 2022
