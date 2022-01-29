@@ -57,7 +57,7 @@ check:
 	make build
 	R CMD check  --ignore-vignettes --no-manual ${TARBALL} -o ${CHKDIR}
 
-unit:
+unit-csv:
 	Rscript inst/script/unit.R
 
 readme:
@@ -78,3 +78,8 @@ bump-dev:
 tag-version:
 	git tag $(VERSION)
 	git push origin $(VERSION)
+
+stories: 
+	make unit-csv
+	Rscript inst/script/stories.R
+

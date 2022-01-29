@@ -1,7 +1,8 @@
-library(dplyr)
-library(testthat)
-library(yaml)
-library(knitr)
+stopifnot(require("dplyr"))
+stopifnot(require("testthat"))
+stopifnot(require("yaml"))
+stopifnot(require("knitr"))
+stopifnot(require("readr"))
 
 stopifnot(file.exists("inst/docs/tests.csv"))
 
@@ -22,10 +23,12 @@ all <- left_join(story, test, by = "test")
 
 all$date <- date()
 
-write_csv(all, "inst/docs/stories-tests.csv")
+if(any(is.na(all$failed))) {
+  warning("some NA found")  
+}
 
+write_csv(all, "inst/docs/stories-tests.csv")
 
 x <- kable(all, format = "markdown")
 
 writeLines(x, con = "inst/docs/stories.md")
-
