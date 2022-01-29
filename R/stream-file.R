@@ -81,7 +81,7 @@ file_stream <- function(n, locker = NULL, format = NULL, where = NULL, ...) {
   files <- file_set(n = n, where = where, ...)
   ans <- Map(files, seq_along(files), f = new_file_object, USE.NAMES = FALSE)
   if(is.character(locker)) {
-    blah <- setup_locker(where = locker, n = 0)
+    blah <- setup_locker(where = locker)
     class(ans) <- c("locker_stream", class(ans))
   }
   class(ans) <- unique(c("file_stream", class(ans)))

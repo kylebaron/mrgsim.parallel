@@ -24,7 +24,7 @@ clear_locker <- function(where, locker_path, pattern) {
     stop(msg)
   }
   if(!is.character(pattern)) {
-    pattern <- "\\.(fst|feather|csv|qs|rds)$"
+    pattern <- "\\.(fst|feather|csv|qs|rds|ext)$"
   } 
   files <- list.files(
     where, 
@@ -97,32 +97,23 @@ reset_locker <- function(where, pattern = NULL) {
 #' need to be preserved. You can call [noreset_locker()] on that directory
 #' to prevent future resets. 
 #' 
-#' 
-#' @inheritParams file_set
 #' @param where The directory that contains tagged directories of run 
 #' results.
 #' @param tag The name of a folder under `where`; this directory must not 
 #' exist the first time the locker is set up and __will be deleted__ and 
 #' re-created each time it is used to store output from a new simulation run.
-#' @param n The number of output files to be saved.
-#' @param ext The format extension for output files, including `.`.
 #' 
 #' @return
-#' When `n` is given, `setup_locker` returns a character vector of target file 
-#' names. When `n` is not given, an empty list is returned. 
+#' The locker location.
 #' 
 #' @examples
-#' x <- setup_locker(tempdir(), tag = "my-sims", n = 2)
+#' x <- setup_locker(tempdir(), tag = "my-sims")
 #' x
 #' 
 #' @seealso [reset_locker()], [noreset_locker()], [version_locker()]
 #' 
 #' @export
-setup_locker <- function(where, tag = locker_tag(where), n = 0, ext = "", 
-                         prefix = NULL) {
-  will_save <- is.character(where) && length(where)==1
-  output_paths <- vector(mode = "list", length = n)
-  if(!will_save) return(output_paths)
+setup_locker <- function(where, tag = locker_tag(where)) {
   if(missing(tag)) {
     output_folder <- where
     where <- dirname(where)
@@ -133,13 +124,7 @@ setup_locker <- function(where, tag = locker_tag(where), n = 0, ext = "",
     dir.create(where, recursive = TRUE)
   }
   reset_locker(output_folder)
-  if(n > 0) {
-    output_files <- file_set(n, prefix = prefix)
-    output_files <- paste0(output_files, ext)
-    output_paths <- file.path(output_folder, output_files)
-  }
-  class(output_paths) <- c("will_save", "list")
-  output_paths
+  return(invisible(output_folder))
 }
 
 #' Prohibit a locker space from being reset

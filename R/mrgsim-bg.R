@@ -94,6 +94,7 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
   .path <- NULL  
   notag <- is.null(.tag)
   Plan <- list(workers = .cores)
+  create_locker <- is.character(.locker)
   
   if(is.character(.plan)) {
     Plan$strategy <- .plan
@@ -104,7 +105,7 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
   }
   if(is.character(.locker)) {
     if(.format == "arrow" && !arrow_installed()) {
-      stop("the arrow package must be installed to complete this task.")
+      stop("The arrow package must be installed to complete this task.")
     }
     if(notag) {
       .tag <- basename(.locker)
@@ -112,10 +113,10 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     .path <- dirname(.locker)
   }
   if(!is.character(.tag)) {
-    stop(".tag must have type character")  
+    stop("`.tag` must have type character.")  
   }
   if(length(.tag) != 1) {
-    stop(".tag must have length 1")  
+    stop("`.tag` must have length 1.")  
   }
   if(is.data.frame(data)) {
     if(nchunk <= 1) {
@@ -128,16 +129,19 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     stop("`data` didn't resolve to list format.")  
   }
   
-  ext <- ifelse(substr(.format, 1, 1)=='.', .format, paste0(".", .format))
-  
-  output_paths <- setup_locker(
-    where = .path, 
-    .tag, 
-    n = length(data), 
-    ext = ext, 
-    prefix = "bg"
-  )
-  
+  if(create_locker) {
+    ext <- ifelse(substr(.format, 1, 1)=='.', .format, paste0(".", .format))
+    locker_loc <- setup_locker(.path, .tag)
+    output_paths <- file_set(
+      n = length(data),
+      prefix = "bg", 
+      ext = ext, 
+      where = locker_loc
+    )
+  } else {
+    output_paths <- vector(mode = "list", length = length(data))  
+  }
+ 
   if(length(data)==1) {
     func <- bg_mrgsim_d_impl
     args <- list(...)

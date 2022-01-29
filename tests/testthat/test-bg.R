@@ -2,10 +2,10 @@ library(testthat)
 
 context("background simulation")
 
-mod <- mrgsolve::modlib("popex", delta = 24, end = 168)
+mod <- mrgsolve::modlib("popex", delta = 24, end = 168, rtol = 1e-4)
 data <- mrgsolve::expand.ev(
-  amt =c(100, 300, 450), 
-  ID = 1:5, 
+  amt = c(100, 300), 
+  ID = 1:3, 
   ii = 24, 
   addl = 6
 )
@@ -78,7 +78,7 @@ test_that("bg is same as fg, chunked", {
   expect_identical(fg, bg)
 })
 
-test_that("save results as fst", {
+test_that("bg save results as fst", {
   locker <- tempdir()
   ds <- file.path(locker, "A1")
   if(dir.exists(ds)) unlink(ds, recursive = TRUE)
@@ -90,7 +90,7 @@ test_that("save results as fst", {
     .wait = TRUE, 
     .seed = 123256L, 
     nchunk = 2, 
-    .ncores = 1,
+    .cores = 1,
     .locker = ds
   )
   sims <- internalize_fst(ds)
@@ -103,9 +103,10 @@ test_that("save results as fst", {
   expect_match(files, target, fixed = TRUE, all = FALSE)
 })
 
-test_that("error when saving to existing directory", {
+test_that("bg error when saving to existing directory", {
   locker <- tempdir()
   ds <- file.path(locker, "A1123")
+  if(dir.exists(ds)) unlink(ds, recursive = TRUE)
   dir.create(ds)
   expect_error(
     bg <- bg_mrgsim_d(
@@ -115,4 +116,18 @@ test_that("error when saving to existing directory", {
     ), 
     regexp = "the dataset directory exists"
   )
+})
+
+test_that("bg simulate parallel", {
+  bg <- bg_mrgsim_d(
+    mod, 
+    data, 
+    .wait = TRUE, 
+    .seed = 123256L, 
+    nchunk = 2, 
+    .plan = "sequential"
+  )
+  df <- bg$get_result()
+  expect_is(df, "list")
+  expect_length(df, 2)
 })

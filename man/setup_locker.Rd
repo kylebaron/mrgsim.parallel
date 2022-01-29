@@ -4,7 +4,7 @@
 \alias{setup_locker}
 \title{Set up a data storage locker}
 \usage{
-setup_locker(where, tag = locker_tag(where), n = 0, ext = "", prefix = NULL)
+setup_locker(where, tag = locker_tag(where))
 }
 \arguments{
 \item{where}{The directory that contains tagged directories of run
@@ -13,16 +13,9 @@ results.}
 \item{tag}{The name of a folder under \code{where}; this directory must not
 exist the first time the locker is set up and \strong{will be deleted} and
 re-created each time it is used to store output from a new simulation run.}
-
-\item{n}{The number of output files to be saved.}
-
-\item{ext}{The format extension for output files, including \code{.}.}
-
-\item{prefix}{A character prefix for the file name.}
 }
 \value{
-When \code{n} is given, \code{setup_locker} returns a character vector of target file
-names. When \code{n} is not given, an empty list is returned.
+The locker location.
 }
 \description{
 A locker is a directory structure where an enclosing folder contains
@@ -45,7 +38,7 @@ need to be preserved. You can call \code{\link[=noreset_locker]{noreset_locker()
 to prevent future resets.
 }
 \examples{
-x <- setup_locker(tempdir(), tag = "my-sims", n = 2)
+x <- setup_locker(tempdir(), tag = "my-sims")
 x
 
 }

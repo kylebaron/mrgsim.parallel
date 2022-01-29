@@ -3,10 +3,18 @@ library(testthat)
 context("locker")
 
 test_that("set up locker", {
-  x <- setup_locker(tempdir(), "foo", n = 3)
-  expect_length(x, 3)
-  expect_equal(basename(dirname(x[[3]])), "foo")
-  expect_equal(basename(dirname(dirname(x[[3]]))), basename(tempdir()))
+  x <- setup_locker(tempdir(), "foo")
+  expect_length(x, 1)
+  expect_is(x, "character")
+})
+
+test_that("reset locker", {
+  x <- setup_locker(tempdir(), "foo")
+  cat("...", file = file.path(x, "foo.fst"))
+  y <- reset_locker(file.path(tempdir(), "foo"))
+  expect_equal(basename(x), "foo")
+  expect_true(is.null(y))
+  expect_length(list.files(x), 0)
 })
 
 test_that("warn if directory isn't empty on reset", {
@@ -53,4 +61,3 @@ test_that("version a locker", {
   x <- version_locker(locker, version = "v33", overwrite = TRUE, noreset = TRUE)
   expect_false(mrgsim.parallel:::is_locker_dir(x))
 })
-

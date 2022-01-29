@@ -13,7 +13,7 @@
   `rds` file formats (#16)
   
 - Add utilities for managing locker storage space: `setup_locker()`, 
-  `reset_locker()`, `noreset_locker()` (#16)
+  `reset_locker()`, `noreset_locker()`, `version_locker()` (#16)
 
 - Add some utility functions for working with outputs written in `fst` format:
   `internalize_fst()`, `head_fst()`, `list_fst()` (#16)

@@ -1,0 +1,31 @@
+library(dplyr)
+library(testthat)
+library(yaml)
+library(knitr)
+
+stopifnot(file.exists("inst/docs/tests.csv"))
+
+test <- read_csv("inst/docs/tests.csv", show_col_types=FALSE)
+stories <- yaml.load_file("inst/docs/stories.yaml")
+
+story <- Map(stories, names(stories), f = function(story, storylabel) {
+  tibble(
+    st = storylabel,
+    summary = story$summary,
+    test = story$tests
+  )
+})
+
+story <- bind_rows(story)
+
+all <- left_join(story, test, by = "test")
+
+all$date <- date()
+
+write_csv(all, "inst/docs/stories-tests.csv")
+
+
+x <- kable(all, format = "markdown")
+
+writeLines(x, con = "inst/docs/stories.md")
+
