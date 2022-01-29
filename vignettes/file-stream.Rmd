@@ -321,7 +321,10 @@ x <- locate_stream(x, locker)
 x[[2]]$file
 ```
 
-or to manipulate the file extension
+`locate_stream()` comes with an argument called `initialize` which can be used
+to initialze the locker space if it hasn't already been initialized or reset.
+
+Finally, you can  manipulate the file extension
 ```{r}
 x <- ext_stream(x, "")
 x[[4]]$file
@@ -430,5 +433,24 @@ cat("foo", file = file.path(locker, 'foo.txt'))
 try(new_stream(5, locker = locker))
 list.files(locker)
 ```
+
+```{r, include = FALSE}
+if(dir.exists(locker)) unlink(locker, recursive = TRUE)
+```
+
+If you _really_ want to be safe, you can disable the resetting of the locker
+space immediately after creating it
+
+```{r}
+x <- new_stream(5, locker = locker)
+noreset_locker(locker)
+```
+
+The next time you try to reset this particular locker space, you will be denied
+and an error will be generated. Only use this option when safety is your 
+number one priority; it will be inconvenient because you will always need to 
+manually clean up the locker space or generate new locations every time the 
+simulations are re-run.
+
 
 
