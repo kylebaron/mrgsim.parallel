@@ -5,6 +5,8 @@ path <- c(
   "README.Rmd"
 )
 
+message("checking package")
 spell_check_package()
 ignore <- readLines("inst/WORDLIST")
-spell_check_files(path,ignore)
+message("checking other files")
+spell_check_files(path, ignore)

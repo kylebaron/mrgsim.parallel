@@ -1,3 +1,4 @@
+# nocov start
 check_loaded <- function(mod) {
   mod@package %in% names(getLoadedDLLs())  
 }
@@ -38,3 +39,5 @@ mrgsim_ms <- function(mod, ...) {
 #' @rdname mrgsim_ms
 #' @export
 mrgsim_worker <- mrgsim_ms
+
+#nocov end

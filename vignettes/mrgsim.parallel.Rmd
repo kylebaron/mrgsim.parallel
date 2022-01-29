@@ -1,0 +1,283 @@
+---
+title: "Get started"
+author: ""
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette: 
+    toc: true
+    number_sections: true
+    keep_md: true
+vignette: >
+  %\VignetteIndexEntry{Get started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+# Introduction
+mrgsim.parallel provides parallelized simulation workflows for use with 
+mrgsolve models. Input data sets are chunked into lists and simulated in 
+parallel using multiple new R sessions (new R processes started to handle
+each chunk) or forked R sessions (R processes forked from the current R 
+process). This implies some not-insignificant overhead for the parallelization
+and therefore this strategy will only speed up problems with some size 
+or complexity to them; you will see little performance gain and possibly some slowdown by trying to parallelize problems that are smaller or run very fast to begin with.
+
+Because this vignette is embedded in the mrgsim.parallel R package, the code 
+here must run fairly quickly. Even problems where there is a large speed up 
+from parallelization might still take too much time to include in a package
+vignette. Therefore, we will mainly stick to examples of a much smaller scope.
+These examples are probably not big enough to see a tremendous performance 
+gain; that is not the point. We simply want to illustrate the workflows to get
+you started simulating in parallel on appropriately-sized problems. 
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(comment = '.', warning = FALSE, message = FALSE)
+```
+
+# Simulate a data set
+
+In this section, we will create a data set and then simulate it with and without
+parallelization.
+
+```{r}
+library(mrgsim.parallel)
+library(dplyr)
+```
+
+We'll simulate 100 subjects receiving each of 3 dose levels
+
+```{r}
+data <- expand.ev(amt = c(100, 200, 300), ID = seq(100))
+count(data, amt)
+```
+
+using the mrgsolve house model
+
+```{r}
+mod <- house(end = 72)
+```
+
+It is probably most efficient to just simulate this in one go
+
+```{r}
+outx <- mrgsim_d(mod, data, output = "df")
+```
+
+Here, we've called on `mrgsolve:::mrgsim_d()`, which takes the model object
+(`mod`) as the first argument and a data set (`data`) as the second argument.
+
+mrgsim provides two parallelized versions of this function, one using a 
+backend provided by the `parallel` package and another which taps the 
+`fuure` and future.apply` packages for the parallel backend.
+
+For platform independent parallelization, use `fu_mrgsim_d()` (`fu` stands 
+for `future`) after setting the desired `plan()` for parallelization. For 
+example, we can use `future::multisession` with 2 workers
+
+```{r, eval = FALSE}
+future::plan(future::multisession, workers = 2L)
+```
+
+```{r}
+out <- fu_mrgsim_d(mod, data, .seed = 123, nchunk = 6)
+```
+
+```{r, include = FALSE}
+future::plan(future::sequential)
+```
+
+Because the problem is so small, this would actually take longer to run than the 
+non-parallelized version. 
+
+If you are on `macos` or `unix` operating system, you can parallelize using 
+forked R processes. This generally runs much faster than `future::multisession`, 
+which requires new R processes to be started up.
+
+
+`mc_mrgsim_d()` will parallelize this simulation using forked processes
+using the parallel package
+
+```{r, eval = FALSE}
+out <- mc_mrgsim_d(mod, data, mc.cores = 2, .seed = 123,  nchunk = 6)
+```
+
+Or this can be run using `fu_mrgsim_d()` with `future::multicore`, which also 
+will parallelize across forked R processes
+
+```{r, eval = FALSE, warning = FALSE}
+future::plan(future::multicore)
+out <- fu_mrgsim_d(mod, data, .seed = 123, nchunk = 6)
+```
+
+R processes cannot be forked on the Windows operating system, so you cannot 
+parallelize with `mc_mrgsim_d()` or `fu_mrgsim_d()` + `plan(multicore)` on 
+Windows. 
+
+# Simulate idata with event
+
+The other workflow that provided is similar to `mrgsolve::mrgsim_ei()`, which
+simulates an `idata_set` with an event object. For example, we create an 
+event object
+
+```{r}
+e <- ev(amt = 100, ii = 24, addl = 27)
+```
+
+and then a data frame with individual level parameters (in this case, we'll 
+simulate a bunch of weights)
+
+```{r}
+idata <- data.frame(WT = runif(25, 40, 140))
+head(idata)
+```
+
+Then simulate
+
+```{r}
+out <- mrgsim_ei(mod, e, idata)
+```
+
+This already runs very fast. But let's parallelize it anyway. First, 
+use `fu_mrgsim_ei()`
+
+```{r, eval = FALSE}
+future::plan(future::multisession, workers = 2L)
+
+out <- fu_mrgsim_ei(mod, e, idata,.seed = 123, nchunks = 6)
+```
+
+Or if you are on `macos` or `unix` operating system, use `mc_mrgsim_ei()` to 
+invoke multicore parallelization provided by `parallel`
+
+```{r, eval = FALSE}
+out <- mc_mrgsim_ei(mod, e, idata, .seed = 123, nchunks = 6, mc.cores = 2)
+```
+
+# Simulate in the background
+
+To simulate in the "background", we first launch another R process using 
+`callr::r_bg()` and run a chunked simulation in that R process. Because it 
+is in the background, we can get the R prompt back and query the simulation 
+process. Once the process is done, we can collect the result. Let's run an 
+example.
+
+The function is `bg_mrgsim_d()`. Like `mc_mrgsim_d()`, we have to pass in the 
+model object and a data set
+
+```{r}
+out <- bg_mrgsim_d(mod, data, nchunk = 2)
+```
+
+Because this simulation is run in a package vignette, we'll use the default
+of waiting for the simulation to finish. Once it is done, we have a 
+process object that tells us the simulation is "done". 
+
+```{r}
+out
+```
+
+To collect the result, run 
+
+```{r}
+sims <- out$get_result()
+```
+
+And we have a list of simulated data
+
+```{r}
+length(sims)
+head(sims[[1]])
+```
+
+For very large simulations, we can write the simulated output to a data
+"locker" on disk and then read it in later.  We'll call the locker `foo` in 
+the `tempdir()`
+
+
+```{r}
+locker <- file.path(tempdir(), "foo")
+
+out <- bg_mrgsim_d(mod, data, .locker = locker, nchunk = 4)
+```
+
+Now, the output isn't simulated data but file names where the data are stored
+
+```{r}
+files <- out$get_result()
+files
+```
+
+We can read the data back in with `fst::read_fst()`
+
+```{r}
+library(fst)
+sims <- lapply(files, read_fst)
+head(sims[[2]])
+```
+
+Or use the internalize helper which returns a single data frame by default
+
+```{r}
+sims <- internalize_fst(locker)
+
+head(sims)
+```
+
+The background workflow simulates each chunk sequentially by default. We can 
+also parallelize this simulation by specifying a `.plan`
+
+```{r}
+out <- bg_mrgsim_d(
+  mod, 
+  data, 
+  nchunk = 4,
+  .plan = "multisession", 
+  .locker = locker, 
+  .cores = 2
+)
+sims <- internalize_fst(locker)
+```
+
+
+# Tools
+
+mrgsim.parallel also provides several tools that can make these workflows
+easier. 
+
+To chunk a data frame by rows, use `chunk_by_row()`
+
+```{r}
+data <- data.frame(i = seq(10))
+
+data_list <- chunk_by_row(data, nchunk = 2)
+```
+
+The result is a list of data frames with the corresponding number of chunks
+```{r}
+length(data_list)
+data_list[[2]]
+```
+
+Similarly, use `chunk_by_id()` which will look at a _single_ column and chunk
+based on those values
+
+```{r}
+set.seed(8789)
+
+data <- data.frame(id = c(rep("a", 4), rep("b", 3), rep("c", 2), rep("d", 5)))
+
+data
+
+data_list <- chunk_by_id(data, id_col = "id", nchunk = 2)
+
+data_list[[2]]
+```
+
+# File streams
+
+There is another set of tools that help you systematically save large 
+simulation outputs to disk in a format that can be quickly and flexibly 
+read back in later. This workflow is called `file stream` and is described in 
+another vignette.
