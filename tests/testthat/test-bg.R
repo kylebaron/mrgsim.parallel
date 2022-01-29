@@ -81,6 +81,7 @@ test_that("bg is same as fg, chunked", {
 test_that("save results as fst", {
   locker <- tempdir()
   ds <- file.path(locker, "A1")
+  if(dir.exists(ds)) unlink(ds, recursive = TRUE)
   bg <- bg_mrgsim_d(
     mod, 
     data, 
@@ -97,8 +98,9 @@ test_that("save results as fst", {
   expect_equal(names(sims), c("ID", "time", "dose", "DV"))
   files <- list.files(ds)
   expect_equal(files[1:2], c("bg-1-2.fst", "bg-2-2.fst"))
-  files <- list.files(ds, all.files=TRUE)
-  expect_match(files, ".mrgsim-parallel-locker-dir.", fixed = TRUE, all = FALSE)
+  files <- list.files(ds, all.files = TRUE, no.. = TRUE)
+  target <- mrgsim.parallel:::.locker_file_name
+  expect_match(files, target, fixed = TRUE, all = FALSE)
 })
 
 test_that("error when saving to existing directory", {

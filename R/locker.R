@@ -3,7 +3,16 @@ locker_tag <- function(locker) {
   basename(locker)
 }
 
-.locker_file_name <- ".mrgsim-parallel-locker-dir." 
+#' Check if a directory is dedicated locker space
+#' 
+#' @param where The locker location.
+#' 
+#' @export
+is_locker_dir <- function(where) {
+  file.exists(file.path(where, .locker_file_name))  
+}
+
+.locker_file_name <- ".mrgsim-parallel-locker-dir" 
 
 clear_locker <- function(where, locker_path, pattern) {
   if(!file.exists(locker_path)) {
@@ -53,7 +62,7 @@ clear_locker <- function(where, locker_path, pattern) {
 #' @param pattern A regular expression for finding files to clear from the 
 #' locker directory.
 #' 
-#' @seealso [setup_locker()], [noreset_locker()]
+#' @seealso [setup_locker()], [noreset_locker()], [version_locker()]
 #' 
 #' @export
 reset_locker <- function(where, pattern = NULL) {
@@ -106,7 +115,7 @@ reset_locker <- function(where, pattern = NULL) {
 #' x <- setup_locker(tempdir(), tag = "my-sims", n = 2)
 #' x
 #' 
-#' @seealso [reset_locker()], [noreset_locker()], [file_set()]
+#' @seealso [reset_locker()], [noreset_locker()], [version_locker()]
 #' 
 #' @export
 setup_locker <- function(where, tag = locker_tag(where), n = 0, ext = "", 
@@ -139,9 +148,12 @@ setup_locker <- function(where, tag = locker_tag(where), n = 0, ext = "",
 #' as a locker. Once the locker is modified this way, it cannot be reset again 
 #' by calling [setup_locker()] or [new_stream()].
 #' 
-#' @param where the locker location
+#' @param where The locker location. 
 #' 
-#' @seealso [setup_locker()], [reset_locker()]
+#' @return
+#' A logical value indicating if write ability was successfully revoked. 
+#' 
+#' @seealso [setup_locker()], [reset_locker()], [version_locker()]
 #' 
 #' @export
 noreset_locker <- function(where) {
@@ -149,5 +161,61 @@ noreset_locker <- function(where) {
   if(!file.exists(locker_file)) {
     stop("`where` does not appear to be a locker.")  
   }
-  file.remove(locker_file)
+  ans <- file.remove(locker_file)
+  return(invisible(ans))
+}
+
+#' Version locker contents
+#' 
+#' @param where The locker location. 
+#' @param version A tag to be appended to `where` for creating a backup of the 
+#' locker contents.
+#' @param overwrite If `TRUE`, the new location will be removed with [unlink()]
+#' if it exists.
+#' @param noreset If `TRUE`, [noreset_locker()] is called **on the new version**.
+#' 
+#' @return
+#' A logical value indicating whether or not all files were successfully copied
+#' to the backup, invisibly. 
+#' 
+#' @examples
+#' locker <- file.path(tempdir(), "version-locker-example")
+#' 
+#' if(dir.exists(locker)) unlink(locker, recursive = TRUE)
+#' 
+#' x <- new_stream(1, locker = locker)
+#' 
+#' cat("test", file = file.path(locker, "1-1"))
+#' 
+#' dir.exists(locker)
+#' 
+#' list.files(locker, all.files = TRUE)
+#' 
+#' y <- version_locker(locker, version = "y")
+#' 
+#' y
+#' 
+#' list.files(y, all.files = TRUE)
+#' 
+#' @seealso [reset_locker()], [noreset_locker()], [setup_locker()]
+#' @export
+version_locker <- function(where, version = "save", overwrite = FALSE, 
+                           noreset = FALSE) {
+  if(!is_locker_dir(where)) {
+    stop("`where` does not appear to be a locker.")  
+  }
+  saved <- paste0(where, "-", version)
+  if(dir.exists(saved)) {
+    if(isTRUE(overwrite)) {
+      unlink(saved, recursive = TRUE)  
+    } else {
+      stop("A directory already exists with this version.")  
+    }
+  }
+  dir.create(saved, recursive = TRUE)
+  files <- list.files(where, full.names = TRUE, all.files = TRUE, no..=TRUE)
+  ans <- file.copy(files, saved)
+  if(!all(ans)) stop("There was a problem copying files to new version.")
+  if(isTRUE(noreset)) noreset_locker(saved)
+  return(invisible(saved))
 }

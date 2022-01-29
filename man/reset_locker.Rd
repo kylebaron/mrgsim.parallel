@@ -29,5 +29,5 @@ to the files matched by \code{pattern}. If any un-matched files exist after
 clearing the directory, a warning will be issued.
 }
 \seealso{
-\code{\link[=setup_locker]{setup_locker()}}, \code{\link[=noreset_locker]{noreset_locker()}}
+\code{\link[=setup_locker]{setup_locker()}}, \code{\link[=noreset_locker]{noreset_locker()}}, \code{\link[=version_locker]{version_locker()}}
 }

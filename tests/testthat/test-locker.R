@@ -33,3 +33,24 @@ test_that("retire a locker", {
   )
   expect_equal(list.files(locker), "foo.fst")
 })
+
+test_that("version a locker", {
+  locker <- temp_ds("foo")  
+  if(dir.exists(locker)) unlink(locker, recursive = TRUE)
+  new_locker <- temp_ds("foo-v33")
+  if(dir.exists(new_locker)) unlink(new_locker, recursive = TRUE)
+  x <- setup_locker(locker)
+  cat("...", file = file.path(locker, "1-1.fst"))
+  x <- version_locker(locker, version = "v33")
+  expect_true(dir.exists(x))
+  expect_error(
+    version_locker(locker, version = "v33"), 
+    regexp = "A directory already exists"
+  )
+  unlink(x, recursive = TRUE)
+  x <- version_locker(locker, version = "v33", overwrite = TRUE)
+  expect_true(dir.exists(x))
+  x <- version_locker(locker, version = "v33", overwrite = TRUE, noreset = TRUE)
+  expect_false(mrgsim.parallel:::is_locker_dir(x))
+})
+

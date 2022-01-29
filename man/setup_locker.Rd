@@ -50,5 +50,5 @@ x
 
 }
 \seealso{
-\code{\link[=reset_locker]{reset_locker()}}, \code{\link[=noreset_locker]{noreset_locker()}}, \code{\link[=file_set]{file_set()}}
+\code{\link[=reset_locker]{reset_locker()}}, \code{\link[=noreset_locker]{noreset_locker()}}, \code{\link[=version_locker]{version_locker()}}
 }
