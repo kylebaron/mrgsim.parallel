@@ -30,7 +30,7 @@ internalize_fst <- function(path, .as_list = FALSE, ...) {
   if(isTRUE(.as_list)) {
     return(ans)  
   }
-  as_tibble(bind_rows(ans)) 
+  as_tibble(bind_rows(ans), .name_repair = "universal") 
 }
 #' @export
 #' @rdname internalize_fst

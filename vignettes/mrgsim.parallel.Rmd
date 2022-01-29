@@ -15,23 +15,21 @@ vignette: >
 
 
 # Introduction
-mrgsim.parallel provides a parallelized simulation workflows for use with 
+mrgsim.parallel provides parallelized simulation workflows for use with 
 mrgsolve models. Input data sets are chunked into lists and simulated in 
 parallel using multiple new R sessions (new R processes started to handle
 each chunk) or forked R sessions (R processes forked from the current R 
 process). This implies some not-insignificant overhead for the parallelization
-and therefore this strategy will only speed up problems with some size to them; 
-you will see little performance gain and possibly some slowdown by trying to 
-parallelize problems that are smaller or run very fast to begin with.
+and therefore this strategy will only speed up problems with some size 
+or complexity to them; you will see little performance gain and possibly some slowdown by trying to parallelize problems that are smaller or run very fast to begin with.
 
 Because this vignette is embedded in the mrgsim.parallel R package, the code 
 here must run fairly quickly. Even problems where there is a large speed up 
 from parallelization might still take too much time to include in a package
 vignette. Therefore, we will mainly stick to examples of a much smaller scope.
 These examples are probably not big enough to see a tremendous performance 
-gain; that is not the point. I will include some larger examples at the end 
-of the vignette that aren't actually run when the vignette builds but the user
-can copy and run the code as a first try at parallelization.
+gain; that is not the point. We simply want to illustrate the workflows to get
+you started simulating in parallel on appropriately-sized problems. 
 
 
 ```{r, include = FALSE}
@@ -72,7 +70,7 @@ Here, we've called on `mrgsolve:::mrgsim_d()`, which takes the model object
 
 mrgsim provides two parallelized versions of this function, one using a 
 backend provided by the `parallel` package and another which taps the 
-`future.apply` package for the parallel backend.
+`fuure` and future.apply` packages for the parallel backend.
 
 For platform independent parallelization, use `fu_mrgsim_d()` (`fu` stands 
 for `future`) after setting the desired `plan()` for parallelization. For 
@@ -86,10 +84,9 @@ future::plan(future::multisession, workers = 2L)
 out <- fu_mrgsim_d(mod, data, .seed = 123, nchunk = 6)
 ```
 
-```{r, eval = FALSE}
+```{r, include = FALSE}
 future::plan(future::sequential)
 ```
-
 
 Because the problem is so small, this would actually take longer to run than the 
 non-parallelized version. 
@@ -114,10 +111,13 @@ future::plan(future::multicore)
 out <- fu_mrgsim_d(mod, data, .seed = 123, nchunk = 6)
 ```
 
+R processes cannot be forked on the Windows operating system, so you cannot 
+parallelize with `mc_mrgsim_d()` or `fu_mrgsim_d()` + `plan(multicore)` on 
+Windows. 
 
 # Simulate idata with event
 
-The other workflow that provided is similar to `mrgsolve:::mrgsim_ei()`, which
+The other workflow that provided is similar to `mrgsolve::mrgsim_ei()`, which
 simulates an `idata_set` with an event object. For example, we create an 
 event object
 

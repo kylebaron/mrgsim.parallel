@@ -4,16 +4,24 @@
 \alias{locate_stream}
 \title{Set or change the directory for file_stream objects}
 \usage{
-locate_stream(x, where)
+locate_stream(x, where, initialize = FALSE)
 }
 \arguments{
 \item{x}{A \code{file_stream} object.}
 
 \item{where}{The new location.}
+
+\item{initialize}{If \code{TRUE}, then the \code{where} directory is passed to a call
+to \code{\link[=reset_locker]{reset_locker()}}.}
 }
 \description{
 Add or update the directory location for items in a \code{file_stream} object.
 If a directory path already exists, it is removed first.
+}
+\details{
+When \code{initialize} is set to \code{TRUE}, the locker space is initialized \strong{or}
+reset. In order to initialize, \code{where} must not exist or it must have been
+previously set up as locker space. See \code{\link[=setup_locker]{setup_locker()}} for details.
 }
 \examples{
 x <- new_stream(5)

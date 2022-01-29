@@ -50,6 +50,24 @@ test_that("relocate stream ", {
   expect_equal(test, "kyle")
 })
 
+test_that("relocate and initialize stream", {
+  x <- new_stream(2)
+  dir <- file.path(tempdir(), "test-relocate-init")
+  if(dir.exists(dir)) unlink(dir, recursive = TRUE)
+  expect_false(dir.exists(dir))
+  x <- locate_stream(x, where = dir, initialize = TRUE)
+  expect_true(dir.exists(dir))
+  expect_true(file.exists(file.path(dir, mrgsim.parallel:::.locker_file_name)))
+  y <- new_stream(3)
+  dir <- file.path(tempdir(), "test-relocate-init-2")
+  dir.create(dir)
+  expect_error( 
+    locate_stream(y, where = dir, initialize = TRUE), 
+    regexp="the dataset directory exists, but doesn't appear"
+  )
+  unlink(dir, recursive = TRUE)
+})
+
 test_that("create new stream with locker", {
   unlink(temp_ds("foo"), recursive = TRUE)
   x <- new_stream(5, locker = temp_ds("foo"))

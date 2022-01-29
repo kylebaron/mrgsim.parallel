@@ -170,8 +170,14 @@ format_stream <- function(x, type = c("fst", "feather", "qs", "rds"),
 #' Add or update the directory location for items in a `file_stream` object. 
 #' If a directory path already exists, it is removed first. 
 #' 
+#' When `initialize` is set to `TRUE`, the locker space is initialized **or**
+#' reset. In order to initialize, `where` must not exist or it must have been 
+#' previously set up as locker space. See [setup_locker()] for details.
+#' 
 #' @param x A `file_stream` object.
 #' @param where The new location. 
+#' @param initialize If `TRUE`, then the `where` directory is passed to a call
+#' to [reset_locker()].
 #' 
 #' @examples
 #' x <- new_stream(5)
@@ -182,10 +188,13 @@ format_stream <- function(x, type = c("fst", "feather", "qs", "rds"),
 #'          [file_set()]
 #' 
 #' @export
-locate_stream <- function(x, where) {
+locate_stream <- function(x, where, initialize = FALSE) {
   clx <- class(x)
   if(!is.file_stream(x)) {
     stop("`x` must be a file_stream object.")  
+  }
+  if(isTRUE(initialize)) {
+    reset_locker(where)  
   }
   ans <- lapply(x, re_set_dir, where = where)
   class(ans) <- clx
