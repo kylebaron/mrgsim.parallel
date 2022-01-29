@@ -1,0 +1,163 @@
+# BASIC SIMULATION ----
+SIM001:
+  summary: > 
+    As a user, I want to simulate a data set in parallel.
+  tests: 
+  - sim data
+  - sim with nchunk=1
+  - sim dry run
+  - sim post processing function
+  - sim pass in chunked data
+  - sim reproducible results
+SIM002:
+  summary: > 
+    As a user, I want to simulate and idata set + event object in parallel.
+  tests: 
+  - sim idata
+  - sim with nchunk=1
+SIM003: 
+  summary: > 
+    As a user, I want to simulate a data frame in a background R process.
+  tests: 
+  - bg simulation has same result as fg
+  - bg is same as fg, not chunked
+  - bg is same as fg, chunked
+  - bg save results as fst
+  - bg error when saving to existing directory
+SIM004:
+  summary: > 
+    As a user, I want to simulate a data frame in parallel in a background
+    R process.
+  tests: 
+  - bg simulate parallel
+
+# CHUNKING UTILS -----
+CHUNK001:
+  summary: > 
+    As a user, I want to chunk a data frame into a list of smaller data frames
+    by the row number. 
+  tests: 
+  - chunk data
+  - chunk bad input 
+CHUNK002:
+  summary: > 
+    As a user, I want to chunk a data frame into a list of smaller data frames
+    by the row number. 
+  tests: 
+  - chunk data
+
+# LOCKER -----
+LOCKER001: 
+  summary: > 
+    As a user, I want to set up a directory that is dedicated for storing a 
+    single set of output files from a single simulation.
+  tests: 
+  - set up locker
+  - warn if directory isn't empty on reset
+  - create new stream with locker and format
+  - bg error when saving to existing directory
+LOCKER002: 
+  summary: > 
+    As a user, I want to reset a pre-established locker space. 
+  tests: 
+  - reset locker
+LOCKER003: 
+  summary: > 
+    As a user, I want to mark a locker space to be ineligible for reset. 
+  tests: 
+  - retire a locker
+LOCKER004:
+  summary: > 
+    As a user, I want to create a backup version of a locker space. 
+  tests: 
+  - version a locker
+
+# FILE STREAMS -----
+STREAM001:
+  summary: > 
+    As a user, I want to create a stream of output file names. 
+  tests: 
+  - create new stream
+  - create new stream from character
+  - create new stream with locker
+STREAM002:
+  summary: > 
+    As a user, I want to associate an output format for a stream of output file names.
+  tests: 
+  - create new stream with locker and format
+  - add format to stream with locker
+  - add format to stream without locker
+STREAM003: 
+  summary: > 
+    As a user, I want to relocate a stream of output file names. 
+  tests: 
+  - relocate stream
+  - relocate and initialize stream
+STREAM004: 
+  summary: > 
+    As a user, I want to set or update the extension for a stream of output 
+    file names. 
+  tests: 
+  - create new stream with ext
+  - add ext to stream
+STREAM005: 
+  summary: > 
+    As a user, I want to be able to template an output file stream based on a 
+    list of input objects.
+  tests: 
+  - create new stream from list
+STREAM006: 
+  summary: > 
+    As a user, I want to be able to initialize output file locker space at the 
+    time the file stream location is set or updated.
+  tests: 
+  - relocate and initialize stream
+  - create new stream with locker
+STREAM007: 
+  summary: > 
+    As a user, I want to automatically write simulated output in fst format.
+  tests: 
+  - writer function - fst
+STREAM008: 
+  summary: > 
+    As a user, I want to automatically write simulated output in feather format.
+  tests: 
+  - writer function - feather
+STREAM009: 
+  summary: > 
+    As a user, I want to automatically write simulated output in qs format.
+  tests:
+  - writer function - qs
+STREAM010: 
+  summary: > 
+    As a user, I want to automatically write simulated output in rds format.
+  tests: 
+  - writer function - rds
+  - writer function - default
+STREAM011: 
+  summary: > 
+    As a user, I want the locker space automatically reset whenever the file 
+    stream is re-created with the same locker name.
+  tests: 
+  - reset locker  
+
+# FST FILES -----
+FST001: 
+  summary: > 
+    As a user, I want to be able to internalize a set of output files in 
+    a locker space when saved in fst format.
+  tests: 
+  - save to fst
+  - bg save results as fst
+FST002: 
+  summary: > 
+    As a user, I want to be able to get a list of output files in a locker 
+    space when saved in fst format.
+  tests: 
+  - save to fst
+FST003:
+  summary: > 
+    As a user, I want to be able to look at the head of a set of output files
+    in a locker space when saved in fst format.
+  tests: 
+  - save to fst
