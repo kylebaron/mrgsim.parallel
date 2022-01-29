@@ -21,8 +21,6 @@ story <- bind_rows(story)
 
 all <- left_join(story, test, by = "test")
 
-all$date <- date()
-
 if(any(is.na(all$failed))) {
   warning("some NA found")  
 }
