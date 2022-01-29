@@ -17,4 +17,3 @@
 
 - Add some utility functions for working with outputs written in `fst` format:
   `internalize_fst()`, `head_fst()`, `list_fst()` (#16)
-  

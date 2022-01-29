@@ -179,4 +179,4 @@ data as well.
 
 ## More info
 
-See [inst/docs/about.md (on GitHub only)](inst/docs/about.md) for more details.
+See [inst/docs/stories.md (on GitHub only)](inst/docs/stories.md) for more details.
