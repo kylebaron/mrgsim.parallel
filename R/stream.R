@@ -174,8 +174,6 @@ new_stream.character <- function(x, ...) {
 #' The format is set on the file objects inside the list so that the file 
 #' object can be used to call a write method. See [write_stream()].
 #' 
-#' Use `as_format_stream()` to format a 
-#' 
 #' @param x A `file_stream` object.
 #' @param type The file format type; if `feather` is chosen, then a check will
 #' be made to ensure the `arrow` package is loaded. 

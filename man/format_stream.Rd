@@ -32,9 +32,6 @@ format (\code{fst}, \code{feather} (arrow), \code{qs} or \code{rds}).
 The format is set on the file objects inside the list so that the file
 object can be used to call a write method. See \code{\link[=write_stream]{write_stream()}}.
 }
-\details{
-Use \code{as_format_stream()} to format a
-}
 \examples{
 fs <- new_stream(2)
 fs <- format_stream(fs, "fst")
