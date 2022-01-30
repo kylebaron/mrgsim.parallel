@@ -32,7 +32,7 @@ write_stream(x, ...)
 the \code{file} spot in \code{x}.}
 }
 \value{
-A logical value indiicating if the output was writen or not.
+A logical value indicating if the output was written or not.
 }
 \description{
 This function will write out objects that have been assigned a format

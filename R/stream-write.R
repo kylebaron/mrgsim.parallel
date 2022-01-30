@@ -20,7 +20,7 @@
 #' @param ... Not used.
 #' 
 #' @return 
-#' A logical value indiicating if the output was writen or not. 
+#' A logical value indicating if the output was written or not. 
 #' 
 #' @examples
 #' ds <- temp_ds("example")
