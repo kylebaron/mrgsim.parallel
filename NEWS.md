@@ -1,3 +1,5 @@
+# mrgsim.parallel (development version)
+
 # mrgsim.parallel 0.2.0
 
 - Add `bg_mrgsim_d()` to simulate data sets in background R processes (#16)
