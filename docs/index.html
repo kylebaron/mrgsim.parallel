@@ -23,6 +23,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -35,26 +37,38 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">mrgsim.parallel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+  <a href="reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
      
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/file-stream.html">File Stream Workflow</a>
+    </li>
+    <li>
+      <a href="articles/mrgsim.parallel.html">Get started</a>
+    </li>
+  </ul>
 </li>
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/kylebaron/mrgsim.parallel/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/kylebaron/mrgsim.parallel/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -70,218 +84,253 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="mrgsimparallel" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#mrgsimparallel" class="anchor"></a>mrgsim.parallel</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="mrgsimparallel">mrgsim.parallel<a class="anchor" aria-label="anchor" href="#mrgsimparallel"></a>
+</h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<div id="overview" class="section level2">
-<h2 class="hasAnchor">
-<a href="#overview" class="anchor"></a>Overview</h2>
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
 <p>mrgsolve.parallel facilitates parallel simulation with mrgsolve in R. The future and parallel packages provide the parallelization.</p>
 <p>There are 2 main workflows:</p>
-<ol>
+<ol style="list-style-type: decimal">
 <li>Split a <code>data_set</code> into chunks by ID, simulate the chunks in parallel, then assemble the results back to a single data frame.</li>
 <li>Split an <code>idata_set</code> (individual-level parameters) into chunks by row, simulate the chunks in parallel, then assemble the results back to a single data frame.</li>
 </ol>
 <p>The nature of the parallel backend requires some overhead to get the parallel simulation done. So, it will take a reasonably-sized job to see a speed increase and small jobs will likely take <em>longer</em> with parallelization. But jobs taking more than a handful of seconds could benefit from this type of parallelization.</p>
 </div>
-<div id="backend" class="section level2">
-<h2 class="hasAnchor">
-<a href="#backend" class="anchor"></a>Backend</h2>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<div class="section level2">
+<h2 id="backend">Backend<a class="anchor" aria-label="anchor" href="#backend"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">future</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">mrgsim.parallel</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kylebaron/mrgsim.parallel" class="external-link">mrgsim.parallel</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">future.fork.enable</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">mc.cores</span> <span class="kw">=</span> <span class="fl">6L</span>)
-
-<span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span>(<span class="no">multiprocess</span>, <span class="kw">workers</span> <span class="kw">=</span> <span class="fl">6L</span>)</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>future.fork.enable <span class="op">=</span> <span class="cn">TRUE</span>, parallelly.fork.enable <span class="op">=</span> <span class="cn">TRUE</span>, mc.cores <span class="op">=</span> <span class="fl">4L</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="first-workflow-split-and-simulate-a-data-set" class="section level2">
-<h2 class="hasAnchor">
-<a href="#first-workflow-split-and-simulate-a-data-set" class="anchor"></a>First workflow: split and simulate a data set</h2>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="no">mod</span> <span class="kw">&lt;-</span> <span class="fu">modlib</span>(<span class="st">"pk2cmt"</span>, <span class="kw">end</span> <span class="kw">=</span> <span class="fl">168</span>*<span class="fl">8</span>, <span class="kw">delta</span> <span class="kw">=</span> <span class="fl">1</span>)
+<div class="section level2">
+<h2 id="first-workflow-split-and-simulate-a-data-set">First workflow: split and simulate a data set<a class="anchor" aria-label="anchor" href="#first-workflow-split-and-simulate-a-data-set"></a>
+</h2>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mrgsolve/man/modlib.html" class="external-link">modlib</a></span><span class="op">(</span><span class="st">"pk2cmt"</span>, end <span class="op">=</span> <span class="fl">168</span><span class="op">*</span><span class="fl">8</span>, delta <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
 
-<span class="no">data</span> <span class="kw">&lt;-</span> <span class="fu">expand.ev</span>(<span class="kw">amt</span> <span class="kw">=</span> <span class="fl">100</span>*<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>,<span class="fl">2000</span>), <span class="kw">ii</span> <span class="kw">=</span> <span class="fl">24</span>, <span class="kw">addl</span> <span class="kw">=</span> <span class="fl">27</span>*<span class="fl">2</span>+<span class="fl">2</span>)
+<span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mrgsolve/man/expand.idata.html" class="external-link">expand.ev</a></span><span class="op">(</span>amt <span class="op">=</span> <span class="fl">100</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2000</span><span class="op">)</span>, ii <span class="op">=</span> <span class="fl">24</span>, addl <span class="op">=</span> <span class="fl">27</span><span class="op">*</span><span class="fl">2</span><span class="op">+</span><span class="fl">2</span><span class="op">)</span> 
 
-<span class="no">data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="no">data</span>, <span class="kw">CL</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span>(), <span class="fl">0.7</span>, <span class="fl">1.3</span>))
+<span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">data</span>, CL <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="fl">0.7</span>, <span class="fl">1.3</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">data</span>)</pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">.   ID time amt ii addl cmt evid        CL</a>
-<a class="sourceLine" id="cb3-2" title="2">. <span class="dv">1</span>  <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">0.8059246</span></a>
-<a class="sourceLine" id="cb3-3" title="3">. <span class="dv">2</span>  <span class="dv">2</span>    <span class="dv">0</span> <span class="dv">200</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">0.7168025</span></a>
-<a class="sourceLine" id="cb3-4" title="4">. <span class="dv">3</span>  <span class="dv">3</span>    <span class="dv">0</span> <span class="dv">300</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">1.1715658</span></a>
-<a class="sourceLine" id="cb3-5" title="5">. <span class="dv">4</span>  <span class="dv">4</span>    <span class="dv">0</span> <span class="dv">400</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">0.8232524</span></a>
-<a class="sourceLine" id="cb3-6" title="6">. <span class="dv">5</span>  <span class="dv">5</span>    <span class="dv">0</span> <span class="dv">500</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">0.7639733</span></a>
-<a class="sourceLine" id="cb3-7" title="7">. <span class="dv">6</span>  <span class="dv">6</span>    <span class="dv">0</span> <span class="dv">600</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">1.0919521</span></a></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">data</span>)</pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">. [<span class="dv">1</span>] <span class="dv">2000</span>    <span class="dv">8</span></a></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>.   ID time amt ii addl cmt evid        CL</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>. <span class="dv">1</span>  <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">0.9714138</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>. <span class="dv">2</span>  <span class="dv">2</span>    <span class="dv">0</span> <span class="dv">200</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">0.7977687</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>. <span class="dv">3</span>  <span class="dv">3</span>    <span class="dv">0</span> <span class="dv">300</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">0.7937479</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>. <span class="dv">4</span>  <span class="dv">4</span>    <span class="dv">0</span> <span class="dv">400</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">1.0287696</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>. <span class="dv">5</span>  <span class="dv">5</span>    <span class="dv">0</span> <span class="dv">500</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">1.1802787</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>. <span class="dv">6</span>  <span class="dv">6</span>    <span class="dv">0</span> <span class="dv">600</span> <span class="dv">24</span>   <span class="dv">56</span>   <span class="dv">1</span>    <span class="dv">1</span> <span class="fl">0.7458695</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>. [<span class="dv">1</span>] <span class="dv">2000</span>    <span class="dv">8</span></span></code></pre></div>
 <p>We can simulate in parallel with the future package or the parallel package like this:</p>
-<div class="sourceCode" id="cb6"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">ans1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">future_mrgsim_d</a></span>(<span class="no">mod</span>, <span class="no">data</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">6L</span>))</pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb7-2" title="2">.  <span class="fl">10.005</span>   <span class="fl">1.735</span>   <span class="fl">2.944</span></a></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">ans2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">mc_mrgsim_d</a></span>(<span class="no">mod</span>, <span class="no">data</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">6L</span>))</pre></div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb9-2" title="2">.   <span class="fl">8.847</span>   <span class="fl">0.928</span>   <span class="fl">2.002</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers <span class="op">=</span> <span class="fl">4L</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">ans1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">future_mrgsim_d</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">data</span>, nchunk <span class="op">=</span> <span class="fl">4L</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>.    user  system elapsed </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>.   <span class="fl">0.473</span>   <span class="fl">0.176</span>   <span class="fl">4.173</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multicore</span>, workers <span class="op">=</span> <span class="fl">4L</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">ans1b</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">future_mrgsim_d</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">data</span>, nchunk <span class="op">=</span> <span class="fl">4L</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>.    user  system elapsed </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>.   <span class="fl">5.322</span>   <span class="fl">0.544</span>   <span class="fl">1.846</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">ans2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">mc_mrgsim_d</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">data</span>, nchunk <span class="op">=</span> <span class="fl">4L</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>.    user  system elapsed </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>.   <span class="fl">5.289</span>   <span class="fl">0.563</span>   <span class="fl">1.756</span></span></code></pre></div>
 <p>To compare an identical simulation done without parallelization</p>
-<div class="sourceCode" id="cb10"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">ans3</span> <span class="kw">&lt;-</span> <span class="fu">mrgsim_d</span>(<span class="no">mod</span>,<span class="no">data</span>))</pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb11-2" title="2">.   <span class="fl">6.348</span>   <span class="fl">0.169</span>   <span class="fl">6.526</span></a></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="no">ans2</span>,<span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="no">ans3</span>))</pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">. [<span class="dv">1</span>] <span class="ot">TRUE</span></a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">ans3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mrgsolve/man/mrgsim_variants.html" class="external-link">mrgsim_d</a></span><span class="op">(</span><span class="va">mod</span>,<span class="va">data</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>.    user  system elapsed </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>.   <span class="fl">4.839</span>   <span class="fl">0.105</span>   <span class="fl">4.954</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">ans2</span>,<span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">ans3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>. [<span class="dv">1</span>] <span class="cn">TRUE</span></span></code></pre></div>
 </div>
-<div id="second-workflow-split-and-simulate-a-batch-of-parameters" class="section level2">
-<h2 class="hasAnchor">
-<a href="#second-workflow-split-and-simulate-a-batch-of-parameters" class="anchor"></a>Second workflow: split and simulate a batch of parameters</h2>
+<div class="section level2">
+<h2 id="second-workflow-split-and-simulate-a-batch-of-parameters">Second workflow: split and simulate a batch of parameters<a class="anchor" aria-label="anchor" href="#second-workflow-split-and-simulate-a-batch-of-parameters"></a>
+</h2>
 <p>Backend and the model</p>
-<div class="sourceCode" id="cb14"><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span>(<span class="no">multiprocess</span>, <span class="kw">workers</span> <span class="kw">=</span> <span class="fl">6</span>)
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>
 
-<span class="no">mod</span> <span class="kw">&lt;-</span> <span class="fu">modlib</span>(<span class="st">"pk1cmt"</span>, <span class="kw">end</span> <span class="kw">=</span> <span class="fl">168</span>*<span class="fl">4</span>, <span class="kw">delta</span> <span class="kw">=</span> <span class="fl">1</span>)</pre></div>
+<span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mrgsolve/man/modlib.html" class="external-link">modlib</a></span><span class="op">(</span><span class="st">"pk1cmt"</span>, end <span class="op">=</span> <span class="fl">168</span><span class="op">*</span><span class="fl">4</span>, delta <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p>For this workflow, we have a set of parameters (<code>idata</code>) along with an event object that gets applied to all of the parameters</p>
-<div class="sourceCode" id="cb15"><pre class="r"><span class="no">idata</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(<span class="kw">CL</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="fl">4000</span>, <span class="fl">0.5</span>, <span class="fl">1.5</span>), <span class="kw">ID</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span>(<span class="no">CL</span>))
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">idata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>CL <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">4000</span>, <span class="fl">0.5</span>, <span class="fl">1.5</span><span class="op">)</span>, ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">CL</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">idata</span>)</pre></div>
-<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">. <span class="co"># A tibble: 6 x 2</span></a>
-<a class="sourceLine" id="cb16-2" title="2">.      CL    ID</a>
-<a class="sourceLine" id="cb16-3" title="3">.   <span class="op">&lt;</span>dbl<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>int<span class="op">&gt;</span></a>
-<a class="sourceLine" id="cb16-4" title="4">. <span class="dv">1</span>  <span class="fl">1.11</span>     <span class="dv">1</span></a>
-<a class="sourceLine" id="cb16-5" title="5">. <span class="dv">2</span>  <span class="fl">1.34</span>     <span class="dv">2</span></a>
-<a class="sourceLine" id="cb16-6" title="6">. <span class="dv">3</span>  <span class="fl">1.18</span>     <span class="dv">3</span></a>
-<a class="sourceLine" id="cb16-7" title="7">. <span class="dv">4</span>  <span class="fl">1.19</span>     <span class="dv">4</span></a>
-<a class="sourceLine" id="cb16-8" title="8">. <span class="dv">5</span>  <span class="fl">1.27</span>     <span class="dv">5</span></a>
-<a class="sourceLine" id="cb16-9" title="9">. <span class="dv">6</span>  <span class="fl">1.20</span>     <span class="dv">6</span></a></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="r"><span class="no">dose</span> <span class="kw">&lt;-</span> <span class="fu">ev</span>(<span class="kw">amt</span> <span class="kw">=</span> <span class="fl">100</span>, <span class="kw">ii</span> <span class="kw">=</span> <span class="fl">24</span>, <span class="kw">addl</span> <span class="kw">=</span> <span class="fl">27</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">idata</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>. <span class="co"># A tibble: 6 × 2</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>.      CL    ID</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>.   <span class="sc">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>int<span class="sc">&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>. <span class="dv">1</span> <span class="fl">0.552</span>     <span class="dv">1</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>. <span class="dv">2</span> <span class="fl">0.765</span>     <span class="dv">2</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>. <span class="dv">3</span> <span class="fl">0.669</span>     <span class="dv">3</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>. <span class="dv">4</span> <span class="fl">0.943</span>     <span class="dv">4</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>. <span class="dv">5</span> <span class="fl">0.929</span>     <span class="dv">5</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>. <span class="dv">6</span> <span class="fl">1.19</span>      <span class="dv">6</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dose</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mrgsolve/man/ev.html" class="external-link">ev</a></span><span class="op">(</span>amt <span class="op">=</span> <span class="fl">100</span>, ii <span class="op">=</span> <span class="fl">24</span>, addl <span class="op">=</span> <span class="fl">27</span><span class="op">)</span>
 
-<span class="no">dose</span></pre></div>
-<div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">. Events<span class="op">:</span></a>
-<a class="sourceLine" id="cb18-2" title="2">.   time amt ii addl cmt evid</a>
-<a class="sourceLine" id="cb18-3" title="3">. <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span> <span class="dv">24</span>   <span class="dv">27</span>   <span class="dv">1</span>    <span class="dv">1</span></a></code></pre></div>
+<span class="va">dose</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>. Events<span class="sc">:</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>.   time amt ii addl cmt evid</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>. <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span> <span class="dv">24</span>   <span class="dv">27</span>   <span class="dv">1</span>    <span class="dv">1</span></span></code></pre></div>
 <p>Run it in parallel</p>
-<div class="sourceCode" id="cb19"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">ans1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_ei.html">mc_mrgsim_ei</a></span>(<span class="no">mod</span>, <span class="no">dose</span>, <span class="no">idata</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">6</span>))</pre></div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb20-2" title="2">.   <span class="fl">6.374</span>   <span class="fl">0.866</span>   <span class="fl">1.531</span></a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">ans1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_ei.html">mc_mrgsim_ei</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">dose</span>, <span class="va">idata</span>, nchunk <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>.    user  system elapsed </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>.   <span class="fl">3.705</span>   <span class="fl">0.481</span>   <span class="fl">1.486</span></span></code></pre></div>
 <p>And without parallelization</p>
-<div class="sourceCode" id="cb21"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">ans2</span> <span class="kw">&lt;-</span> <span class="fu">mrgsim_ei</span>(<span class="no">mod</span>, <span class="no">dose</span>, <span class="no">idata</span>, <span class="kw">output</span> <span class="kw">=</span> <span class="st">"df"</span>))</pre></div>
-<div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb22-2" title="2">.   <span class="fl">4.411</span>   <span class="fl">0.135</span>   <span class="fl">4.550</span></a></code></pre></div>
-<div class="sourceCode" id="cb23"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="no">ans1</span>,<span class="no">ans2</span>)</pre></div>
-<div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">. [<span class="dv">1</span>] <span class="ot">TRUE</span></a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">ans2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mrgsolve/man/mrgsim_variants.html" class="external-link">mrgsim_ei</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">dose</span>, <span class="va">idata</span>, output <span class="op">=</span> <span class="st">"df"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>.    user  system elapsed </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>.   <span class="fl">3.313</span>   <span class="fl">0.076</span>   <span class="fl">3.395</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">ans1</span>,<span class="va">ans2</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>. [<span class="dv">1</span>] <span class="cn">TRUE</span></span></code></pre></div>
 </div>
-<div id="utility-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#utility-functions" class="anchor"></a>Utility functions</h2>
+<div class="section level2">
+<h2 id="utility-functions">Utility functions<a class="anchor" aria-label="anchor" href="#utility-functions"></a>
+</h2>
 <p>You can access the chunking functions for your own parallel workflows</p>
-<div class="sourceCode" id="cb25"><pre class="r"><span class="no">dose</span> <span class="kw">&lt;-</span> <span class="fu">ev_seq</span>(<span class="fu">ev</span>(<span class="kw">amt</span> <span class="kw">=</span> <span class="fl">100</span>), <span class="fu">ev</span>(<span class="kw">amt</span> <span class="kw">=</span> <span class="fl">50</span>, <span class="kw">ii</span> <span class="kw">=</span> <span class="fl">12</span>, <span class="kw">addl</span> <span class="kw">=</span> <span class="fl">2</span>))
-<span class="no">dose</span> <span class="kw">&lt;-</span> <span class="fu">ev_rep</span>(<span class="no">dose</span>, <span class="fl">1</span>:<span class="fl">5</span>)
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dose</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mrgsolve/man/ev_seq.html" class="external-link">ev_seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/mrgsolve/man/ev.html" class="external-link">ev</a></span><span class="op">(</span>amt <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/pkg/mrgsolve/man/ev.html" class="external-link">ev</a></span><span class="op">(</span>amt <span class="op">=</span> <span class="fl">50</span>, ii <span class="op">=</span> <span class="fl">12</span>, addl <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
+<span class="va">dose</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mrgsolve/man/ev_rep.html" class="external-link">ev_rep</a></span><span class="op">(</span><span class="va">dose</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>
 
-<span class="no">dose</span></pre></div>
-<div class="sourceCode" id="cb26"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">.    ID time amt ii addl cmt evid</a>
-<a class="sourceLine" id="cb26-2" title="2">. <span class="dv">1</span>   <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb26-3" title="3">. <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb26-4" title="4">. <span class="dv">3</span>   <span class="dv">2</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb26-5" title="5">. <span class="dv">4</span>   <span class="dv">2</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb26-6" title="6">. <span class="dv">5</span>   <span class="dv">3</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb26-7" title="7">. <span class="dv">6</span>   <span class="dv">3</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb26-8" title="8">. <span class="dv">7</span>   <span class="dv">4</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb26-9" title="9">. <span class="dv">8</span>   <span class="dv">4</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb26-10" title="10">. <span class="dv">9</span>   <span class="dv">5</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb26-11" title="11">. <span class="dv">10</span>  <span class="dv">5</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a></code></pre></div>
-<div class="sourceCode" id="cb27"><pre class="r"><span class="fu"><a href="reference/chunk_data_frame.html">chunk_by_id</a></span>(<span class="no">dose</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></div>
-<div class="sourceCode" id="cb28"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">. <span class="op">$</span><span class="st">`</span><span class="dt">1</span><span class="st">`</span></a>
-<a class="sourceLine" id="cb28-2" title="2">.   ID time amt ii addl cmt evid</a>
-<a class="sourceLine" id="cb28-3" title="3">. <span class="dv">1</span>  <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb28-4" title="4">. <span class="dv">2</span>  <span class="dv">1</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb28-5" title="5">. <span class="dv">3</span>  <span class="dv">2</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb28-6" title="6">. <span class="dv">4</span>  <span class="dv">2</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb28-7" title="7">. <span class="dv">5</span>  <span class="dv">3</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb28-8" title="8">. <span class="dv">6</span>  <span class="dv">3</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb28-9" title="9">. </a>
-<a class="sourceLine" id="cb28-10" title="10">. <span class="op">$</span><span class="st">`</span><span class="dt">2</span><span class="st">`</span></a>
-<a class="sourceLine" id="cb28-11" title="11">.    ID time amt ii addl cmt evid</a>
-<a class="sourceLine" id="cb28-12" title="12">. <span class="dv">7</span>   <span class="dv">4</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb28-13" title="13">. <span class="dv">8</span>   <span class="dv">4</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb28-14" title="14">. <span class="dv">9</span>   <span class="dv">5</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></a>
-<a class="sourceLine" id="cb28-15" title="15">. <span class="dv">10</span>  <span class="dv">5</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></a></code></pre></div>
+<span class="va">dose</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>.    ID time amt ii addl cmt evid</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>. <span class="dv">1</span>   <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>. <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>. <span class="dv">3</span>   <span class="dv">2</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>. <span class="dv">4</span>   <span class="dv">2</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>. <span class="dv">5</span>   <span class="dv">3</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>. <span class="dv">6</span>   <span class="dv">3</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>. <span class="dv">7</span>   <span class="dv">4</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>. <span class="dv">8</span>   <span class="dv">4</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>. <span class="dv">9</span>   <span class="dv">5</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>. <span class="dv">10</span>  <span class="dv">5</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/chunk_data_frame.html">chunk_by_id</a></span><span class="op">(</span><span class="va">dose</span>, nchunk <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>. <span class="sc">$</span><span class="st">`</span><span class="at">1</span><span class="st">`</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>.   ID time amt ii addl cmt evid</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>. <span class="dv">1</span>  <span class="dv">1</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>. <span class="dv">2</span>  <span class="dv">1</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>. <span class="dv">3</span>  <span class="dv">2</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>. <span class="dv">4</span>  <span class="dv">2</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>. <span class="dv">5</span>  <span class="dv">3</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>. <span class="dv">6</span>  <span class="dv">3</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>. <span class="sc">$</span><span class="st">`</span><span class="at">2</span><span class="st">`</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>.    ID time amt ii addl cmt evid</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>. <span class="dv">7</span>   <span class="dv">4</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>. <span class="dv">8</span>   <span class="dv">4</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>. <span class="dv">9</span>   <span class="dv">5</span>    <span class="dv">0</span> <span class="dv">100</span>  <span class="dv">0</span>    <span class="dv">0</span>   <span class="dv">1</span>    <span class="dv">1</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>. <span class="dv">10</span>  <span class="dv">5</span>    <span class="dv">0</span>  <span class="dv">50</span> <span class="dv">12</span>    <span class="dv">2</span>   <span class="dv">1</span>    <span class="dv">1</span></span></code></pre></div>
 <p>See also: <code>chunk_by_row</code></p>
 </div>
-<div id="do-a-dry-run-to-check-the-overhead-of-parallelization" class="section level2">
-<h2 class="hasAnchor">
-<a href="#do-a-dry-run-to-check-the-overhead-of-parallelization" class="anchor"></a>Do a dry run to check the overhead of parallelization</h2>
-<div class="sourceCode" id="cb29"><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span>(<span class="no">transparent</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">fu_mrgsim_d</a></span>(<span class="no">mod</span>, <span class="no">data</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">8</span>, <span class="kw">.dry</span> <span class="kw">=</span> <span class="fl">TRUE</span>))</pre></div>
-<div class="sourceCode" id="cb30"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb30-2" title="2">.   <span class="fl">0.016</span>   <span class="fl">0.001</span>   <span class="fl">0.018</span></a></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span>(<span class="no">multiprocess</span>,<span class="kw">workers</span> <span class="kw">=</span> <span class="fl">8L</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">fu_mrgsim_d</a></span>(<span class="no">mod</span>, <span class="no">data</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">8</span>, <span class="kw">.dry</span> <span class="kw">=</span> <span class="fl">TRUE</span>))</pre></div>
-<div class="sourceCode" id="cb32"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">.    user  system elapsed </a>
-<a class="sourceLine" id="cb32-2" title="2">.   <span class="fl">0.138</span>   <span class="fl">0.224</span>   <span class="fl">0.183</span></a></code></pre></div>
+<div class="section level2">
+<h2 id="do-a-dry-run-to-check-the-overhead-of-parallelization">Do a dry run to check the overhead of parallelization<a class="anchor" aria-label="anchor" href="#do-a-dry-run-to-check-the-overhead-of-parallelization"></a>
+</h2>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">transparent</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">fu_mrgsim_d</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">data</span>, nchunk <span class="op">=</span> <span class="fl">8</span>, .dry <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>.    user  system elapsed </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>.   <span class="fl">0.014</span>   <span class="fl">0.001</span>   <span class="fl">0.016</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers <span class="op">=</span> <span class="fl">8L</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_d.html">fu_mrgsim_d</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">data</span>, nchunk <span class="op">=</span> <span class="fl">8</span>, .dry <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>.    user  system elapsed </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>.   <span class="fl">0.045</span>   <span class="fl">0.003</span>   <span class="fl">5.151</span></span></code></pre></div>
 </div>
-<div id="pass-a-function-to-post-process-on-the-worker" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pass-a-function-to-post-process-on-the-worker" class="anchor"></a>Pass a function to post process on the worker</h2>
+<div class="section level2">
+<h2 id="pass-a-function-to-post-process-on-the-worker">Pass a function to post process on the worker<a class="anchor" aria-label="anchor" href="#pass-a-function-to-post-process-on-the-worker"></a>
+</h2>
 <p>First check the range of times from the previous example</p>
-<div class="sourceCode" id="cb33"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">ans1</span>$<span class="no">time</span>)</pre></div>
-<div class="sourceCode" id="cb34"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">.    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </a>
-<a class="sourceLine" id="cb34-2" title="2">.     <span class="fl">0.0</span>   <span class="fl">167.0</span>   <span class="fl">335.5</span>   <span class="fl">335.5</span>   <span class="fl">504.0</span>   <span class="fl">672.0</span></a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">ans1</span><span class="op">$</span><span class="va">time</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>.    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>.     <span class="fl">0.0</span>   <span class="fl">167.0</span>   <span class="fl">335.5</span>   <span class="fl">335.5</span>   <span class="fl">504.0</span>   <span class="fl">672.0</span></span></code></pre></div>
 <p>The post-processing function has arguments the simulated data and the model object</p>
-<div class="sourceCode" id="cb35"><pre class="r"><span class="no">post</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">sims</span>, <span class="no">mod</span>) {
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">sims</span>, <span class="no">time</span> <span class="kw">&gt;</span> <span class="fl">600</span>)
-}
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">post</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">sims</span>, <span class="va">mod</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sims</span>, <span class="va">time</span> <span class="op">&gt;</span> <span class="fl">600</span><span class="op">)</span>  
+<span class="op">}</span>
 
-<span class="no">dose</span> <span class="kw">&lt;-</span> <span class="fu">ev</span>(<span class="kw">amt</span> <span class="kw">=</span> <span class="fl">100</span>, <span class="kw">ii</span> <span class="kw">=</span> <span class="fl">24</span>, <span class="kw">addl</span> <span class="kw">=</span> <span class="fl">27</span>)
+<span class="va">dose</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mrgsolve/man/ev.html" class="external-link">ev</a></span><span class="op">(</span>amt <span class="op">=</span> <span class="fl">100</span>, ii <span class="op">=</span> <span class="fl">24</span>, addl <span class="op">=</span> <span class="fl">27</span><span class="op">)</span>
 
-<span class="no">ans3</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_ei.html">mc_mrgsim_ei</a></span>(<span class="no">mod</span>, <span class="no">dose</span>, <span class="no">idata</span>, <span class="kw">nchunk</span> <span class="kw">=</span> <span class="fl">6</span>, <span class="kw">.p</span> <span class="kw">=</span> <span class="no">post</span>)</pre></div>
-<div class="sourceCode" id="cb36"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">ans3</span>$<span class="no">time</span>)</pre></div>
-<div class="sourceCode" id="cb37"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">.    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </a>
-<a class="sourceLine" id="cb37-2" title="2">.   <span class="fl">601.0</span>   <span class="fl">618.8</span>   <span class="fl">636.5</span>   <span class="fl">636.5</span>   <span class="fl">654.2</span>   <span class="fl">672.0</span></a></code></pre></div>
+<span class="va">ans3</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parallel_mrgsim_ei.html">mc_mrgsim_ei</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">dose</span>, <span class="va">idata</span>, nchunk <span class="op">=</span> <span class="fl">6</span>, .p <span class="op">=</span> <span class="va">post</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">ans3</span><span class="op">$</span><span class="va">time</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>.    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>.   <span class="fl">601.0</span>   <span class="fl">618.8</span>   <span class="fl">636.5</span>   <span class="fl">636.5</span>   <span class="fl">654.2</span>   <span class="fl">672.0</span></span></code></pre></div>
 <p>The main use case here is to summarize or some how decrease the volume of data before returning the combined simulations. In case memory is able to handle the simulation volume, this post-processing could be done on the combined data as well.</p>
 <hr>
 </div>
-<div id="more-info" class="section level2">
-<h2 class="hasAnchor">
-<a href="#more-info" class="anchor"></a>More info</h2>
-<p>See <a href="inst/docs/about.html">inst/docs/about.md (on GitHub only)</a> for more details.</p>
+<div class="section level2">
+<h2 id="more-info">More info<a class="anchor" aria-label="anchor" href="#more-info"></a>
+</h2>
+<p>See <a href="inst/docs/stories.html">inst/docs/stories.md (on GitHub only)</a> for more details.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=mrgsim.parallel">https://​cloud.r-project.org/​package=mrgsim.parallel</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/kylebaron/mrgsim.parallel/">https://​github.com/​kylebaron/​mrgsim.parallel/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/kylebaron/mrgsim.parallel/issues">https://​github.com/​kylebaron/​mrgsim.parallel/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=mrgsim.parallel" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/kylebaron/mrgsim.parallel/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/kylebaron/mrgsim.parallel/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;=2)</li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing mrgsim.parallel</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Kyle Baron <br><small class="roles"> Maintainer </small>  </li>
 </ul>
 </div>
+
+
 
   </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Kyle Baron.</p>
+  <p></p>
+<p>Developed by Kyle Baron.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -289,6 +338,8 @@
 
   
 
+
+  
 
   </body>
 </html>
