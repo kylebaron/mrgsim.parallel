@@ -59,7 +59,7 @@ Issue: #4, #5
 - sim data
 - sim idata
   
-## 3 - Chunk a data frame
+## 4 - Chunk a data frame
 
 Issue: #6
 

@@ -50,32 +50,32 @@ mc_mrgsim_ei(
 )
 }
 \arguments{
-\item{mod}{mrgsolve model object see \link[mrgsolve:mrgmod-class]{mrgsolve::mrgmod}}
+\item{mod}{The mrgsolve model object see \link[mrgsolve:mrgmod-class]{mrgsolve::mrgmod}.}
 
-\item{events}{an event object from mrgsolve; see \link[mrgsolve:ev]{mrgsolve::ev}}
+\item{events}{An event object from mrgsolve; see \code{\link[mrgsolve:ev]{mrgsolve::ev()}}.}
 
-\item{idata}{an idata set of parameters, one per simulation unit (individual);
-see \link[mrgsolve:idata_set]{mrgsolve::idata_set}}
+\item{idata}{An idata set of parameters, one per simulation unit (individual);
+see \code{\link[mrgsolve:idata_set]{mrgsolve::idata_set()}}.}
 
-\item{nchunk}{number of chunks in which to split the data set}
+\item{nchunk}{Number of chunks in which to split the data set}
 
-\item{...}{passed to \link{mrgsim_d}}
+\item{...}{Passed to \code{\link[=mrgsim_d]{mrgsim_d()}}.}
 
-\item{.as_list}{if \code{TRUE} a list is return; otherwise (default) a data frame}
+\item{.as_list}{If \code{TRUE} a list is return; otherwise (default) a data frame}
 
-\item{.p}{post processing function executed on the worker; arguments should
-be (1) the simulated output (2) the model object}
+\item{.p}{Post processing function executed on the worker; arguments should
+be (1) the simulated output (2) the model object.}
 
-\item{.dry}{if \code{TRUE} neither the simulation nor the post processing will
-be done}
+\item{.dry}{If \code{TRUE} neither the simulation nor the post processing will
+be done.}
 
-\item{.seed}{passed to \link{future_lapply} as \code{future.seed}}
+\item{.seed}{Passed to \code{\link[=future_lapply]{future_lapply()}} as \code{future.seed}.}
 
 \item{.parallel}{if \code{FALSE}, the simulation will not be parallelized; this is
-intended for debugging and testing use only}
+intended for debugging and testing use only.}
 }
 \value{
-A data frame or list of simulated data
+A data frame or list of simulated data.
 }
 \description{
 Use \link{future_mrgsim_ei} to simulate with the \code{future} package.  Use

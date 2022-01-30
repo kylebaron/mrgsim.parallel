@@ -1,3 +1,17 @@
+dll
+fst
+lapply
+macos
+mrgmod
+os
+multisession
+unlinked
+tibble
+parallelize
+parallelized
+parallelizing
+subfolders
+pre
 mrgsim
 Globals
 covr
@@ -7,3 +21,6 @@ idata
 mclapply
 parallelization
 fu
+customizations
+th
+tempdir

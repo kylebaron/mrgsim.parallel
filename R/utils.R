@@ -86,14 +86,35 @@ chunk_by_row <- function(data,nchunk,mark=NULL) {
   split.data.frame(data,a)
 }
 
-dat <- function(set = c("data", "idata", "data_big", "idata_big")) {
+dat <- function(set = c("data", "idata", "data_big", "idata_big")) { #nocov start
   set <- match.arg(set)
   file <- paste0(set,".RDS")
   file <- system.file("rmd",file,package = "mrgsim.parallel")
   readRDS(file)
-}
+} # nocov end
 
 mc_able <- function() {
   if(.Platform$OS.type=="windows") return(FALSE)
   return(isTRUE(getOption("mrgsim.parallel.mc.enable",TRUE)))
 }
+
+require_arrow <- function() {
+  if(!requireNamespace("arrow")) {
+    stop("the arrow package must be installed to complete this task.")  
+  }
+}
+arrow_installed <- function() requireNamespace("arrow")
+require_qs <- function() {
+  if(!requireNamespace("qs")) {
+    stop("the qs package must be installed to complete this task.")  
+  }
+}
+qs_installed <- function() requireNamespace("qs")
+fst_installed <- function() requireNamespace("fst")
+
+#' Create a path to a dataset in tempdir
+#' 
+#' @param tag The dataset subdirectory.
+#' 
+#' @export
+temp_ds <- function(tag) file.path(tempdir(), tag)

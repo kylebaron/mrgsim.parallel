@@ -47,33 +47,33 @@ fu_mrgsim_d(
 fu_mrgsim_d0(..., .dry = TRUE)
 }
 \arguments{
-\item{mod}{mrgsolve model object see \link[mrgsolve:mrgmod-class]{mrgsolve::mrgmod}}
+\item{mod}{The mrgsolve model object see \link[mrgsolve:mrgmod-class]{mrgsolve::mrgmod}.}
 
-\item{data}{data set to simulate; see \link[mrgsolve:data_set]{mrgsolve::data_set}}
+\item{data}{Data set to simulate; see \code{\link[mrgsolve:data_set]{mrgsolve::data_set()}}.}
 
-\item{nchunk}{number of chunks in which to split the data set}
+\item{nchunk}{Number of chunks in which to split the data set}
 
-\item{...}{passed to \link{mrgsim_d}}
+\item{...}{Passed to \code{\link[=mrgsim_d]{mrgsim_d()}}.}
 
-\item{.as_list}{if \code{TRUE} a list is return; otherwise (default) a data frame}
+\item{.as_list}{If \code{TRUE} a list is return; otherwise (default) a data frame}
 
-\item{.p}{post processing function executed on the worker; arguments should
-be (1) the simulated output (2) the model object}
+\item{.p}{Post processing function executed on the worker; arguments should
+be (1) the simulated output (2) the model object.}
 
-\item{.dry}{if \code{TRUE} neither the simulation nor the post processing will
-be done}
+\item{.dry}{If \code{TRUE} neither the simulation nor the post processing will
+be done.}
 
-\item{.seed}{passed to \link{future_lapply} as \code{future.seed}}
+\item{.seed}{Passed to \code{\link[=future_lapply]{future_lapply()}} as \code{future.seed}.}
 
 \item{.parallel}{if \code{FALSE}, the simulation will not be parallelized; this is
-intended for debugging and testing use only}
+intended for debugging and testing use only.}
 }
 \value{
-A data frame or list of simulated data
+A data frame or list of simulated data.
 }
 \description{
-Use \link{future_mrgsim_d} to simulate with the \code{future} package.  Use
-\link{mc_mrgsim_d} to simulate with \code{parallel::mclapply}.
+Use \code{\link[=future_mrgsim_d]{future_mrgsim_d()}} to simulate with the \code{future} package.  Use
+\code{\link[=mc_mrgsim_d]{mc_mrgsim_d()}} to simulate with \code{parallel::mclapply}.
 }
 \examples{
 
@@ -81,9 +81,9 @@ mod <- mrgsolve::house()
 
 data <- mrgsolve::expand.ev(amt = seq(10))
 
-out <- future_mrgsim_d(mod,data, nchunk = 2)
+out <- future_mrgsim_d(mod, data, nchunk = 2)
 
 }
 \seealso{
-\link{future_mrgsim_ei}
+\code{\link[=future_mrgsim_ei]{future_mrgsim_ei()}}
 }

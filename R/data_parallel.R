@@ -10,25 +10,26 @@
 
 #' Simulate a data set in parallel
 #'
-#' Use [future_mrgsim_d] to simulate with the `future` package.  Use
-#' [mc_mrgsim_d] to simulate with `parallel::mclapply`.
+#' Use [future_mrgsim_d()] to simulate with the `future` package.  Use
+#' [mc_mrgsim_d()] to simulate with `parallel::mclapply`.
 #'
-#' @param mod mrgsolve model object see [mrgsolve::mrgmod-class]
-#' @param data data set to simulate; see [mrgsolve::data_set]
-#' @param nchunk number of chunks in which to split the data set
-#' @param ... passed to [mrgsim_d]
-#' @param .as_list if `TRUE` a list is return; otherwise (default) a data frame
-#' @param .p post processing function executed on the worker; arguments should
-#' be (1) the simulated output (2) the model object
-#' @param .dry if `TRUE` neither the simulation nor the post processing will
-#' be done
-#' @param .seed passed to [future_lapply] as `future.seed`
+#' @param mod The mrgsolve model object see [mrgsolve::mrgmod-class].
+#' @param data Data set to simulate; see [mrgsolve::data_set()].
+#' @param nchunk Number of chunks in which to split the data set
+#' @param ... Passed to [mrgsim_d()].
+#' @param .as_list If `TRUE` a list is return; otherwise (default) a data frame
+#' @param .p Post processing function executed on the worker; arguments should
+#' be (1) the simulated output (2) the model object.
+#' @param .dry If `TRUE` neither the simulation nor the post processing will
+#' be done.
+#' @param .seed Passed to [future_lapply()] as `future.seed`.
 #' @param .parallel if `FALSE`, the simulation will not be parallelized; this is
-#' intended for debugging and testing use only
+#' intended for debugging and testing use only.
 #'
-#' @return A data frame or list of simulated data
+#' @return 
+#' A data frame or list of simulated data.
 #'
-#' @seealso [future_mrgsim_ei]
+#' @seealso [future_mrgsim_ei()]
 #'
 #' @examples
 #'
@@ -36,7 +37,7 @@
 #'
 #' data <- mrgsolve::expand.ev(amt = seq(10))
 #'
-#' out <- future_mrgsim_d(mod,data, nchunk = 2)
+#' out <- future_mrgsim_d(mod, data, nchunk = 2)
 #'
 #' @name parallel_mrgsim_d
 #' @export

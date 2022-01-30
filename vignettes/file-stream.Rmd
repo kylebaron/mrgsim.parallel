@@ -1,0 +1,497 @@
+---
+title: "File Stream Workflow"
+author: ""
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette: 
+    toc: true
+    number_sections: true
+    keep_md: true
+vignette: >
+  %\VignetteIndexEntry{File Stream Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+# Introduction 
+
+File streams are objects you can create to help in organizing larger simulations
+which are naturally broken in to a series of smaller simulations. One example
+is a set of replicate simulations which are performed as a part of 
+simulation-based model checking. Another example would be a large number of 
+doses which need to be evaluated in a population context. In this case, 
+one _very_ large data set is assembled and then broken into `chunks` to be 
+simulated in parallel. In both cases, it is assumed that the outputs (and maybe
+the inputs) are very large and would benefit from an extra layer of 
+organization, including a consideration of how the simulations are stored on 
+disk and accessed at a later time.
+
+The emphasis in these use cases is better management of very large simulation
+outputs. However, given this is a package vignette, we will illustrate the 
+setup and implementation with problems of a (much) smaller scale. 
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(comment = '.')
+has_arrow <- requireNamespace("arrow")
+```
+
+# File stream basics
+
+
+```{r, results = "hide", message = FALSE, warning = FALSE}
+library(dplyr)
+library(mrgsim.parallel)
+```
+
+In the simplest use case, we might want to simulate some large number of 
+replicates. We can start to manage this simulation by creating a file 
+stream
+
+```{r}
+x <- new_stream(10)
+```
+
+This creates a file stream, which is just a list with one position representing
+each replicate that we want to do
+
+```{r}
+length(x)
+```
+
+Each slot holds another list containing information for the `ith` replicate. 
+Looking at replicate 5 we have
+
+```{r}
+x[[5]]
+```
+
+There are three named positions
+
+1. `i` the replicate number
+1. `file` the stem of the output file for this replicate
+1. `x` the data payload for this replicate; in this case it is just `i`
+
+The stem of the output file is named with the current replicate number (`05`) 
+and the total number of replicates in the set (`10`).  The file stem will always 
+be configured to have the format `n` of `N`; but can be customized with a 
+prefix or to use a different separator character (see below).
+
+If we had a model and data set to be simulated in replicate
+
+```{r}
+mod <- house(rtol = 1e-4, outvars = "DV")
+
+data <- expand.ev(amt = 100, ID = 10)
+```
+
+we could use the file stream object to structure the simulation
+
+```{r}
+out <- lapply(x, function(fs) {
+  mrgsim(mod, data) %>% mutate(i = fs$i)
+}) %>% bind_rows()
+```
+
+We have used the replicate number (`fs$i`) to tag the output of the simulation.
+This is a simple example to get started on the basic idea. We could have easily
+done the same simulation by calling
+
+```{r, eval = FALSE}
+out <- lapply(1:10, function(i) {
+  mrgsim(mod, data) %>% mutate(i = i)
+}) %>% bind_rows()
+```
+It would give identical results and using the file stream would have been 
+overkill. So let's use the file stream object to help us save these simulations
+to a file in an efficient and organized way. 
+
+# Use file stream to create a data set on disk
+
+To do this we'll add two arguments to the call to `new_stream()`
+
+1. `locker` a directory that is reserved for this set of simulation output (only)
+1. `format` the output format for saving the files
+
+```{r}
+locker <- file.path(tempdir(), "replicate1")
+
+x <- new_stream(10, locker = locker, format = "fst")
+```
+
+Since this is a package vignette, we are saving the outputs to `tempdir()`, not
+something that we'd recommend in production work, where simulations should
+be saved locally. We also specified `format` to be `fst`, which uses the package
+of the same name to save the data in an efficient format.
+
+Now let's look at the object for the 5th replicate
+
+```{r}
+x[[5]]
+```
+
+We still have `i` (the replicate number). But now `file` is populated with 
+a complete path to the output file. What can't be seen here is that 
+the `replicate` directory has been created
+
+```{r}
+dir.exists(dirname(x[[5]]$file))
+```
+When the file stream was created, so was the directory where the files would
+be saved. Details about the storage `locker` are provided below.
+
+Also notice that the object has a new attribute
+
+```{r}
+class(x[[5]])
+```
+
+This indicates that the file 
+```{r}
+basename(x[[5]]$file)
+```
+
+will be saved in `fst` format when the time comes. `fst` a very efficient format
+for storing data frames in R; but you can choose other formats, like `feather`
+(also for data frames) or `qs` or `rds` for saving any R object. 
+
+To save the `ith` replicate to its pre-defined file location, we call the 
+function `write_stream()` inside our simulation loop
+
+```{r}
+out <- lapply(x, function(fs) {
+  ans <- mrgsim(mod, data) %>% mutate(i = fs$i)
+  write_stream(fs, ans)
+  return(fs$file)
+})
+```
+
+Notice in the previous that we didn't return the data; that's part of the 
+strategy where we write the data to disk rather than return a potentially 
+massive amount of data that could easily swamp our R session. But we did return 
+the `location` of each file that we wrote out
+
+```{r}
+out[1:3]
+```
+
+This makes it easy to read the data back in 
+
+```{r, results = "hide", message = FALSE, warning = FALSE}
+library(fst)
+sims <- lapply(out, read_fst) 
+head(sims[[8]])
+```
+
+
+`mrgsim.parallel` provides a helper function for reading in a set 
+of `fst` files
+
+```{r}
+sims <- internalize_fst(locker)
+str(sims)
+```
+
+By default, `internalize_fst` returns a single data frame with all 
+of your simulations. You can also run a head of the file set
+
+```{r}
+head_fst(locker, n = 8)
+```
+
+Or get a list of the files
+```{r}
+fst <- list_fst(locker)
+fst[2]
+```
+
+
+
+# Alternate (better) file formats
+
+`fst` is an excellent file format and very fast to read and write. But notice
+with the `internalize_fst()` call, we are still reading in all the data back 
+into the R session. We don't _have_ to do that; we could have just read 
+the first 5 files
+
+```{r}
+sims <- list_fst(locker)[1:5] %>% lapply(read_fst) %>% bind_rows()
+```
+
+But we want better value for the price that was paid to write the outputs
+to disk. 
+
+This is where the `arrow` package comes in. Apache Arrow is "a cross-language
+development platform for in-memory data."  Basically, you can have a 
+huge amount of data on disk in an arrow data set and work with it as if 
+it is loaded in memory. 
+
+The following examples will only be run if the arrow package is installed 
+when this vignette is built. 
+
+First, re-create the file stream with format `feather`
+
+```{r, eval = has_arrow}
+x <- new_stream(10, format = "feather", locker = locker)
+```
+
+Now, the files are ready to be stored in feather format
+
+```{r, eval = has_arrow}
+basename(x[[5]]$file)
+class(x[[5]])
+```
+
+and when we re-run the simulation, we'll have a set of `feather` files
+rather than `fst` files
+
+```{r, eval = has_arrow}
+out <- lapply(x, function(fs) {
+  ans <- mrgsim(mod, data) %>% mutate(i = fs$i)
+  write_stream(fs, ans)
+  return(fs$file)
+})
+```
+Notice that there is no change to the simulation code; we still call 
+`write_stream()` and because `fs[[i]]` is set up with `feather` output, 
+we get that method when writing.
+
+Now we don't need a helper function to read the files; we'll use 
+`arrow::open_dataset()` 
+
+```{r, eval = has_arrow, results = "hide", message = FALSE, warning = FALSE}
+library(arrow)
+
+ds <- arrow::open_dataset(locker, format = "feather")
+```
+
+This `ds` object is a pointer to the data; it hasn't actually been loaded
+but we can take a peek at it
+
+```{r, eval = has_arrow}
+head(ds)
+```
+
+
+Once we have the data set open, we can `filter` and `select` the rows 
+and columns that we want, and then call `as_tibble()` to collect the results
+
+```{r, eval = has_arrow}
+sims <- filter(ds, time > 12, i < 5) %>% as_tibble()
+```
+
+Now we have only the part of the simulated data that we need to work with 
+right now
+
+```{r, eval = has_arrow}
+head(sims)
+dim(sims)
+```
+
+# Manipulating file streams
+
+In the most basic example, we created a file stream like this
+
+```{r}
+x <- new_stream(10)
+```
+
+Once the file stream is created, we can indicate the output format after the 
+fact
+
+```{r}
+x <- format_stream(x, "fst")
+```
+
+This will put the proper class on the `file_stream` object and set the 
+file extension
+
+```{r}
+x[[3]]$file
+class(x[[3]])
+```
+
+There are also functions for adding an output file path
+
+```{r}
+x <- locate_stream(x, locker)
+x[[2]]$file
+```
+
+`locate_stream()` comes with an argument called `initialize` which can be used
+to initialize the locker space if it hasn't already been initialized or reset.
+
+Finally, you can  manipulate the file extension
+```{r}
+x <- ext_stream(x, "")
+x[[4]]$file
+```
+
+Here we just removed the file extension. If you are adding a file extension, 
+be sure to include the dot `(.)`.
+
+# Pass objects via file stream
+
+In the simple example, we just numbered each spot in the file stream 
+object. Passing a single number will create a sequence of that length
+
+```{r}
+x <- new_stream(100)
+```
+
+Otherwise, we can create a custom sequence
+
+```{r}
+x <- new_stream(seq(1, 100, 4))
+x[[2]]
+```
+
+If we have a large data set, we can chunk that up and pass that in. Illustrating
+with a toy example
+
+```{r}
+data <- expand.ev(amt = 100, ID = seq(10))
+head(data)
+```
+
+chunk the data frame into a list
+
+```{r}
+chunked <- chunk_by_row(data, nchunk = 5)
+```
+
+And then pass that in
+
+```{r}
+x <- new_stream(chunked)
+
+length(x)
+
+x[[3]]
+```
+
+Now he `x` position has only the "chunk" of data that we need for the current
+simulation; this prevents the entire data frame from getting passed to every 
+worker. 
+
+# The locker system
+
+There are important things to know about the locker system; this is what really 
+makes the arrow data sets work well. 
+
+When you first create a file stream with a `locker` location, you need to 
+specify a directory that does not exist; if the directory exists, you'll get 
+an error. 
+
+Once you create a locker space, that space is reserved for storing output 
+files and should __only__ be used for storing files that are saved using
+`write_stream()`. The locker space is marked by a hidden file that tells
+`mrgsim.parallel` that this is a locker space
+
+```{r}
+x <- new_stream(3, locker = locker)
+list.files(locker, all.files = TRUE)
+```
+
+Because this is a marked and reserved space, whenever the file stream is
+initiated, the locker space is __completely__ cleared of files. That is to say, 
+all the files in the locker space will be blown away at the time the file 
+stream is created or re-created. To say it another way, `new_stream()` called 
+with a locker creates the locker space the first time it is called and 
+__completely clears the space__ at any subsequent call with that locker name. 
+This is really important to remember that the process renews  / resets at the 
+time that `new_stream()` is called; it is equivalent to over writing existing
+files except that it happens in two steps: first all existing files are 
+removed and then new files are created. Thus, the locker world works mainly
+in terms of directories rather than files (although obviously files are also 
+involved). 
+
+
+__WHY?__ The reason for this is to be able to support arrow data sets. Using 
+`arrow::open_dataset(lockername)` is a very efficient way to access very large
+data stored on disk. In order for this to work, all of the files in the 
+directory must be contributing members of that data set. The only way to do this
+is to reset the data set space whenever the data set is re-written and that 
+happens at the time the file set is created. 
+
+
+## Safety considerations
+
+Two approached can be taken to secure existing simulations: create a saved "version" or make
+the locker not resettable. 
+
+### Versions
+
+To save a version of some simulations, call `version_locker()`
+
+```{r}
+y <- version_locker(locker, version = "v000")
+```
+
+This creates a new directory named according to the existing locker name, but with a "version"
+tag attached, and copies all the locker files to this new directory. So if the locker is named
+
+```{r}
+basename(locker)
+```
+
+then the version would be named
+
+```{r}
+basename(y)
+```
+
+See the help topic `?version_locker` for more options around this versioning process. New versions
+are not automatically incremented (e.g. "locker-001", "locker-002") by design. The intent behind the 
+locker system is to create a re-writable space. Versioning an existing locker is just a
+convenient way to stash existing simulations under a similar name. Note that you can also create
+a new version at your call to `new_stream()`
+
+```{r, eval = FALSE}
+x <- new_stream(100, locker = "existing/locker-v2")
+```
+
+Going forward, simulations will be saved to "version 2" of a locker location that already exists. 
+There is nothing special about this setup; just some creativity in naming output directories.
+
+Caution is advised: the locker system was created to save very large simulation outputs; by continuously 
+creating new versions, you could quickly overrun your disk space. This should be used with care. 
+
+### Prevent reset
+
+To prevent the locker from being reset, use `noreset_locker()`; this removes the hidden file
+designating the directory as a valid locker space and prevents it from being cleared.
+
+```{r, include = FALSE}
+unlink(locker, recursive = TRUE)
+```
+
+```{r}
+x <- new_stream(5, locker = locker)
+x <- new_stream(5, locker = locker)
+x <- new_stream(5, locker = locker)
+noreset_locker(locker)
+cat("foo", file = file.path(locker, 'foo.txt'))
+try(new_stream(5, locker = locker))
+list.files(locker)
+```
+
+```{r, include = FALSE}
+if(dir.exists(locker)) unlink(locker, recursive = TRUE)
+```
+
+If you _really_ want to be safe, you can disable the resetting of the locker
+space immediately after creating it
+
+```{r}
+x <- new_stream(5, locker = locker)
+noreset_locker(locker)
+```
+
+The next time you try to reset this particular locker space, you will be denied
+and an error will be generated. Only use this option when safety is your 
+number one priority; it will be inconvenient because you will always need to 
+manually clean up the locker space or generate new locations every time the 
+simulations are re-run.

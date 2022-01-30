@@ -14,7 +14,7 @@ e <- ev(amt = 100)
 idata <- expand.idata(CL = runif(36, 0.5, 1.5))
 idata2 <- expand.idata(CL = runif(40, 0.5, 1.5))
 
-test_that("chunk_data", {
+test_that("chunk data", {
   x <- chunk_by_id(data, nchunk = 5)
   expect_identical(length(x), 5L)
   
@@ -41,7 +41,7 @@ test_that("chunk_data", {
   
 })
 
-test_that("bad input", {
+test_that("chunk bad input", {
   expect_error(chunk_by_id(list(), 5))
   expect_error(chunk_by_id(matrix(0), 5))
   expect_error(chunk_by_id(data, 0))
@@ -90,12 +90,12 @@ test_that("sim with nchunk=1", {
   expect_identical(outa,outb)
 })
 
-test_that("dry run", {
+test_that("sim dry run", {
   expect_is(fu_mrgsim_d(mod,data,.dry = TRUE),"data.frame")
   expect_is(fu_mrgsim_ei(mod,e,idata,.dry = TRUE), "data.frame")
 })
 
-test_that("post processing function", {
+test_that("sim post processing function", {
   post <- function(sims,mod) {sims[,"post_add"] <- 1; sims}
   out1 <- fu_mrgsim_d(mod,data,nchunk=4)
   out2 <- fu_mrgsim_d(mod,data,nchunk=4,.p=post)
@@ -104,14 +104,14 @@ test_that("post processing function", {
   expect_true(all(out2[["post_add"]]==1))
 })
 
-test_that("pass in chunked data", {
+test_that("sim pass in chunked data", {
   ch <- chunk_by_id(data,4)
   out1 <- fu_mrgsim_d(mod,data, nchunk=4)
   out2 <- fu_mrgsim_d(mod,ch)
   expect_identical(out1,out2)
 })
 
-test_that("reproducible results", {
+test_that("sim reproducible results", {
   mod <- mrgsolve::modlib("popex", end = 6)
   data <- mrgsolve::expand.ev(amt = 100, ID = 1:4)
   set.seed(11223)

@@ -1,0 +1,42 @@
+file,context,test,nb,failed,skipped,error,warning,passed
+test-bg.R,background simulation,bg simulation has same result as fg,1,0,FALSE,FALSE,0,1
+test-bg.R,background simulation,"bg is same as fg, not chunked",1,0,FALSE,FALSE,0,1
+test-bg.R,background simulation,"bg is same as fg, chunked",1,0,FALSE,FALSE,0,1
+test-bg.R,background simulation,bg save results as fst,4,0,FALSE,FALSE,0,4
+test-bg.R,background simulation,bg error when saving to existing directory,1,0,FALSE,FALSE,0,1
+test-bg.R,background simulation,bg simulate parallel,2,0,FALSE,FALSE,0,2
+test-file-set.R,file set,generate file set list,3,0,FALSE,FALSE,0,3
+test-file-set.R,file set,generate file set names,3,0,FALSE,FALSE,0,3
+test-file-set.R,file set,create file stream,4,0,FALSE,FALSE,0,4
+test-fst.R,test-fst,save to fst,4,0,FALSE,FALSE,0,4
+test-locker.R,locker,set up locker,2,0,FALSE,FALSE,0,2
+test-locker.R,locker,reset locker,3,0,FALSE,FALSE,0,3
+test-locker.R,locker,warn if directory isn't empty on reset,1,0,FALSE,FALSE,0,1
+test-locker.R,locker,retire a locker,3,0,FALSE,FALSE,0,3
+test-locker.R,locker,version a locker,4,0,FALSE,FALSE,0,4
+test-mrgsim_ms.R,mrgsim ms,mrgsim after load,2,0,FALSE,FALSE,0,2
+test-parallel.R,basic functionality,chunk data,10,0,FALSE,FALSE,0,10
+test-parallel.R,basic functionality,chunk bad input,14,0,FALSE,FALSE,0,14
+test-parallel.R,basic functionality,sim data,4,0,FALSE,FALSE,0,4
+test-parallel.R,basic functionality,sim idata,4,0,FALSE,FALSE,0,4
+test-parallel.R,basic functionality,sim with nchunk=1,2,0,FALSE,FALSE,0,2
+test-parallel.R,basic functionality,sim dry run,2,0,FALSE,FALSE,0,2
+test-parallel.R,basic functionality,sim post processing function,3,0,FALSE,FALSE,0,3
+test-parallel.R,basic functionality,sim pass in chunked data,1,0,FALSE,FALSE,0,1
+test-parallel.R,basic functionality,sim reproducible results,2,0,FALSE,FALSE,0,2
+test-stream.R,test-stream,create new stream,5,0,FALSE,FALSE,0,5
+test-stream.R,test-stream,create new stream from list,6,0,FALSE,FALSE,0,6
+test-stream.R,test-stream,create new stream from character,6,0,FALSE,FALSE,0,6
+test-stream.R,test-stream,create new stream with ext,1,0,FALSE,FALSE,0,1
+test-stream.R,test-stream,add ext to stream ,1,0,FALSE,FALSE,0,1
+test-stream.R,test-stream,relocate stream ,1,0,FALSE,FALSE,0,1
+test-stream.R,test-stream,relocate and initialize stream,4,0,FALSE,FALSE,0,4
+test-stream.R,test-stream,create new stream with locker,4,0,FALSE,FALSE,0,4
+test-stream.R,test-stream,create new stream with locker and format,5,0,FALSE,FALSE,0,5
+test-stream.R,test-stream,add format to stream with locker,5,0,FALSE,FALSE,0,5
+test-stream.R,test-stream,add format to stream without locker,1,0,FALSE,FALSE,0,1
+test-stream.R,test-stream,writer function - rds,2,0,FALSE,FALSE,0,2
+test-stream.R,test-stream,writer function - fst,4,0,FALSE,FALSE,0,4
+test-stream.R,test-stream,writer function - qs,3,0,FALSE,FALSE,0,3
+test-stream.R,test-stream,writer function - feather,4,0,FALSE,FALSE,0,4
+test-stream.R,test-stream,writer function - default,1,0,FALSE,FALSE,0,1
