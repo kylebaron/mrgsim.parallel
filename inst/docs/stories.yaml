@@ -133,7 +133,6 @@ STREAM010:
     As a user, I want to automatically write simulated output in rds format.
   tests: 
   - writer function - rds
-  - writer function - default
 STREAM011: 
   summary: > 
     As a user, I want the locker space automatically reset whenever the file 

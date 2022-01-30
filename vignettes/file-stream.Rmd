@@ -168,14 +168,10 @@ out <- lapply(x, function(fs) {
 })
 ```
 
-Notice that we passed the `fs` object as the first argument to 
-`write_stream()`. This will dispatch to the method that writes `ans` out 
-in `fst` format. 
-
-Notice also that we didn't return the data; that's part of the strategy where
-we write the data to disk rather than return a potentially massive amount of 
-data that could easily swamp our R session. But we did return the `location`
-of each file that we wrote out
+Notice in the previous that we didn't return the data; that's part of the 
+strategy where we write the data to disk rather than return a potentially 
+massive amount of data that could easily swamp our R session. But we did return 
+the `location` of each file that we wrote out
 
 ```{r}
 out[1:3]
@@ -188,6 +184,7 @@ library(fst)
 sims <- lapply(out, read_fst) 
 head(sims[[8]])
 ```
+
 
 `mrgsim.parallel` provides a helper function for reading in a set 
 of `fst` files
@@ -209,6 +206,8 @@ Or get a list of the files
 fst <- list_fst(locker)
 fst[2]
 ```
+
+
 
 # Alternate (better) file formats
 

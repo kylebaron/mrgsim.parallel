@@ -11,7 +11,7 @@
 \usage{
 write_stream(x, ...)
 
-\method{write_stream}{default}(x, data, dir = NULL, ...)
+\method{write_stream}{default}(x, data, ...)
 
 \method{write_stream}{stream_format_fst}(x, data, dir = NULL, ...)
 
@@ -32,7 +32,7 @@ write_stream(x, ...)
 the \code{file} spot in \code{x}.}
 }
 \value{
-\code{NULL} is returned, invisibly.
+A logical value indiicating if the output was writen or not.
 }
 \description{
 This function will write out objects that have been assigned a format
@@ -40,9 +40,14 @@ with either \code{\link[=format_stream]{format_stream()}} or the \code{format} a
 See examples.
 }
 \details{
-The default method writes to \code{rds} using \code{\link[=saveRDS]{saveRDS()}} only if there is no file
-extension or the extension is \code{RDS} or \code{rds}. This default would be invoked
-if \code{write_stream} is called without setting the \code{format}.
+The default method always returns \code{FALSE}; other methods which get invoked
+if a \code{format} was set will return \code{TRUE}. So, the user can always call
+\code{write_stream()} and check the return value: if \code{TRUE}, the file was written
+to disk and the data to not need to be returned; a \code{FALSE} return value
+indicates that no format was set and the data should be returned.
+
+Note the write methods can be invoked directly for a specific format
+if no \code{format} was set (see examples).
 }
 \examples{
 ds <- temp_ds("example")

@@ -32,13 +32,18 @@ format (\code{fst}, \code{feather} (arrow), \code{qs} or \code{rds}).
 The format is set on the file objects inside the list so that the file
 object can be used to call a write method. See \code{\link[=write_stream]{write_stream()}}.
 }
+\details{
+Use \code{as_format_stream()} to format a
+}
 \examples{
 fs <- new_stream(2)
 fs <- format_stream(fs, "fst")
 fs[[1]]
 
+format_is_set(fs[[1]])  
+ 
 }
 \seealso{
-\code{\link[=locate_stream]{locate_stream()}}, \code{\link[=ext_stream]{ext_stream()}}, \code{\link[=new_stream]{new_stream()}}, \code{\link[=file_stream]{file_stream()}},
-\code{\link[=file_set]{file_set()}}
+\code{\link[=format_is_set]{format_is_set()}}, \code{\link[=locate_stream]{locate_stream()}}, \code{\link[=ext_stream]{ext_stream()}},
+\code{\link[=new_stream]{new_stream()}}, \code{\link[=file_stream]{file_stream()}}, \code{\link[=file_set]{file_set()}}
 }

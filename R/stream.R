@@ -1,6 +1,4 @@
-stream_types <- c("fst", "feather", "qs", "rds")
-stream_format_classes <- paste0("stream_format_", stream_types)
-names(stream_format_classes) <- stream_types
+
 
 re_set_ext <- function(x, ext) {
   x$file <- tools::file_path_sans_ext(x$file)
@@ -35,10 +33,64 @@ stream_add_object <- function(stream, object) {
   stream
 }
 
+#' Check if an object inherits from locker_stream
+#' 
+#' @param x An object. 
+#' 
+#' @return 
+#' Logical value indicating if `x` inherits from `locker_stream`.
+#' 
+#' @examples
+#' x <- new_stream(2, locker = temp_ds("locker-stream-example"))
+#' is.locker_stream(x)
+#' 
+#' @export
 is.locker_stream <- function(x) inherits(x, "locker_stream")
+#' Check if an object inherits from file_stream
+#' 
+#' @param x An object. 
+#' 
+#' @return 
+#' Logical value indicating if `x` inherits from `file_stream`.
+#' 
+#' @examples
+#' x <- new_stream(2)
+#' is.file_stream(x)
+#' 
+#' @export
 is.file_stream <- function(x) inherits(x, "file_stream")
+#' Check if an object is a file_set_item
+#' 
+#' @param x An object. 
+#' 
+#' @return 
+#' Logical value indicating if `x` has the `file_set_item` attribute set..
+#' 
+#' @examples
+#' x <- new_stream(2)
+#' is.file_set_item(x[[2]])
+#' 
+#' @export
 is.file_set_item <- function(x) !is.null(attr(x, "file_set_item", exact = TRUE))
-
+#' Check format status of file set item
+#' 
+#' This can be used to check if a file set item has been assigned an output 
+#' format (e.g. `fst`, `feather`, `qs` or `rds`). If the check returns 
+#' `FALSE` it would signal that data should be returned rather than calling
+#' [write_stream()].
+#' 
+#' @param x An object, usually a `file_set_item`. 
+#' 
+#' @return 
+#' Logical indicating if `x` inherits from one of the stream format classes. .
+#' 
+#' @export
+format_is_set <- function(x) {
+  inherits(x, .pkgenv$stream_format_classes)  
+}
+#' @rdname format_is_set
+#' @export
+is.stream_format <- format_is_set
 
 #' Create a stream of outputs and inputs
 #' 
@@ -75,6 +127,10 @@ is.file_set_item <- function(x) !is.null(attr(x, "file_set_item", exact = TRUE))
 #' data <- chunk_by_id(df, nchunk = 2)
 #' x <- new_stream(data)
 #' x[[2]]
+#' 
+#' format_is_set(x[[2]])
+#' x <- new_stream(3, format = "fst")
+#' format_is_set(x[[2]])
 #' 
 #' @seealso [format_stream()], [locate_stream()], [ext_stream()], [file_stream()], 
 #'          [file_set()]
@@ -118,6 +174,8 @@ new_stream.character <- function(x, ...) {
 #' The format is set on the file objects inside the list so that the file 
 #' object can be used to call a write method. See [write_stream()].
 #' 
+#' Use `as_format_stream()` to format a 
+#' 
 #' @param x A `file_stream` object.
 #' @param type The file format type; if `feather` is chosen, then a check will
 #' be made to ensure the `arrow` package is loaded. 
@@ -131,22 +189,25 @@ new_stream.character <- function(x, ...) {
 #' `x` is returned with a new class attribute reflecting the expected output
 #' format (`fst`, `feather` (arrow), `qs` or `rds`).
 #' 
-#' @seealso [locate_stream()], [ext_stream()], [new_stream()], [file_stream()], 
-#'          [file_set()]
+#' @seealso [format_is_set()], [locate_stream()], [ext_stream()], 
+#'          [new_stream()], [file_stream()], [file_set()]
 #' 
 #' @examples
 #' fs <- new_stream(2)
 #' fs <- format_stream(fs, "fst")
 #' fs[[1]]
 #' 
+#' format_is_set(fs[[1]])  
+#'  
 #' @export
 format_stream <- function(x, type = c("fst", "feather", "qs", "rds"), 
                           set_ext = TRUE, warn = FALSE) {
+
   if(!is.file_stream(x)) {
     stop("`x` must be a file_stream object.")  
   }
   type <- match.arg(type)
-  format <- stream_format_classes[type]
+  format <- .pkgenv$stream_format_classes[type]
   if(type=="feather") require_arrow()
   if(type=="qs") require_qs()
   clx <- class(x)
@@ -165,6 +226,7 @@ format_stream <- function(x, type = c("fst", "feather", "qs", "rds"),
   class(ans) <- clx
   ans
 }
+
 #' Set or change the directory for file_stream objects
 #' 
 #' Add or update the directory location for items in a `file_stream` object. 

@@ -55,6 +55,10 @@ data <- chunk_by_id(df, nchunk = 2)
 x <- new_stream(data)
 x[[2]]
 
+format_is_set(x[[2]])
+x <- new_stream(3, format = "fst")
+format_is_set(x[[2]])
+
 }
 \seealso{
 \code{\link[=format_stream]{format_stream()}}, \code{\link[=locate_stream]{locate_stream()}}, \code{\link[=ext_stream]{ext_stream()}}, \code{\link[=file_stream]{file_stream()}},
