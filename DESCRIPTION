@@ -12,7 +12,7 @@ Description: Simulation from an 'mrgsolve'
 License: GPL (>=2)
 Imports: parallel, dplyr, future, future.apply, callr, fst
 Depends: mrgsolve, R (>= 3.5.0)
-Suggests: testthat, arrow, qs, knitr
+Suggests: testthat, arrow, qs, knitr, rmarkdown
 Encoding: UTF-8
 URL: https://github.com/kylebaron/mrgsim.parallel
 BugReports: https://github.com/kylebaron/mrgsim.parallel/issues
