@@ -35,8 +35,8 @@ test-stream.R,test-stream,create new stream with locker,4,0,FALSE,FALSE,0,4
 test-stream.R,test-stream,create new stream with locker and format,5,0,FALSE,FALSE,0,5
 test-stream.R,test-stream,add format to stream with locker,5,0,FALSE,FALSE,0,5
 test-stream.R,test-stream,add format to stream without locker,1,0,FALSE,FALSE,0,1
-test-stream.R,test-stream,writer function - rds,1,0,FALSE,FALSE,0,1
-test-stream.R,test-stream,writer function - fst,3,0,FALSE,FALSE,0,3
-test-stream.R,test-stream,writer function - qs,2,0,FALSE,FALSE,0,2
-test-stream.R,test-stream,writer function - feather,3,0,FALSE,FALSE,0,3
-test-stream.R,test-stream,writer function - default,3,0,FALSE,FALSE,0,3
+test-stream.R,test-stream,writer function - rds,2,0,FALSE,FALSE,0,2
+test-stream.R,test-stream,writer function - fst,4,0,FALSE,FALSE,0,4
+test-stream.R,test-stream,writer function - qs,3,0,FALSE,FALSE,0,3
+test-stream.R,test-stream,writer function - feather,4,0,FALSE,FALSE,0,4
+test-stream.R,test-stream,writer function - default,1,0,FALSE,FALSE,0,1

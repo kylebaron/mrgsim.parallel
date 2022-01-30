@@ -74,15 +74,13 @@ STREAM006,"As a user, I want to be able to initialize output file locker space a
 STREAM006,"As a user, I want to be able to initialize output file locker space at the  time the file stream location is set or updated.
 ",create new stream with locker,test-stream.R,test-stream,4,0,FALSE,FALSE,0,4
 STREAM007,"As a user, I want to automatically write simulated output in fst format.
-",writer function - fst,test-stream.R,test-stream,3,0,FALSE,FALSE,0,3
+",writer function - fst,test-stream.R,test-stream,4,0,FALSE,FALSE,0,4
 STREAM008,"As a user, I want to automatically write simulated output in feather format.
-",writer function - feather,test-stream.R,test-stream,3,0,FALSE,FALSE,0,3
+",writer function - feather,test-stream.R,test-stream,4,0,FALSE,FALSE,0,4
 STREAM009,"As a user, I want to automatically write simulated output in qs format.
-",writer function - qs,test-stream.R,test-stream,2,0,FALSE,FALSE,0,2
+",writer function - qs,test-stream.R,test-stream,3,0,FALSE,FALSE,0,3
 STREAM010,"As a user, I want to automatically write simulated output in rds format.
-",writer function - rds,test-stream.R,test-stream,1,0,FALSE,FALSE,0,1
-STREAM010,"As a user, I want to automatically write simulated output in rds format.
-",writer function - default,test-stream.R,test-stream,3,0,FALSE,FALSE,0,3
+",writer function - rds,test-stream.R,test-stream,2,0,FALSE,FALSE,0,2
 STREAM011,"As a user, I want the locker space automatically reset whenever the file  stream is re-created with the same locker name.
 ",reset locker,test-locker.R,locker,3,0,FALSE,FALSE,0,3
 FST001,"As a user, I want to be able to internalize a set of output files in  a locker space when saved in fst format.
