@@ -70,6 +70,16 @@ test_that("chunk data by multiple cols", {
   expect_equal(length(chunked), 3)
   tot <- sum(vapply(chunked, nrow, 1L))
   expect_equal(tot, nrow(data))
+  
+  set.seed(98765)
+  nch <- 11
+  data <- expand.grid(A = 1:6, B = letters[3:10], C = LETTERS[12:14], D = 5)
+  data$N <- seq(nrow(data))
+  sp1 <- chunk_by_row(data, nchunk = nch)
+  sp2 <- chunk_by_cols(data, cols = c("A", "B", "C"), nchunk = nch)
+  x <- do.call(rbind, sp1)
+  y <- do.call(rbind, sp2)
+  expect_identical(x, y)
 })
 
 test_that("chunk bad input", {
