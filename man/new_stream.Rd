@@ -32,12 +32,9 @@ directory.}
 
 \item{nchunk}{The number of chunks.}
 
-\item{cols}{A character vector of columns to use for deriving \code{ID} to use
-for chunking.}
-
-\item{id_col}{The name of the column specifying unique IDs to use to split
-the \code{data.frame} into chunks; this assumes a unique subject ID across the
-entire data set.}
+\item{cols}{The name(s) of the column(s) specifying unique IDs to use to
+split the \code{data.frame} into chunks; this could be a unique \code{ID} or a
+combination of columns that when pasted together form a unique ID.}
 }
 \value{
 A list with the following elements:

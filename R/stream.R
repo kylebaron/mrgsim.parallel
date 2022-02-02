@@ -159,9 +159,9 @@ new_stream.list <- function(x, locker = NULL, format = NULL, ...) {
 }
 
 #' @inheritParams chunk_data_frame
-#' @param id_col The name of the column specifying unique IDs to use to split
-#' the `data.frame` into chunks; this assumes a unique subject ID across the 
-#' entire data set.
+#' @param cols The name(s) of the column(s) specifying unique IDs to use to 
+#' split the `data.frame` into chunks; this could be a unique `ID` or a 
+#' combination of columns that when pasted together form a unique ID.
 #' @rdname new_stream
 #' @export
 new_stream.data.frame <- function(x, nchunk, cols = "ID", locker = NULL, 

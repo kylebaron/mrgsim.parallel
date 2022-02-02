@@ -31,7 +31,7 @@ wrap_loadso <- function(mod,fun,...) {
 #' @examples
 #' x <- expand.grid(ID = 1:10, B = rev(1:10))
 #'
-#' chunk_by_id(x, 3)
+#' chunk_by_id(x, nchunk = 3)
 #'
 #' chunk_by_row(x, nchunk = 4)
 #'
@@ -57,7 +57,7 @@ chunk_by_id <- function(data,nchunk,id_col="ID",mark=NULL) {
     stop("nchunk must be <= number of IDs",call.=FALSE) 
   }
   nper <- ntot%/%nchunk
-  a <- rep(seq(nchunk), each = nper, length.out = ntot)
+  a <- sort(rep(seq(nchunk), each = nper, length.out = ntot))
   sp <- a[match(id,ids)]
   if(is.character(mark)) {
     data[[mark]] <- sp  
@@ -94,7 +94,7 @@ chunk_by_cols <- function(data,nchunk,cols,mark=NULL) {
     stop("nchunk must be <= number of unique values in `cols`",call.=FALSE) 
   }
   nper <- ntot%/%nchunk
-  a <- rep(seq(nchunk), each = nper, length.out = ntot)
+  a <- sort(rep(seq(nchunk), each = nper, length.out = ntot))
   sp <- a[match(id,ids)]
   if(is.character(mark)) {
     data[[mark]] <- sp  
@@ -119,7 +119,7 @@ chunk_by_row <- function(data,nchunk,mark=NULL) {
   }
   ntot <- nrow(data)
   nper <- ntot%/%nchunk
-  a <- rep(seq(nchunk), each = nper, length.out = ntot)
+  a <- sort(rep(seq(nchunk), each = nper, length.out = ntot))
   if(is.character(mark)) {
     data[[mark]] <- a    
   }

@@ -45,6 +45,12 @@ CHUNK002:
     by the row number. 
   tests: 
   - chunk data
+CHUNK003:
+  summary: >
+    As a user, I want to chunk a data frame into a list of smaller data frames
+    by the unique values found in multiple columns.
+  tests: 
+  - chunk data by multiple cols
 
 # LOCKER -----
 LOCKER001: 
