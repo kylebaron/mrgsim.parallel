@@ -5,8 +5,8 @@ test-bg.R,background simulation,"bg is same as fg, chunked",1,0,FALSE,FALSE,0,1
 test-bg.R,background simulation,bg save results as fst,4,0,FALSE,FALSE,0,4
 test-bg.R,background simulation,bg error when saving to existing directory,1,0,FALSE,FALSE,0,1
 test-bg.R,background simulation,bg simulate parallel,2,0,FALSE,FALSE,0,2
-test-chunk.R,chunk data sets,chunk data,10,0,FALSE,FALSE,0,10
-test-chunk.R,chunk data sets,chunk data by multiple cols,2,0,FALSE,FALSE,0,2
+test-chunk.R,chunk data sets,chunk data,13,0,FALSE,FALSE,0,13
+test-chunk.R,chunk data sets,chunk data by multiple cols,3,0,FALSE,FALSE,0,3
 test-chunk.R,chunk data sets,chunk bad input,14,0,FALSE,FALSE,0,14
 test-file-set.R,file set,generate file set list,3,0,FALSE,FALSE,0,3
 test-file-set.R,file set,generate file set names,3,0,FALSE,FALSE,0,3

@@ -99,9 +99,12 @@ is.stream_format <- format_is_set
 #' `locker` initiates a call to [setup_locker()], which sets up or resets
 #'  the output directories. 
 #'  
-#'  For the `data.frame` method, the data are chunked into a list by `id_col`.
-#'  This column is expected to be an `ID` that is unique across the data 
-#'  set.
+#'  For the `data.frame` method, the data are chunked into a list by columns 
+#'  listed in `cols`. Ideally, this is a singlel column that operates as 
+#'  a unique `ID` across the data set and is used by [chunk_by_id()] to 
+#'  form the chunks. Alternatively, `cols` can be multiple column names which 
+#'  are pasted together to form a unique `ID` that is used for splitting 
+#'  via [chunk_by_cols()].
 #' 
 #' @param x A list or vector to template the stream; for the `numeric` method, 
 #' passing a single number will fill `x` with a sequence of that length.
@@ -128,11 +131,11 @@ is.stream_format <- format_is_set
 #' new_stream(2, locker = file.path(tempdir(), "foo"))
 #' 
 #' df <- data.frame(ID = c(1,2,3,4))
-#' data <- chunk_by_id(df, nchunk = 2)
-#' x <- new_stream(data)
+#' x <- new_stream(df, nchunk = 2)
 #' x[[2]]
 #' 
 #' format_is_set(x[[2]])
+#' 
 #' x <- new_stream(3, format = "fst")
 #' format_is_set(x[[2]])
 #' 

@@ -53,9 +53,12 @@ replicate numbers and possibly input objects for a simulation. Passing
 \code{locker} initiates a call to \code{\link[=setup_locker]{setup_locker()}}, which sets up or resets
 the output directories.
 
-For the \code{data.frame} method, the data are chunked into a list by \code{id_col}.
-This column is expected to be an \code{ID} that is unique across the data
-set.
+For the \code{data.frame} method, the data are chunked into a list by columns
+listed in \code{cols}. Ideally, this is a singlel column that operates as
+a unique \code{ID} across the data set and is used by \code{\link[=chunk_by_id]{chunk_by_id()}} to
+form the chunks. Alternatively, \code{cols} can be multiple column names which
+are pasted together to form a unique \code{ID} that is used for splitting
+via \code{\link[=chunk_by_cols]{chunk_by_cols()}}.
 }
 \examples{
 x <- new_stream(3)
@@ -64,11 +67,11 @@ x[[1]]
 new_stream(2, locker = file.path(tempdir(), "foo"))
 
 df <- data.frame(ID = c(1,2,3,4))
-data <- chunk_by_id(df, nchunk = 2)
-x <- new_stream(data)
+x <- new_stream(df, nchunk = 2)
 x[[2]]
 
 format_is_set(x[[2]])
+
 x <- new_stream(3, format = "fst")
 format_is_set(x[[2]])
 
