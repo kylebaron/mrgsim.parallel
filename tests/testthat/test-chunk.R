@@ -37,6 +37,30 @@ test_that("chunk data", {
   x <- chunk_by_row(idata2, nchunk = 2, mark = "test")
   expect_true(exists("test", x[[2]]))
   expect_true(all(x[[2]]["test"]==2))
+  
+  set.seed(12345)
+  sam <- seq(10)
+  nch <- 7
+  ltrs <- sample(letters)
+  ids <- unlist(sapply(ltrs, function(x) rep(x, each = sample(sam, 1))))
+  data <- data.frame(ID = ids, stringsAsFactors = FALSE, row.names = NULL)
+  spl <- chunk_by_id(data, nchunk = nch)
+  data2 <- as.data.frame(do.call(rbind, spl))
+  rownames(data2) <- NULL
+  expect_equal(data, data2)
+  
+  set.seed(36912)
+  ltrs <- sample(letters)
+  ech <- 5
+  nch <- 13
+  ids <- rep(sample(ltrs), each = ech)
+  data <- data.frame(ID = ids, stringsAsFactors = FALSE, row.names = NULL)
+  spl <- chunk_by_id(data, nchunk = nch)
+  uni <- unique(vapply(spl, nrow, 1L))
+  expect_equal(uni, ech*length(ltrs)/nch)
+  data2 <- as.data.frame(do.call(rbind, spl))
+  rownames(data2) <- NULL
+  expect_equal(data, data2)
 })
 
 test_that("chunk data by multiple cols", {

@@ -37,7 +37,7 @@ Use \link{chunk_by_id} to split up a data set by the \code{ID} column; use
 \examples{
 x <- expand.grid(ID = 1:10, B = rev(1:10))
 
-chunk_by_id(x, 3)
+chunk_by_id(x, nchunk = 3)
 
 chunk_by_row(x, nchunk = 4)
 
