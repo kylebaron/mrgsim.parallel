@@ -56,7 +56,7 @@ chunk_by_id <- function(data,nchunk,id_col="ID",mark=NULL) {
   if(!(nchunk <= ntot)) {
     stop("nchunk must be <= number of IDs",call.=FALSE) 
   }
-  nper <- ceiling(ntot/nchunk)
+  nper <- ntot%/%nchunk
   a <- rep(seq(nchunk), each = nper, length.out = ntot)
   sp <- a[match(id,ids)]
   if(is.character(mark)) {
@@ -93,7 +93,7 @@ chunk_by_cols <- function(data,nchunk,cols,mark=NULL) {
   if(!(nchunk <= ntot)) {
     stop("nchunk must be <= number of unique values in `cols`",call.=FALSE) 
   }
-  nper <- ceiling(ntot/nchunk)
+  nper <- ntot%/%nchunk
   a <- rep(seq(nchunk), each = nper, length.out = ntot)
   sp <- a[match(id,ids)]
   if(is.character(mark)) {
@@ -118,7 +118,7 @@ chunk_by_row <- function(data,nchunk,mark=NULL) {
     stop("nchunk must be <= nrow(data)",call.=FALSE) 
   }
   ntot <- nrow(data)
-  nper <- ceiling(ntot/nchunk)
+  nper <- ntot%/%nchunk
   a <- rep(seq(nchunk), each = nper, length.out = ntot)
   if(is.character(mark)) {
     data[[mark]] <- a    

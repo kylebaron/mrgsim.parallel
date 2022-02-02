@@ -115,6 +115,12 @@ To do this we'll add two arguments to the call to `new_stream()`
 1. `locker` a directory that is reserved for this set of simulation output (only)
 1. `format` the output format for saving the files
 
+```{r, include = FALSE}
+locker <- file.path(tempdir(), "replicate1")
+if(dir.exists(locker)) unlink(locker, recursive = TRUE)
+```
+
+
 ```{r}
 locker <- file.path(tempdir(), "replicate1")
 
@@ -426,6 +432,12 @@ the locker not resettable.
 
 To save a version of some simulations, call `version_locker()`
 
+```{r, include = FALSE}
+new_locker <- paste0(locker, "-v000")
+if(dir.exists(new_locker)) unlink(new_locker, recursive = TRUE)
+```
+
+
 ```{r}
 y <- version_locker(locker, version = "v000")
 ```
@@ -474,8 +486,8 @@ x <- new_stream(5, locker = locker)
 x <- new_stream(5, locker = locker)
 noreset_locker(locker)
 cat("foo", file = file.path(locker, 'foo.txt'))
-try(new_stream(5, locker = locker))
-list.files(locker)
+# new_stream(5, locker = locker)
+# list.files(locker)
 ```
 
 ```{r, include = FALSE}

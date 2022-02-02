@@ -30,7 +30,7 @@ test_that("chunk data", {
   expect_true(all(x[[3]]["test"]==3))
   
   x <- chunk_by_row(idata, nchunk = 10)
-  expect_identical(length(x), 9L)
+  expect_identical(length(x), 10L)
   
   x <- chunk_by_row(idata2, nchunk = 10)
   expect_identical(length(x), 10L)
@@ -38,7 +38,6 @@ test_that("chunk data", {
   x <- chunk_by_row(idata2, nchunk = 2, mark = "test")
   expect_true(exists("test", x[[2]]))
   expect_true(all(x[[2]]["test"]==2))
-  
 })
 
 test_that("chunk data by multiple cols", {
