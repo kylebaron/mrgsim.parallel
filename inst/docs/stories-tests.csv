@@ -1,20 +1,20 @@
 STID,STORY,test,file,context,nb,failed,skipped,error,warning,passed
 SIM001,"As a user, I want to simulate a data set in parallel.
-",sim data,test-parallel.R,basic functionality,4,0,FALSE,FALSE,0,4
+",sim data,test-parallel.R,parallel simulation,4,0,FALSE,FALSE,0,4
 SIM001,"As a user, I want to simulate a data set in parallel.
-",sim with nchunk=1,test-parallel.R,basic functionality,2,0,FALSE,FALSE,0,2
+",sim with nchunk=1,test-parallel.R,parallel simulation,2,0,FALSE,FALSE,0,2
 SIM001,"As a user, I want to simulate a data set in parallel.
-",sim dry run,test-parallel.R,basic functionality,2,0,FALSE,FALSE,0,2
+",sim dry run,test-parallel.R,parallel simulation,2,0,FALSE,FALSE,0,2
 SIM001,"As a user, I want to simulate a data set in parallel.
-",sim post processing function,test-parallel.R,basic functionality,3,0,FALSE,FALSE,0,3
+",sim post processing function,test-parallel.R,parallel simulation,3,0,FALSE,FALSE,0,3
 SIM001,"As a user, I want to simulate a data set in parallel.
-",sim pass in chunked data,test-parallel.R,basic functionality,1,0,FALSE,FALSE,0,1
+",sim pass in chunked data,test-parallel.R,parallel simulation,1,0,FALSE,FALSE,0,1
 SIM001,"As a user, I want to simulate a data set in parallel.
-",sim reproducible results,test-parallel.R,basic functionality,2,0,FALSE,FALSE,0,2
+",sim reproducible results,test-parallel.R,parallel simulation,2,0,FALSE,FALSE,0,2
 SIM002,"As a user, I want to simulate and idata set + event object in parallel.
-",sim idata,test-parallel.R,basic functionality,4,0,FALSE,FALSE,0,4
+",sim idata,test-parallel.R,parallel simulation,4,0,FALSE,FALSE,0,4
 SIM002,"As a user, I want to simulate and idata set + event object in parallel.
-",sim with nchunk=1,test-parallel.R,basic functionality,2,0,FALSE,FALSE,0,2
+",sim with nchunk=1,test-parallel.R,parallel simulation,2,0,FALSE,FALSE,0,2
 SIM003,"As a user, I want to simulate a data frame in a background R process.
 ",bg simulation has same result as fg,test-bg.R,background simulation,1,0,FALSE,FALSE,0,1
 SIM003,"As a user, I want to simulate a data frame in a background R process.
@@ -28,11 +28,13 @@ SIM003,"As a user, I want to simulate a data frame in a background R process.
 SIM004,"As a user, I want to simulate a data frame in parallel in a background R process.
 ",bg simulate parallel,test-bg.R,background simulation,2,0,FALSE,FALSE,0,2
 CHUNK001,"As a user, I want to chunk a data frame into a list of smaller data frames by the row number. 
-",chunk data,test-parallel.R,basic functionality,10,0,FALSE,FALSE,0,10
+",chunk data,test-chunk.R,chunk data sets,10,0,FALSE,FALSE,0,10
 CHUNK001,"As a user, I want to chunk a data frame into a list of smaller data frames by the row number. 
-",chunk bad input,test-parallel.R,basic functionality,14,0,FALSE,FALSE,0,14
+",chunk bad input,test-chunk.R,chunk data sets,14,0,FALSE,FALSE,0,14
 CHUNK002,"As a user, I want to chunk a data frame into a list of smaller data frames by the row number. 
-",chunk data,test-parallel.R,basic functionality,10,0,FALSE,FALSE,0,10
+",chunk data,test-chunk.R,chunk data sets,10,0,FALSE,FALSE,0,10
+CHUNK003,"As a user, I want to chunk a data frame into a list of smaller data frames by the unique values found in multiple columns.
+",chunk data by multiple cols,test-chunk.R,chunk data sets,2,0,FALSE,FALSE,0,2
 LOCKER001,"As a user, I want to set up a directory that is dedicated for storing a  single set of output files from a single simulation.
 ",set up locker,test-locker.R,locker,2,0,FALSE,FALSE,0,2
 LOCKER001,"As a user, I want to set up a directory that is dedicated for storing a  single set of output files from a single simulation.
@@ -83,6 +85,8 @@ STREAM010,"As a user, I want to automatically write simulated output in rds form
 ",writer function - rds,test-stream.R,test-stream,2,0,FALSE,FALSE,0,2
 STREAM011,"As a user, I want the locker space automatically reset whenever the file  stream is re-created with the same locker name.
 ",reset locker,test-locker.R,locker,3,0,FALSE,FALSE,0,3
+STREAM012,"As a user, I want to be able to template an output file stream based on a data frame to be chunked to list.
+",create new stream from data.frame,test-stream.R,test-stream,8,0,FALSE,FALSE,0,8
 FST001,"As a user, I want to be able to internalize a set of output files in  a locker space when saved in fst format.
 ",save to fst,test-fst.R,test-fst,4,0,FALSE,FALSE,0,4
 FST001,"As a user, I want to be able to internalize a set of output files in  a locker space when saved in fst format.
