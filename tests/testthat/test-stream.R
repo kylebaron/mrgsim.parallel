@@ -22,6 +22,24 @@ test_that("create new stream from list", {
   expect_equal(x[[1]]$file, "1-3")
 })
 
+test_that("create new stream from data.frame", {
+  a <- expand.grid(ID = 1:50, B = c(2,3))
+  a$ID <- seq(nrow(a))
+  x <- new_stream(a, 5)
+  expect_equal(length(x), 5)
+  expect_is(x[[4]]$x, "data.frame")
+  expect_equal(nrow(x[[4]]$x), 20)
+  expect_is(x, "file_stream")
+  expect_is(x, "list")  
+  expect_is(x[[1]], "list")
+  expect_equal(x[[1]]$file, "1-5")
+  expect_error(
+    new_stream(a, 101),
+    regexp="`x` must have >= `nchunk` rows", 
+    fixed = TRUE
+  )
+})
+
 test_that("create new stream from character", {
   x <- new_stream(letters[1:5])
   expect_equal(length(x), 5)

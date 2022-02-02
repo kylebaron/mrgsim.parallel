@@ -139,7 +139,12 @@ STREAM011:
     stream is re-created with the same locker name.
   tests: 
   - reset locker  
-
+STREAM012: 
+  summary: > 
+    As a user, I want to be able to template an output file stream based on a
+    data frame to be chunked to list.
+  tests: 
+  - create new stream from data.frame
 # FST FILES -----
 FST001: 
   summary: > 

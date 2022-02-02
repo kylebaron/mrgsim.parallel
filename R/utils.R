@@ -16,14 +16,17 @@ wrap_loadso <- function(mod,fun,...) {
 #' Use [chunk_by_id] to split up a data set by the `ID` column; use
 #' [chunk_by_row] split a data set by rows.
 #'
-#' @param data a data frame
-#' @param nchunk number of chunks
-#' @param id_col character specifying the column containing the `ID` for
-#' chunking
-#' @param mark when populated as a character label, adds a column to the 
-#' chunked data frames with that name and with value the integer group number
+#' @param data A data frame.
+#' @param nchunk The number of chunks.
+#' @param id_col Character name specifying the column containing the `ID` for
+#' chunking. 
+#' @param cols A character vector of columns to use for deriving `ID` to use 
+#' for chunking.
+#' @param mark When populated as a character label, adds a column to the 
+#' chunked data frames with that name and with value the integer group number.
 #'
-#' @return A list of data frames
+#' @return 
+#' A list of data frames.
 #'
 #' @examples
 #' x <- expand.grid(ID = 1:10, B = rev(1:10))
@@ -52,6 +55,43 @@ chunk_by_id <- function(data,nchunk,id_col="ID",mark=NULL) {
   ntot <- length(ids)
   if(!(nchunk <= ntot)) {
     stop("nchunk must be <= number of IDs",call.=FALSE) 
+  }
+  nper <- ceiling(ntot/nchunk)
+  a <- rep(seq(nchunk), each = nper, length.out = ntot)
+  sp <- a[match(id,ids)]
+  if(is.character(mark)) {
+    data[[mark]] <- sp  
+  }
+  split.data.frame(data, sp)
+}
+#' @rdname chunk_data_frame
+#' @export
+chunk_by_cols <- function(data,nchunk,cols,mark=NULL) {
+  if(!is.character(cols)) {
+    stop("`cols` must be character.")  
+  }
+  if(length(cols)==1) {
+    return(chunk_by_id(data,nchunk,id_col=cols,mark=mark))  
+  }
+  if(!is.data.frame(data)) {
+    stop("data argument must be a data.frame",call.=FALSE)  
+  }
+  for(col in cols) {
+    if(!exists(col,data)) {
+      stop(sprintf("chunking column %s does not exist in data", col),call.=FALSE)  
+    }  
+  }
+  if(!is.numeric(nchunk)) {
+    stop("nchunk must be numeric",call.=FALSE)  
+  }
+  if(!(nchunk > 0)) {
+    stop("nchunk must be greater than zero",call.=FALSE)  
+  }
+  id <- do.call(paste0, c(data[,cols,drop=FALSE], sep = " "))
+  ids <- unique(id)
+  ntot <- length(ids)
+  if(!(nchunk <= ntot)) {
+    stop("nchunk must be <= number of unique values in `cols`",call.=FALSE) 
   }
   nper <- ceiling(ntot/nchunk)
   a <- rep(seq(nchunk), each = nper, length.out = ntot)

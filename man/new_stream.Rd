@@ -3,6 +3,7 @@
 \name{new_stream}
 \alias{new_stream}
 \alias{new_stream.list}
+\alias{new_stream.data.frame}
 \alias{new_stream.numeric}
 \alias{new_stream.character}
 \title{Create a stream of outputs and inputs}
@@ -10,6 +11,8 @@
 new_stream(x, ...)
 
 \method{new_stream}{list}(x, locker = NULL, format = NULL, ...)
+
+\method{new_stream}{data.frame}(x, nchunk, cols = "ID", locker = NULL, format = NULL, ...)
 
 \method{new_stream}{numeric}(x, ...)
 
@@ -26,6 +29,15 @@ directory will be unlinked if it exists and is an established locker
 directory.}
 
 \item{format}{Passed to \code{\link[=format_stream]{format_stream()}}.}
+
+\item{nchunk}{The number of chunks.}
+
+\item{cols}{A character vector of columns to use for deriving \code{ID} to use
+for chunking.}
+
+\item{id_col}{The name of the column specifying unique IDs to use to split
+the \code{data.frame} into chunks; this assumes a unique subject ID across the
+entire data set.}
 }
 \value{
 A list with the following elements:
@@ -43,6 +55,10 @@ By stream we mean a list that pre-specifies the output file names,
 replicate numbers and possibly input objects for a simulation. Passing
 \code{locker} initiates a call to \code{\link[=setup_locker]{setup_locker()}}, which sets up or resets
 the output directories.
+
+For the \code{data.frame} method, the data are chunked into a list by \code{id_col}.
+This column is expected to be an \code{ID} that is unique across the data
+set.
 }
 \examples{
 x <- new_stream(3)
