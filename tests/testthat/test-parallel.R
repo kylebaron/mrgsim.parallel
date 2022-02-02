@@ -41,6 +41,13 @@ test_that("chunk data", {
   
 })
 
+test_that("chunk data by multiple cols", {
+  data <- data.frame(a = c(rep("a", 3), rep("b", 4)), 
+                     b = c(rep("a", 4), rep("b", 2), "c"))
+  chunked <- chunk_by_cols(data, nchunk = 3, cols = c("a", "b"))
+  expect_equal(length(chunked), 3)
+})
+
 test_that("chunk bad input", {
   expect_error(chunk_by_id(list(), 5))
   expect_error(chunk_by_id(matrix(0), 5))
