@@ -5,6 +5,9 @@ test-bg.R,background simulation,"bg is same as fg, chunked",1,0,FALSE,FALSE,0,1
 test-bg.R,background simulation,bg save results as fst,4,0,FALSE,FALSE,0,4
 test-bg.R,background simulation,bg error when saving to existing directory,1,0,FALSE,FALSE,0,1
 test-bg.R,background simulation,bg simulate parallel,2,0,FALSE,FALSE,0,2
+test-chunk.R,chunk data sets,chunk data,13,0,FALSE,FALSE,0,13
+test-chunk.R,chunk data sets,chunk data by multiple cols,3,0,FALSE,FALSE,0,3
+test-chunk.R,chunk data sets,chunk bad input,14,0,FALSE,FALSE,0,14
 test-file-set.R,file set,generate file set list,3,0,FALSE,FALSE,0,3
 test-file-set.R,file set,generate file set names,3,0,FALSE,FALSE,0,3
 test-file-set.R,file set,create file stream,4,0,FALSE,FALSE,0,4
@@ -15,17 +18,16 @@ test-locker.R,locker,warn if directory isn't empty on reset,1,0,FALSE,FALSE,0,1
 test-locker.R,locker,retire a locker,3,0,FALSE,FALSE,0,3
 test-locker.R,locker,version a locker,4,0,FALSE,FALSE,0,4
 test-mrgsim_ms.R,mrgsim ms,mrgsim after load,2,0,FALSE,FALSE,0,2
-test-parallel.R,basic functionality,chunk data,10,0,FALSE,FALSE,0,10
-test-parallel.R,basic functionality,chunk bad input,14,0,FALSE,FALSE,0,14
-test-parallel.R,basic functionality,sim data,4,0,FALSE,FALSE,0,4
-test-parallel.R,basic functionality,sim idata,4,0,FALSE,FALSE,0,4
-test-parallel.R,basic functionality,sim with nchunk=1,2,0,FALSE,FALSE,0,2
-test-parallel.R,basic functionality,sim dry run,2,0,FALSE,FALSE,0,2
-test-parallel.R,basic functionality,sim post processing function,3,0,FALSE,FALSE,0,3
-test-parallel.R,basic functionality,sim pass in chunked data,1,0,FALSE,FALSE,0,1
-test-parallel.R,basic functionality,sim reproducible results,2,0,FALSE,FALSE,0,2
+test-parallel.R,parallel simulation,sim data,4,0,FALSE,FALSE,0,4
+test-parallel.R,parallel simulation,sim idata,4,0,FALSE,FALSE,0,4
+test-parallel.R,parallel simulation,sim with nchunk=1,2,0,FALSE,FALSE,0,2
+test-parallel.R,parallel simulation,sim dry run,2,0,FALSE,FALSE,0,2
+test-parallel.R,parallel simulation,sim post processing function,3,0,FALSE,FALSE,0,3
+test-parallel.R,parallel simulation,sim pass in chunked data,1,0,FALSE,FALSE,0,1
+test-parallel.R,parallel simulation,sim reproducible results,2,0,FALSE,FALSE,0,2
 test-stream.R,test-stream,create new stream,5,0,FALSE,FALSE,0,5
 test-stream.R,test-stream,create new stream from list,6,0,FALSE,FALSE,0,6
+test-stream.R,test-stream,create new stream from data.frame,8,0,FALSE,FALSE,0,8
 test-stream.R,test-stream,create new stream from character,6,0,FALSE,FALSE,0,6
 test-stream.R,test-stream,create new stream with ext,1,0,FALSE,FALSE,0,1
 test-stream.R,test-stream,add ext to stream ,1,0,FALSE,FALSE,0,1

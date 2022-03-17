@@ -98,6 +98,13 @@ is.stream_format <- format_is_set
 #' replicate numbers and possibly input objects for a simulation. Passing 
 #' `locker` initiates a call to [setup_locker()], which sets up or resets
 #'  the output directories. 
+#'  
+#'  For the `data.frame` method, the data are chunked into a list by columns 
+#'  listed in `cols`. Ideally, this is a singlel column that operates as 
+#'  a unique `ID` across the data set and is used by [chunk_by_id()] to 
+#'  form the chunks. Alternatively, `cols` can be multiple column names which 
+#'  are pasted together to form a unique `ID` that is used for splitting 
+#'  via [chunk_by_cols()].
 #' 
 #' @param x A list or vector to template the stream; for the `numeric` method, 
 #' passing a single number will fill `x` with a sequence of that length.
@@ -124,11 +131,11 @@ is.stream_format <- format_is_set
 #' new_stream(2, locker = file.path(tempdir(), "foo"))
 #' 
 #' df <- data.frame(ID = c(1,2,3,4))
-#' data <- chunk_by_id(df, nchunk = 2)
-#' x <- new_stream(data)
+#' x <- new_stream(df, nchunk = 2)
 #' x[[2]]
 #' 
 #' format_is_set(x[[2]])
+#' 
 #' x <- new_stream(3, format = "fst")
 #' format_is_set(x[[2]])
 #' 
@@ -143,6 +150,35 @@ new_stream <- function(x, ...) UseMethod("new_stream")
 new_stream.list <- function(x, locker = NULL, format = NULL, ...) {
   if(length(x)==0) {
     stop("`x` must have length >= 1.")  
+  }
+  ans <- file_stream(locker = locker, n = length(x),  ...)
+  cl <- class(ans)
+  ans <- Map(ans, x, f = stream_add_object, USE.NAMES = FALSE)
+  class(ans) <- cl
+  if(is.character(format)) {
+    ans <- format_stream(ans, format)  
+  }
+  ans
+}
+
+#' @inheritParams chunk_data_frame
+#' @param cols The name(s) of the column(s) specifying unique IDs to use to 
+#' split the `data.frame` into chunks; this could be a unique `ID` or a 
+#' combination of columns that when pasted together form a unique ID.
+#' @rdname new_stream
+#' @export
+new_stream.data.frame <- function(x, nchunk, cols = "ID", locker = NULL, 
+                                  format = NULL, ...) {
+  if(nchunk < 1) {
+    stop("`nchunk` must be >= 1.")  
+  }
+  if(nrow(x) < nchunk) {
+    stop("`x` must have >= `nchunk` rows.")  
+  }
+  if(is.null(cols)) {
+    x <- chunk_by_row(x, nchunk = nchunk)
+  } else {
+    x <- chunk_by_cols(x, nchunk = nchunk, cols = cols)
   }
   ans <- file_stream(locker = locker, n = length(x),  ...)
   cl <- class(ans)
@@ -200,7 +236,7 @@ new_stream.character <- function(x, ...) {
 #' @export
 format_stream <- function(x, type = c("fst", "feather", "qs", "rds"), 
                           set_ext = TRUE, warn = FALSE) {
-
+  
   if(!is.file_stream(x)) {
     stop("`x` must be a file_stream object.")  
   }

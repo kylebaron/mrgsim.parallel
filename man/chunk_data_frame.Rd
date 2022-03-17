@@ -3,26 +3,32 @@
 \name{chunk_data_frame}
 \alias{chunk_data_frame}
 \alias{chunk_by_id}
+\alias{chunk_by_cols}
 \alias{chunk_by_row}
 \title{Chunk a data frame}
 \usage{
 chunk_by_id(data, nchunk, id_col = "ID", mark = NULL)
 
+chunk_by_cols(data, nchunk, cols, mark = NULL)
+
 chunk_by_row(data, nchunk, mark = NULL)
 }
 \arguments{
-\item{data}{a data frame}
+\item{data}{A data frame.}
 
-\item{nchunk}{number of chunks}
+\item{nchunk}{The number of chunks.}
 
-\item{id_col}{character specifying the column containing the \code{ID} for
-chunking}
+\item{id_col}{Character name specifying the column containing the \code{ID} for
+chunking.}
 
-\item{mark}{when populated as a character label, adds a column to the
-chunked data frames with that name and with value the integer group number}
+\item{mark}{When populated as a character label, adds a column to the
+chunked data frames with that name and with value the integer group number.}
+
+\item{cols}{A character vector of columns to use for deriving \code{ID} to use
+for chunking.}
 }
 \value{
-A list of data frames
+A list of data frames.
 }
 \description{
 Use \link{chunk_by_id} to split up a data set by the \code{ID} column; use
@@ -31,7 +37,7 @@ Use \link{chunk_by_id} to split up a data set by the \code{ID} column; use
 \examples{
 x <- expand.grid(ID = 1:10, B = rev(1:10))
 
-chunk_by_id(x, 3)
+chunk_by_id(x, nchunk = 3)
 
 chunk_by_row(x, nchunk = 4)
 

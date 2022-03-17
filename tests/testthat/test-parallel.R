@@ -1,7 +1,6 @@
 library(testthat)
 
-context("basic functionality")
-
+context("parallel simulation")
 
 mod <- suppressMessages(mrgsolve::modlib("pk1", end = 3))
 
@@ -13,50 +12,6 @@ e <- ev(amt = 100)
 
 idata <- expand.idata(CL = runif(36, 0.5, 1.5))
 idata2 <- expand.idata(CL = runif(40, 0.5, 1.5))
-
-test_that("chunk data", {
-  x <- chunk_by_id(data, nchunk = 5)
-  expect_identical(length(x), 5L)
-  
-  x2 <- chunk_by_id(data2, nchunk = 5, id_col = "SUBJ")
-  expect_identical(length(x), 5L)
-  
-  x2 <- chunk_by_id(data2, nchunk = 5, mark = "test")
-  expect_true(exists("test", x2[[3]]))
-  expect_true(all(x[[4]][["test"]]==4))
-  
-  x <- chunk_by_row(data2, nchunk = 3, mark = "test")
-  expect_true(exists("test", x[[3]]))
-  expect_true(all(x[[3]]["test"]==3))
-  
-  x <- chunk_by_row(idata, nchunk = 10)
-  expect_identical(length(x), 9L)
-  
-  x <- chunk_by_row(idata2, nchunk = 10)
-  expect_identical(length(x), 10L)
-  
-  x <- chunk_by_row(idata2, nchunk = 2, mark = "test")
-  expect_true(exists("test", x[[2]]))
-  expect_true(all(x[[2]]["test"]==2))
-  
-})
-
-test_that("chunk bad input", {
-  expect_error(chunk_by_id(list(), 5))
-  expect_error(chunk_by_id(matrix(0), 5))
-  expect_error(chunk_by_id(data, 0))
-  expect_error(chunk_by_id(data, "A"))
-  expect_error(chunk_by_id(data, "kyletbaron"))
-  expect_error(chunk_by_id(data, 26))
-  expect_is(chunk_by_id(data,25),"list")
-  expect_error(chunk_by_row(list(), 5))
-  expect_error(chunk_by_row(matrix(0), 5))
-  expect_error(chunk_by_row(data, 0))
-  expect_error(chunk_by_row(data, "A"))
-  expect_error(chunk_by_row(data, 99))
-  expect_is(chunk_by_row(data,25), "list")
-  expect_error(chunk_by_id(data,4,id_col="FOO"))
-})
 
 test_that("sim data", {
   out <- mrgsim_d(mod, data, output="df")
