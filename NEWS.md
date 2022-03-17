@@ -1,4 +1,11 @@
-# mrgsim.parallel (development version)
+# mrgsim.parallel 0.2.1
+
+- `new_stream()` gains a method for `data.frame` (#20).
+
+- Add `chunk_by_cols` to chunk a data frame by multiple columns (#20)
+
+- Removed `file-stream` vignette 
+
 
 # mrgsim.parallel 0.2.0
 
