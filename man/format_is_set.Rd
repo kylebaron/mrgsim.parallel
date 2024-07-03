@@ -17,7 +17,7 @@ Logical indicating if \code{x} inherits from one of the stream format classes. .
 }
 \description{
 This can be used to check if a file set item has been assigned an output
-format (e.g. \code{fst}, \code{feather}, \code{qs} or \code{rds}). If the check returns
+format (e.g. \code{fst}, \code{feather}, \code{parquet}, \code{qs} or \code{rds}). If the check returns
 \code{FALSE} it would signal that data should be returned rather than calling
 \code{\link[=write_stream]{write_stream()}}.
 }

@@ -31,8 +31,9 @@ bg_sim_env <- function() {
 #' @param .format The output format for saving simulations; using format
 #' `fst` will allow saved results to be read with [fst::read_fst()]; using
 #' format `arrow` will allow saved results to be read with 
-#' [arrow::open_dataset()] with `format = "feather"`; note that `fst` is 
-#' installed with `mrgsim.parallel` but `arrow` may need explicit installation.
+#' [arrow::open_dataset()] with `format = "feather"` or `format = "parquet"`; 
+#' note that `fst` is installed with `mrgsim.parallel` but `arrow` may need 
+#' explicit installation.
 #' @param .wait If `FALSE`, the function returns immediately; if `TRUE`, then 
 #' wait until the background job is finished.
 #' @param .seed A `numeric` value used to set the seed for the simulation; 
@@ -86,7 +87,7 @@ bg_sim_env <- function() {
 bg_mrgsim_d <- function(mod, data, nchunk = 1,   
                         ..., 
                         .locker = NULL, .tag = NULL, 
-                        .format = c("fst", "feather", "rds"),
+                        .format = c("fst", "feather", "parquet", "rds"),
                         .wait = TRUE, .seed = FALSE, 
                         .cores = 1, .plan = NULL) {
   
@@ -227,6 +228,13 @@ bg_mrgsim_d_impl <- function(data, mod, output = NULL, .seed = NULL,
   }
   if(.format == "feather") { #nocov start
     arrow::write_feather( 
+      x = out,
+      sink = output
+    )
+    return(output)
+  } 
+  if(.format == "parquet") { #nocov start
+    arrow::write_parquet( 
       x = out,
       sink = output
     )
