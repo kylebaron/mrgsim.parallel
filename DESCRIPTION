@@ -1,7 +1,7 @@
 Package: mrgsim.parallel
 Type: Package
 Title: Simulate with 'mrgsolve' in Parallel
-Version: 0.2.0.9001
+Version: 0.2.0.9002
 Author: Kyle Baron
 Maintainer: Kyle Baron <kylebtwin@imap.cc>
 Description: Simulation from an 'mrgsolve' 
