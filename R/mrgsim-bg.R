@@ -105,8 +105,8 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     .tag <- mod@model  
   }
   if(is.character(.locker)) {
-    if(.format == "arrow" && !arrow_installed()) {
-      stop("The arrow package must be installed to complete this task.")
+    if(.format %in% c("feather", "parquet") && !arrow_installed()) {
+      stop("The arrow package must be installed to save to feather or parquet format.")
     }
     if(notag) {
       .tag <- basename(.locker)
