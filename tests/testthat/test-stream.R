@@ -170,6 +170,20 @@ test_that("writer function - feather", {
   )
 })
 
+test_that("writer function - parquet", {
+  skip_if_not_installed("arrow")
+  expect_true(mrgsim.parallel:::arrow_installed())
+  unlink(temp_ds("write/arrow"), recursive = TRUE)
+  x <- new_stream(1, locker = temp_ds("write/arrow"), format = "parquet")
+  expect_true(write_stream(x[[1]], mtcars))
+  mt <- arrow::read_parquet(x[[1]]$file)
+  expect_equivalent(mt, mtcars)
+  expect_error(
+    write_stream(x[[1]], list(mtcars)), 
+    regexp="must be a data.frame"
+  )
+})
+
 test_that("writer function - default", {
   unlink(temp_ds("write/default"), recursive = TRUE)
   x <- new_stream(1, locker = temp_ds("write/default"), ext = "rds")
