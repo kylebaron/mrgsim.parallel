@@ -31,7 +31,7 @@ bg_mrgsim_d(
 results from several different runs in a single folder.}
 
 \item{.tag}{A name to use for the current run; results are saved under
-\code{.tag} in \code{.path} folder.}
+\code{.tag} in \code{.locker} folder.}
 
 \item{.format}{The output format for saving simulations; using format
 \code{fst} will allow saved results to be read with \code{\link[fst:write_fst]{fst::read_fst()}}; using
@@ -71,7 +71,7 @@ data are returned; when an output \code{.locker} is specified, the path to
 the \code{fst} file on disk is returned.  The \code{fst} files  should be read with
 \code{\link[fst:write_fst]{fst::read_fst()}}. When the results are not saved to \code{.locker}, you will
 get a single data frame when \code{nchunk} is 1 or a list of data frames when
-\code{nchunk} is greater than 1. It is safest to call \code{\link[dplyr:bind]{dplyr::bind_rows()}} or
+\code{nchunk} is greater than 1. It is safest to call \code{\link[dplyr:bind_rows]{dplyr::bind_rows()}} or
 something equivalent on the result if you are expecting data frame.
 }
 \examples{

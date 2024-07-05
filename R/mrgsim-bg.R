@@ -27,7 +27,7 @@ bg_sim_env <- function() {
 #' @param .locker A directory for saving simulated data; use this to collect 
 #' results from several different runs in a single folder.
 #' @param .tag A name to use for the current run; results are saved under 
-#' `.tag` in `.path` folder.
+#' `.tag` in `.locker` folder.
 #' @param .format The output format for saving simulations; using format
 #' `fst` will allow saved results to be read with [fst::read_fst()]; using
 #' format `arrow` will allow saved results to be read with 
@@ -92,7 +92,6 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
   
   .format <- match.arg(.format)
   .path <- NULL  
-  notag <- is.null(.tag)
   Plan <- list(workers = .cores)
   create_locker <- is.character(.locker)
   
@@ -100,23 +99,14 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
     Plan$strategy <- .plan
     if(.cores==1) Plan$workers <- NULL
   }
-  if(notag) {
-    .tag <- mod@model  
-  }
-  if(is.character(.locker)) {
+  if(create_locker) {
     if(.format == "arrow" && !arrow_installed()) {
       stop("The arrow package must be installed to complete this task.")
     }
-    if(notag) {
-      .tag <- basename(.locker)
+    .path <- .locker
+    if(is.character(.tag)) {
+      .path <- file.path(.locker, .tag)
     }
-    .path <- dirname(.locker)
-  }
-  if(!is.character(.tag)) {
-    stop("`.tag` must have type character.")  
-  }
-  if(length(.tag) != 1) {
-    stop("`.tag` must have length 1.")  
   }
   if(is.data.frame(data)) {
     if(nchunk <= 1) {
@@ -131,7 +121,7 @@ bg_mrgsim_d <- function(mod, data, nchunk = 1,
   
   if(create_locker) {
     ext <- ifelse(substr(.format, 1, 1)=='.', .format, paste0(".", .format))
-    locker_loc <- setup_locker(.path, .tag)
+    locker_loc <- setup_locker(dirname(.path), basename(.path))
     output_paths <- file_set(
       n = length(data),
       prefix = "bg", 
