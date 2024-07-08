@@ -43,6 +43,7 @@ parallelization.
 
 ```{r}
 library(mrgsim.parallel)
+library(future.callr)
 library(dplyr)
 ```
 
@@ -74,10 +75,10 @@ backend provided by the `parallel` package and another which taps the
 
 For platform independent parallelization, use `fu_mrgsim_d()` (`fu` stands 
 for `future`) after setting the desired `plan()` for parallelization. For 
-example, we can use `future::multisession` with 2 workers
+example, we can use `future.callr::callr` with 2 workers
 
 ```{r, eval = FALSE}
-future::plan(future::multisession, workers = 2L)
+future::plan(future.callr::callr, workers = 2L)
 ```
 
 ```{r}
@@ -92,9 +93,8 @@ Because the problem is so small, this would actually take longer to run than the
 non-parallelized version. 
 
 If you are on `macos` or `unix` operating system, you can parallelize using 
-forked R processes. This generally runs much faster than `future::multisession`, 
-which requires new R processes to be started up.
-
+forked R processes. This generally runs much faster than `future::multisession`
+and `future::callr`, which requires new R processes to be started up.
 
 `mc_mrgsim_d()` will parallelize this simulation using forked processes
 using the parallel package
@@ -107,7 +107,10 @@ Or this can be run using `fu_mrgsim_d()` with `future::multicore`, which also
 will parallelize across forked R processes
 
 ```{r, eval = FALSE, warning = FALSE}
+options(future.fork.enable = TRUE)
+
 future::plan(future::multicore)
+
 out <- fu_mrgsim_d(mod, data, .seed = 123, nchunk = 6)
 ```
 
@@ -143,7 +146,7 @@ This already runs very fast. But let's parallelize it anyway. First,
 use `fu_mrgsim_ei()`
 
 ```{r, eval = FALSE}
-future::plan(future::multisession, workers = 2L)
+future::plan(future.callr::callr, workers = 2L)
 
 out <- fu_mrgsim_ei(mod, e, idata,.seed = 123, nchunks = 6)
 ```
@@ -233,12 +236,41 @@ out <- bg_mrgsim_d(
   mod, 
   data, 
   nchunk = 4,
-  .plan = "multisession", 
+  .plan = "callr", 
   .locker = locker, 
   .cores = 2
 )
 sims <- internalize_fst(locker)
 ```
+
+# Integration with Apache Arrow
+
+In the previous section, we saw how you can simulate in parallel, running all 
+the jobs in the background. In that example, we saved output generated on worker 
+nodes in `fst` format. We can alternatively save outputs in very efficient file 
+formats provided by the Apache Arrow package, providing a very powerful way to 
+manage large outputs. 
+
+We prefer the parquet format provided by the arrow R package. To take this 
+approach, you'll first have to install arrow. 
+
+
+Once arrow is installed, we can simulate in the background again, this time
+saving with `.format ="parquet"`
+
+```{r}
+out <- bg_mrgsim_d(
+  mod, 
+  data, 
+  nchunk = 4,
+  .plan = "callr", 
+  .locker = locker, 
+  .format = "parquet",
+  .cores = 2
+)
+```
+
+
 
 
 # Tools
