@@ -74,6 +74,16 @@ write_stream.stream_format_feather <- function(x, data, dir = NULL, ...) {
 
 #' @rdname write_stream
 #' @export
+write_stream.stream_format_parquet <- function(x, data, dir = NULL, ...) {
+  if(!is.data.frame(data)) stop("`x` must be a data.frame")
+  require_arrow()
+  file <- write_stream_dir_check(x$file, dir)
+  arrow::write_parquet(x = data, sink = file)
+  return(invisible(TRUE))
+}
+
+#' @rdname write_stream
+#' @export
 write_stream.stream_format_qs <- function(x, data, dir = NULL, ...) {
   require_qs()
   file <- write_stream_dir_check(x$file, dir)

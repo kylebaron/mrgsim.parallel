@@ -75,7 +75,7 @@ is.file_set_item <- function(x) !is.null(attr(x, "file_set_item", exact = TRUE))
 #' Check format status of file set item
 #' 
 #' This can be used to check if a file set item has been assigned an output 
-#' format (e.g. `fst`, `feather`, `qs` or `rds`). If the check returns 
+#' format (e.g. `fst`, `feather`, `parquet`, `qs` or `rds`). If the check returns 
 #' `FALSE` it would signal that data should be returned rather than calling
 #' [write_stream()].
 #' 
@@ -211,8 +211,8 @@ new_stream.character <- function(x, ...) {
 #' object can be used to call a write method. See [write_stream()].
 #' 
 #' @param x A `file_stream` object.
-#' @param type The file format type; if `feather` is chosen, then a check will
-#' be made to ensure the `arrow` package is loaded. 
+#' @param type The file format type; if `feather` or `parquet` is chosen, then 
+#' a check will be made to ensure the `arrow` package is loaded. 
 #' @param set_ext If `TRUE`, the existing extension (if it exists) is stripped
 #' and a new extension is added based on the value of `type`.
 #' @param warn If `TRUE` a warning will be issued in case the output format 
@@ -221,7 +221,7 @@ new_stream.character <- function(x, ...) {
 #' 
 #' @return
 #' `x` is returned with a new class attribute reflecting the expected output
-#' format (`fst`, `feather` (arrow), `qs` or `rds`).
+#' format (`fst`, `feather` (arrow), `parquet` (arrow), `qs` or `rds`).
 #' 
 #' @seealso [format_is_set()], [locate_stream()], [ext_stream()], 
 #'          [new_stream()], [file_stream()], [file_set()]
@@ -234,7 +234,7 @@ new_stream.character <- function(x, ...) {
 #' format_is_set(fs[[1]])  
 #'  
 #' @export
-format_stream <- function(x, type = c("fst", "feather", "qs", "rds"), 
+format_stream <- function(x, type = c("fst", "feather", "parquet", "qs", "rds"), 
                           set_ext = TRUE, warn = FALSE) {
   
   if(!is.file_stream(x)) {
@@ -242,7 +242,7 @@ format_stream <- function(x, type = c("fst", "feather", "qs", "rds"),
   }
   type <- match.arg(type)
   format <- .pkgenv$stream_format_classes[type]
-  if(type=="feather") require_arrow()
+  if(type=="feather" | type=="parquet") require_arrow()
   if(type=="qs") require_qs()
   clx <- class(x)
   cl <- c(format, "list")
