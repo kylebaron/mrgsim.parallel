@@ -100,7 +100,7 @@ is.stream_format <- format_is_set
 #'  the output directories. 
 #'  
 #'  For the `data.frame` method, the data are chunked into a list by columns 
-#'  listed in `cols`. Ideally, this is a singlel column that operates as 
+#'  listed in `cols`. Ideally, this is a single column that operates as 
 #'  a unique `ID` across the data set and is used by [chunk_by_id()] to 
 #'  form the chunks. Alternatively, `cols` can be multiple column names which 
 #'  are pasted together to form a unique `ID` that is used for splitting 

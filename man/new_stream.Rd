@@ -54,7 +54,7 @@ replicate numbers and possibly input objects for a simulation. Passing
 the output directories.
 
 For the \code{data.frame} method, the data are chunked into a list by columns
-listed in \code{cols}. Ideally, this is a singlel column that operates as
+listed in \code{cols}. Ideally, this is a single column that operates as
 a unique \code{ID} across the data set and is used by \code{\link[=chunk_by_id]{chunk_by_id()}} to
 form the chunks. Alternatively, \code{cols} can be multiple column names which
 are pasted together to form a unique \code{ID} that is used for splitting

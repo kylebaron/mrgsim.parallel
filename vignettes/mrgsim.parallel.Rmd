@@ -236,7 +236,7 @@ out <- bg_mrgsim_d(
   mod, 
   data, 
   nchunk = 4,
-  .plan = "callr", 
+  .plan = "future.callr::callr", 
   .locker = locker, 
   .cores = 2
 )
@@ -248,7 +248,7 @@ sims <- internalize_fst(locker)
 In the previous section, we saw how you can simulate in parallel, running all 
 the jobs in the background. In that example, we saved output generated on worker 
 nodes in `fst` format. We can alternatively save outputs in very efficient file 
-formats provided by the Apache Arrow package, providing a very powerful way to 
+formats provided by the Apache Arrow package, providing a powerful way to 
 manage large outputs. 
 
 We prefer the parquet format provided by the arrow R package. To take this 
@@ -256,22 +256,68 @@ approach, you'll first have to install arrow.
 
 
 Once arrow is installed, we can simulate in the background again, this time
-saving with `.format ="parquet"`
+saving with `.format = "parquet"`
 
 ```{r}
 out <- bg_mrgsim_d(
   mod, 
   data, 
-  nchunk = 4,
-  .plan = "callr", 
+  nchunk = 8,
+  .plan = "future.callr::callr",
   .locker = locker, 
   .format = "parquet",
   .cores = 2
 )
+
+```
+
+Because we set `.locker`, the simulation outputs can be found in that 
+directory
+
+```{r}
+list.files(locker)
+```
+
+We have eight data chunks sitting in parquet-formatted files. To read the data
+back into R, we use the `arrow::open_dataset()` function and point to the 
+_directory_ where those files are stored
+
+```{r}
+ds <- arrow::open_dataset(locker)
+```
+
+Now, we can look at the data
+
+```{r}
+head(ds)
+nrow(ds)
+```
+
+We can read it all back into R in one call
+
+```{r}
+sims <- collect(ds)
+
+sims
 ```
 
 
+Or, we can call some wrangling functions on the data set object before 
+calling `collect()`
 
+```{r}
+sims <- 
+  ds %>% 
+  select(ID, time, CP) %>% 
+  filter(time < 12) %>% 
+  collect()
+
+sims
+```
+
+While this specific example is very small and easy to deal with, using this 
+arrow / dataset approach is an efficient way to deal with very large simulation
+output.
 
 # Tools
 

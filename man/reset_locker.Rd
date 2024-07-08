@@ -25,7 +25,7 @@ exist; if it exists, there will be an error. It is also an error for
 that marks the directory as established locker space.
 
 \strong{NOTE}: when the locker is reset, all contents are cleared according
-to the files matched by \code{pattern}. If any un-matched files exist after
+to the files matched by \code{pattern}. If any unmatched files exist after
 clearing the directory, a warning will be issued.
 }
 \seealso{

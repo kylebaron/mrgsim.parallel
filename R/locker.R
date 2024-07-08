@@ -55,7 +55,7 @@ clear_locker <- function(where, locker_path, pattern) {
 #' that marks the directory as established locker space. 
 #' 
 #' __NOTE__: when the locker is reset, all contents are cleared according 
-#' to the files matched by `pattern`. If any un-matched files exist after
+#' to the files matched by `pattern`. If any unmatched files exist after
 #' clearing the directory, a warning will be issued. 
 #' 
 #' @param where The full path to the locker. 
