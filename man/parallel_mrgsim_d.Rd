@@ -51,7 +51,8 @@ fu_mrgsim_d0(..., .dry = TRUE)
 
 \item{data}{Data set to simulate; see \code{\link[mrgsolve:data_set]{mrgsolve::data_set()}}.}
 
-\item{nchunk}{Number of chunks in which to split the data set}
+\item{nchunk}{Number of chunks in which to split the data set; chunking will
+be based on the \code{ID} column, which is required in \code{data}.}
 
 \item{...}{Passed to \code{\link[=mrgsim_d]{mrgsim_d()}}.}
 
