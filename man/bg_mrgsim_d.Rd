@@ -23,7 +23,8 @@ bg_mrgsim_d(
 
 \item{data}{Data set to simulate; see \code{\link[mrgsolve:data_set]{mrgsolve::data_set()}}.}
 
-\item{nchunk}{Number of chunks in which to split the data set}
+\item{nchunk}{Number of chunks in which to split the data set; chunking will
+be based on the \code{ID} column, which is required in \code{data}.}
 
 \item{...}{Arguments passed to \code{\link[mrgsolve:mrgsim]{mrgsolve::mrgsim()}}.}
 
@@ -31,7 +32,7 @@ bg_mrgsim_d(
 results from several different runs in a single folder.}
 
 \item{.tag}{A name to use for the current run; results are saved under
-\code{.tag} in \code{.path} folder.}
+\code{.tag} in \code{.locker} folder.}
 
 \item{.format}{The output format for saving simulations; using format
 \code{fst} will allow saved results to be read with \code{\link[fst:write_fst]{fst::read_fst()}}; using

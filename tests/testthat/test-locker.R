@@ -3,12 +3,14 @@ library(testthat)
 context("locker")
 
 test_that("set up locker", {
+  unlink(temp_ds("foo"), recursive = TRUE)
   x <- setup_locker(tempdir(), "foo")
   expect_length(x, 1)
   expect_is(x, "character")
 })
 
 test_that("reset locker", {
+  unlink(temp_ds("foo"), recursive = TRUE)
   x <- setup_locker(tempdir(), "foo")
   cat("...", file = file.path(x, "foo.fst"))
   y <- reset_locker(file.path(tempdir(), "foo"))
