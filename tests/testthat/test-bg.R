@@ -131,3 +131,32 @@ test_that("bg simulate parallel", {
   expect_is(df, "list")
   expect_length(df, 2)
 })
+
+test_that("bg locker and tag", {
+  loc <- file.path(tempdir(), "foo")
+  bg <- bg_mrgsim_d(
+    mod, 
+    data, 
+    .locker = loc,
+    .format = "fst",
+    .wait = TRUE, 
+    .seed = 123256L, 
+    nchunk = 2, 
+    .plan = "sequential"
+  )
+  files <- bg$get_result()[[1]]
+  expect_equal(dirname(files), file.path(tempdir(), "foo"))
+  bg <- bg_mrgsim_d(
+    mod, 
+    data, 
+    .locker = loc,
+    .tag = "run2", 
+    .format = "fst",
+    .wait = TRUE, 
+    .seed = 123256L, 
+    nchunk = 2, 
+    .plan = "sequential"
+  )
+  files <- bg$get_result()[[1]]
+  expect_equal(dirname(files), file.path(tempdir(), "foo", "run2"))
+})
