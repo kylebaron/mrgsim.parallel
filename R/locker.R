@@ -24,7 +24,7 @@ clear_locker <- function(where, locker_path, pattern) {
     stop(msg)
   }
   if(!is.character(pattern)) {
-    pattern <- "\\.(fst|feather|csv|qs|rds|ext)$"
+    pattern <- "\\.(fst|feather|parquet|csv|qs|rds|ext)$"
   } 
   files <- list.files(
     where, 

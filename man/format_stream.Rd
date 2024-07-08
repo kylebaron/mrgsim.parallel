@@ -6,7 +6,7 @@
 \usage{
 format_stream(
   x,
-  type = c("fst", "feather", "qs", "rds"),
+  type = c("fst", "feather", "parquet", "qs", "rds"),
   set_ext = TRUE,
   warn = FALSE
 )
@@ -14,8 +14,8 @@ format_stream(
 \arguments{
 \item{x}{A \code{file_stream} object.}
 
-\item{type}{The file format type; if \code{feather} is chosen, then a check will
-be made to ensure the \code{arrow} package is loaded.}
+\item{type}{The file format type; if \code{feather} or \code{parquet} is chosen, then
+a check will be made to ensure the \code{arrow} package is loaded.}
 
 \item{set_ext}{If \code{TRUE}, the existing extension (if it exists) is stripped
 and a new extension is added based on the value of \code{type}.}
@@ -26,7 +26,7 @@ is set but there is no directory path associated with the \code{file} spot in
 }
 \value{
 \code{x} is returned with a new class attribute reflecting the expected output
-format (\code{fst}, \code{feather} (arrow), \code{qs} or \code{rds}).
+format (\code{fst}, \code{feather} (arrow), \code{parquet} (arrow), \code{qs} or \code{rds}).
 }
 \description{
 The format is set on the file objects inside the list so that the file
