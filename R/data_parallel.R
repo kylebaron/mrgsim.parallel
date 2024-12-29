@@ -23,7 +23,7 @@
 #' be (1) the simulated output (2) the model object.
 #' @param .dry If `TRUE` neither the simulation nor the post processing will
 #' be done.
-#' @param .seed Passed to [future_lapply()] as `future.seed`.
+#' @param .seed Passed to [future.apply::future_lapply()] as `future.seed`.
 #' @param .parallel if `FALSE`, the simulation will not be parallelized; this is
 #' intended for debugging and testing use only.
 #'

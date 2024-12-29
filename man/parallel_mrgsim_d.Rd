@@ -64,7 +64,7 @@ be (1) the simulated output (2) the model object.}
 \item{.dry}{If \code{TRUE} neither the simulation nor the post processing will
 be done.}
 
-\item{.seed}{Passed to \code{\link[=future_lapply]{future_lapply()}} as \code{future.seed}.}
+\item{.seed}{Passed to \code{\link[future.apply:future_lapply]{future.apply::future_lapply()}} as \code{future.seed}.}
 
 \item{.parallel}{if \code{FALSE}, the simulation will not be parallelized; this is
 intended for debugging and testing use only.}

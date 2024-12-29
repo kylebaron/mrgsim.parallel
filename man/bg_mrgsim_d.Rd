@@ -55,7 +55,7 @@ simulation sequentially.}
 parallelization will be handled by the \code{future} package.}
 }
 \value{
-An \code{r_process} object; see \code{\link[callr:r_bg]{callr::r_bg()}}. Call \code{process$get_resuilt()} to
+An \code{r_process} object; see \code{\link[callr:r_bg]{callr::r_bg()}}. Call \code{process$get_result()} to
 get the actual result (see \code{details}). If a \code{.locker} path is supplied,
 the simulated data is saved to disk and a list of file names is returned.
 }
