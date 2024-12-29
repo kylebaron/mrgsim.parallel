@@ -62,25 +62,7 @@ job_mrgsim_d <- function(mod, data, tag,
     ext = ext, 
     where = locker_loc
   )
-  
-  # if(length(data)==1) {
-  #   #func <- bg_mrgsim_d_impl
-  #   args <- list(...)
-  #   args$mod <- mod
-  #   args$data <- data[[1]]
-  #   args$output <- output_paths[[1]]
-  #   args$.seed <- seed
-  #   args$.format <- format
-  # } else {
-  #   #func <- bg_mrgsim_apply
-  #   args <- list()
-  #   args$more <- list(mod = mod, ...)
-  #   args$output <- output_paths
-  #   args$data <- data
-  #   args$Plan <- Plan
-  #   args$.seed <- seed
-  #   args$.format <- format
-  # }
+
   if(is.numeric(seed)) {
     set.seed(seed)  
   }
