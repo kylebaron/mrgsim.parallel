@@ -76,7 +76,7 @@ bg_sim_env <- function() {
 #'   
 #' 
 #' @return 
-#' An `r_process` object; see [callr::r_bg()]. Call `process$get_resuilt()` to 
+#' An `r_process` object; see [callr::r_bg()]. Call `process$get_result()` to 
 #' get the actual result (see `details`). If a `.locker` path is supplied, 
 #' the simulated data is saved to disk and a list of file names is returned. 
 #' 
