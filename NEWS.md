@@ -1,4 +1,6 @@
-# mrgsim.parallel (development version)
+# mrgsim.parallel 0.3.0
+
+
 
 # mrgsim.parallel 0.2.0
 
