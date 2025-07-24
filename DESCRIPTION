@@ -2,7 +2,9 @@ Package: mrgsim.parallel
 Type: Package
 Title: Simulate with 'mrgsolve' in Parallel
 Version: 0.3.0
-Author: Kyle Baron
+Authors@R: c(
+    person("Kyle", "Baron", "", "kylebtwin@imap.cc", c("aut", "cre"))
+    )
 Maintainer: Kyle Baron <kylebtwin@imap.cc>
 Description: Simulation from an 'mrgsolve' 
     <https://cran.r-project.org/package=mrgsolve> model using a parallel backend.  

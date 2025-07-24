@@ -54,7 +54,7 @@ fu_mrgsim_d0(..., .dry = TRUE)
 \item{nchunk}{Number of chunks in which to split the data set; chunking will
 be based on the \code{ID} column, which is required in \code{data}.}
 
-\item{...}{Passed to \code{\link[=mrgsim_d]{mrgsim_d()}}.}
+\item{...}{Passed to \code{\link[mrgsolve:mrgsim_variants]{mrgsolve::mrgsim_d()}}.}
 
 \item{.as_list}{If \code{TRUE} a list is return; otherwise (default) a data frame}
 
