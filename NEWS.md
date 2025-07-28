@@ -1,5 +1,13 @@
 # mrgsim.parallel 0.3.0
 
+- Fix anchor links to functions in other packages (#25). 
+
+- Fixed bug in `tag` argument to `bg_mrgsim_d()`; simulations are now
+  properly stored in `.locker/.tag` (#23). 
+
+- Add support for saving background sims in parquet format (#22).
+
+- Add method to create a new stream from a data frame (#20).
 
 
 # mrgsim.parallel 0.2.0

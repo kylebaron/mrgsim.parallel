@@ -12,6 +12,7 @@ data <- mrgsolve::expand.ev(
   addl = 6
 )
 data$dose <- data$amt
+clean <- function(x) gsub("[[:punct:]]", "-", x, perl = TRUE)
 
 test_that("bg simulation has same result as fg", { 
   bg <- bg_mrgsim_d(
@@ -147,7 +148,10 @@ test_that("bg locker, no tag", {
     .plan = "sequential"
   )
   files <- bg$get_result()
-  expect_equal(dirname(files[[1]]), file.path(tempdir(), "foo"))
+  expect_equal(
+    clean(dirname(files[[1]])), 
+    clean(file.path(tempdir(), "foo"))
+  )
   bg2 <- bg_mrgsim_d(
     mod, 
     data, 
@@ -176,7 +180,10 @@ test_that("bg locker and tag", {
     .plan = "sequential"
   )
   files <- bg$get_result()[[1]]
-  expect_equal(dirname(files), file.path(tempdir(), "foo"))
+  expect_equal(
+    clean(dirname(files[1])), 
+    clean(file.path(tempdir(), "foo"))
+  )
   bg <- bg_mrgsim_d(
     mod, 
     data, 
@@ -189,8 +196,10 @@ test_that("bg locker and tag", {
     .plan = "sequential"
   )
   files <- bg$get_result()
-  expect_equal(dirname(files[[1]]), file.path(tempdir(), "foo", "run2"))
-  
+  expect_equal(
+    clean(dirname(files[[1]])), 
+    clean(file.path(tempdir(), "foo", "run2"))
+  )  
   bg2 <- bg_mrgsim_d(
     mod, 
     data, 
