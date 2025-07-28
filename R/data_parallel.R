@@ -17,7 +17,7 @@
 #' @param data Data set to simulate; see [mrgsolve::data_set()].
 #' @param nchunk Number of chunks in which to split the data set; chunking will 
 #' be based on the `ID` column, which is required in `data`.
-#' @param ... Passed to [mrgsim_d()].
+#' @param ... Passed to [mrgsolve::mrgsim_d()].
 #' @param .as_list If `TRUE` a list is return; otherwise (default) a data frame
 #' @param .p Post processing function executed on the worker; arguments should
 #' be (1) the simulated output (2) the model object.
