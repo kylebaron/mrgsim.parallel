@@ -1,3 +1,5 @@
+# mrgsim.parallel (development version)
+
 # mrgsim.parallel 0.3.0
 
 - Fix anchor links to functions in other packages (#25). 

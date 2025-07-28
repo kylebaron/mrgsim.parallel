@@ -1,7 +1,7 @@
 Package: mrgsim.parallel
 Type: Package
 Title: Simulate with 'mrgsolve' in Parallel
-Version: 0.3.0
+Version: 0.3.0.9000
 Authors@R: c(
     person("Kyle", "Baron", "", "kylebtwin@imap.cc", c("aut", "cre"))
     )
