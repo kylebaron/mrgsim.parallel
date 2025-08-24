@@ -220,7 +220,7 @@ bg_mrgsim_d_impl <- function(data, mod, output = NULL, .seed = NULL,
     )
     return(output)
   } 
-  if(.format == "parquet") { #nocov start
+  if(.format == "parquet") {
     arrow::write_parquet( 
       x = out,
       sink = output
